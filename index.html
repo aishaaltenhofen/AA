@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aisha Altenhofen Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /*
+        CORE AESTHETIC: Fixed positioning for text, scrollable content for images.
+        White background, black text, small serif font, precise geometry.
+        */
+        body {
+            background-color: white;
+            color: black;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.8rem; /* Very small text for elegance */
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Prevent body scroll, content area will scroll */
+        }
+
+        /* Fixed Left Panel for Name/Email */
+        .fixed-left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 100%;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Scrollable Right Panel for Navigation/Gallery */
+        #content-area {
+            position: absolute;
+            top: 0;
+            left: 200px; /* Starts after the fixed left panel */
+            right: 0;
+            bottom: 0;
+            overflow-y: scroll; /* Enable scrolling for gallery content */
+            padding: 2.5rem; /* Consistent padding */
+        }
+
+        /* Link and Navigation Styling */
+        .project-link, #index-link {
+            text-decoration: none;
+            color: black;
+            line-height: 1.6;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            display: block;
+        }
+        .project-link:hover, #index-link:hover {
+            opacity: 0.5;
+        }
+
+        /* Gallery Styling */
+        .gallery-image {
+            width: 100%;
+            max-width: 900px; /* Max width for images */
+            height: auto;
+            object-fit: contain;
+            margin: 4rem 0; /* Dramatic vertical spacing between artworks */
+            opacity: 0; /* Start hidden for fade-in */
+            transition: opacity 0.6s ease-out;
+        }
+
+        /* Initial Nav List Positioning: Right-aligned and Vertically Centered */
+        #main-nav-list {
+            min-height: calc(100vh - 5rem); /* Fill height of content area minus padding */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end; /* Pushes content to the far right */
+        }
+        
+        /* Ensure text and links align right within the list item */
+        #main-nav-list ul {
+            text-align: right; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tailwind Config: Ensure custom font setup is active -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Times New Roman"', 'Times', 'serif'],
+                        serif: ['"Times New Roman"', 'Times', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Fixed Left Panel: Name and Email -->
+    <div class="fixed-left">
+        <!-- 1. Name: Aisha Altenhofen (Top Left) -->
+        <h1 class="text-base font-medium">Aisha Altenhofen</h1>
+        
+        <!-- 2. Email (Bottom Left) -->
+        <div class="text-xs">aishaaltenhofen@gmail.com</div>
+    </div>
+    
+    <!-- Fixed Top Right Index/Back Link -->
+    <!-- This link remains fixed in the top right of the viewport for easy return -->
+    <a href="#" id="index-link" class="fixed top-8 right-8 z-10" style="display: none;">Index</a>
+
+
+    <!-- Scrollable Right Panel: Content Area -->
+    <section id="content-area">
+        
+        <!-- Initial View: Main Navigation List (Centered Vertically and Right-aligned) -->
+        <nav id="main-nav-list">
+            <ul class="space-y-4 text-lg">
+                <li><a href="#" class="project-link italic" data-series="carrier">The Carrier</a></li>
+                <li><a href="#" class="project-link italic" data-series="aabb">AABB</a></li>
+                <li><a href="#" class="project-link italic" data-series="exposure">First Exposure</a></li>
+                <li><a href="#" class="project-link italic" data-series="aftertext">Aftertext</a></li>
+                <li><a href="#" class="project-link italic" data-series="trouble">trouble!</a></li>
+            </ul>
+        </nav>
+
+        <!-- Dynamic Gallery Content will be injected here -->
+        <div id="gallery-viewer" class="hidden">
+            <!-- Images and series titles appear here when a link is clicked -->
+        </div>
+
+    </section>
+
+    <script>
+        // --- DATA SETUP ---
+        // Define the content for each series (Placeholder images)
+        const seriesData = {
+            carrier: {
+                title: "The Carrier",
+                images: [
+                    "https://placehold.co/1200x800/d4d4d4/000000?text=The+Carrier+Image+01",
+                    "https://placehold.co/900x1200/c7c7c7/000000?text=The+Carrier+Image+02",
+                    "https://placehold.co/1600x900/bdbdbd/000000?text=The+Carrier+Image+03"
+                ]
+            },
+            aabb: {
+                title: "AABB",
+                images: [
+                    "https://placehold.co/1000x1000/a3a3a3/000000?text=AABB+Image+01",
+                    "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02"
+                ]
+            },
+            exposure: {
+                title: "First Exposure",
+                images: [
+                    "https://placehold.co/1400x700/858585/000000?text=First+Exposure+Image+01",
+                    "https://placehold.co/1000x1400/7d7d7d/000000?text=First+Exposure+Image+02",
+                    "https://placehold.co/1200x1000/707070/000000?text=First+Exposure+Image+03"
+                ]
+            },
+            aftertext: {
+                title: "Aftertext",
+                images: [
+                    "https://placehold.co/1100x750/616161/000000?text=Aftertext+Image+01",
+                    "https://placehold.co/1300x850/545454/000000?text=Aftertext+Image+02",
+                ]
+            },
+            trouble: {
+                title: "trouble!", // Title is now lowercase for the gallery view
+                images: [
+                    "https://placehold.co/1000x700/404040/000000?text=Trouble!+Image+01",
+                    "https://placehold.co/900x900/3d3d3d/000000?text=Trouble!+Image+02",
+                    "https://placehold.co/1500x800/292929/000000?text=Trouble!+Image+03"
+                ]
+            }
+        };
+
+        // --- ELEMENTS ---
+        const mainNavList = document.getElementById('main-nav-list');
+        const galleryViewer = document.getElementById('gallery-viewer');
+        const contentArea = document.getElementById('content-area');
+        const indexLink = document.getElementById('index-link');
+        const projectLinks = document.querySelectorAll('.project-link');
+
+        // --- FUNCTIONS ---
+        
+        // Generates the HTML for the image gallery
+        function createGalleryHTML(series) {
+            const data = seriesData[series];
+            // The series title stays left-aligned in the gallery view for easy reading
+            let html = `<h2 class="text-base font-medium mb-12">${data.title}</h2>`;
+            
+            data.images.forEach((src, index) => {
+                // Image with sequential description
+                html += `
+                    <p class="text-xs mb-2">Image ${index + 1} of ${data.images.length}</p>
+                    <img src="${src}" alt="${data.title} - Image ${index + 1}" class="gallery-image">
+                `;
+            });
+            // Add extra spacing at the bottom
+            html += '<div style="height: 100px;"></div>';
+            return html;
+        }
+
+        // Handles displaying a specific series gallery
+        function showSeries(series) {
+            const galleryHTML = createGalleryHTML(series);
+            
+            // 1. Hide the main navigation list
+            mainNavList.classList.add('hidden');
+            
+            // 2. Show the gallery viewer
+            galleryViewer.classList.remove('hidden');
+            galleryViewer.innerHTML = galleryHTML;
+
+            // 3. Show the 'Index' link for navigation back
+            indexLink.style.display = 'block';
+            
+            // 4. Reset scroll position to the top of the content area
+            contentArea.scrollTo(0, 0); 
+            
+            // 5. Fade in images sequentially
+            setTimeout(() => {
+                const images = galleryViewer.querySelectorAll('.gallery-image');
+                images.forEach((img, index) => {
+                    setTimeout(() => {
+                        img.style.opacity = '1';
+                    }, index * 100); // Staggered fade-in effect
+                });
+            }, 50);
+        }
+
+        // Handles returning to the main navigation list
+        function showIndex(event) {
+            event.preventDefault();
+            
+            // 1. Hide gallery and index link
+            galleryViewer.classList.add('hidden');
+            galleryViewer.innerHTML = '';
+            indexLink.style.display = 'none';
+
+            // 2. Show the main navigation list
+            mainNavList.classList.remove('hidden');
+            
+            // 3. Reset scroll position to the top
+            contentArea.scrollTo(0, 0); 
+        }
+
+        // --- EVENT LISTENERS ---
+        
+        // Attach click listeners to all project titles
+        projectLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const series = link.getAttribute('data-series');
+                showSeries(series);
+            });
+        });
+
+        // Attach click listener to the fixed 'Index' link
+        indexLink.addEventListener('click', showIndex);
+        
+        // Set the initial view to show the titles
+        showIndex({preventDefault: () => {}}); // Call to initialize state
+        
+    </script>
+</body>
+</html>
