@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aisha Altenhofen Portfolio</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
     <style>
         /*
         CORE AESTHETIC: Fixed positioning for text, scrollable content for images.
@@ -28,14 +27,12 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 200px;
+            width: 230px; 
             height: 100%;
-            padding: 2.5rem 1.5rem;
-            /* Flex column with space-between handles the top (Name), middle (News), and bottom (Email) elements, 
-               which visually aligns the News block with the centered project list on the right. */
+            padding: 2.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
-            justify-content: space-between; 
+            justify-content: flex-start; 
             z-index: 20; 
         }
         
@@ -44,14 +41,17 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 200px; 
+            /* WIEDERHERGESTELLT: Breite auf 230px gesetzt, um Platz für lange Titel zu haben */
+            width: 230px; 
             height: 100%;
-            padding: 2.5rem 1.5rem;
-            /* Centers the project list vertically */
+            padding: 2.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
-            justify-content: center; 
-            align-items: flex-end; 
+            justify-content: flex-start; 
+            /* GEÄNDERT: align-items auf flex-start gesetzt. 
+               Dadurch rücken die Titel an den LINKEN Rand dieser Spalte (nah an die Bilder),
+               lassen aber rechts den gewünschten Weißraum. */
+            align-items: flex-start; 
             z-index: 20; 
         }
 
@@ -59,8 +59,9 @@
         #content-area {
             position: absolute;
             top: 0;
-            left: 200px; 
-            right: 200px; 
+            left: 230px; 
+            /* WIEDERHERGESTELLT: Rechter Rand auf 230px, passend zur Navigationsbreite */
+            right: 230px; 
             bottom: 0;
             overflow-y: scroll; 
             padding: 2.5rem; 
@@ -78,7 +79,7 @@
 
         @media (max-width: 767px) {
             body {
-                overflow-y: scroll; /* Allow body to scroll entirely */
+                overflow-y: scroll; 
                 height: auto;
             }
 
@@ -90,26 +91,25 @@
                 padding: 1.5rem 1rem;
             }
             
-            /* Restructure fixed-left for mobile: Name top, News middle, Email bottom, stacked */
+            /* Restructure fixed-left for mobile: Name/Email top, News below */
             .fixed-left {
-                flex-direction: column; /* Stack name, news, email */
+                flex-direction: column; 
                 border-bottom: 1px solid #eee;
-                /* Add separation between elements for mobile stacking */
-                gap: 1.5rem;
+                gap: 1.5rem; /* Abstand zwischen Name/Email-Block und News-Block */
             }
             
-            /* Navigation Titles (now below Name/Email) */
+            /* Navigation Titles (now below Name/Email and News) */
             #fixed-right-nav {
                 border-bottom: 1px solid #eee;
-                /* Reset centering to be left-aligned and top-aligned */
                 justify-content: flex-start; 
                 align-items: flex-start;
+                /* Mobile: Breite auf 100% zurücksetzen */
+                width: 100%;
             }
 
             /* Content area sits below navigation */
             #content-area {
                 padding: 1.5rem 1rem; 
-                /* Ensure mobile scrollbar (if needed) is visible in the main body scroll */
                 overflow-y: visible;
                 scrollbar-width: auto;
             }
@@ -151,6 +151,12 @@
             line-height: 1.6;
             color: black;
         }
+        
+        /* New style for italic navigation links */
+        .nav-link-italic {
+            font-style: italic;
+        }
+
 
         /* Gallery Styling */
         .gallery-image {
@@ -158,22 +164,22 @@
             max-width: 900px; 
             height: auto;
             object-fit: contain;
-            margin-top: 1rem; /* Gap after city/exhibition info */
-            margin-bottom: 0; /* REMOVED: Fixed spacing below image, controlled by subsequent elements */
+            margin-top: 1rem; 
+            margin-bottom: 0; 
             opacity: 0; 
             transition: opacity 0.6s ease-out;
         }
 
-        /* Email Font Adjustment for visual length matching */
-        #email-address {
-            font-size: 0.65rem; 
+        /* Helper class for desktop to push content down (used for News block) */
+        .push-down-md {
+            margin-top: auto; 
+            margin-bottom: auto; /* Sorgt dafür, dass der News Block in der Mitte ist */
         }
     </style>
 </head>
 <body>
 
-    <!-- Tailwind Config: Ensure custom font setup is active -->
-    <script>
+    <!-- Tailwind Config: Ensure custom font setup is active --><script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -186,81 +192,94 @@
         }
     </script>
 
-    <!-- Fixed Left Panel: Name, News, and Email -->
-    <div class="fixed-left">
-        <!-- 1. Name: Aisha Altenhofen (Top Left) - ACTS AS THE INDEX LINK -->
-        <h1 id="name-link" class="text-base font-medium interactable-text">Aisha Altenhofen</h1>
+    <!-- Fixed Left Panel: Name, Email, and News --><div class="fixed-left">
         
-        <!-- 1.5. News Updates (Middle Left) -->
-        <div id="news-updates" class="text-xs">
-            <h3 class="font-medium text-xs mb-2">News</h3>
-            <!-- EDITED: Reduced vertical spacing between news items from space-y-3 to space-y-2 -->
+        <!-- 1. Name: Aisha Altenhofen (Top Left) -->
+        <h1 id="name-link" class="text-sm font-medium interactable-text mb-0">Aisha Altenhofen</h1>
+        
+        <!-- 2. Email -->
+        <div id="email-address" class="text-xs mb-6">aishaaltenhofen@gmail.com</div>
+
+        <!-- 3. News Updates (MITTE Links auf Desktop) -->
+        <div id="news-updates" class="text-xs push-down-md">
+            <h3 class="font-medium text-sm mb-2">News</h3>
             <ul id="news-list" class="space-y-2">
                 <!-- News items will be injected here by the script -->
             </ul>
         </div>
         
-        <!-- 2. Email (Bottom Left) -->
-        <div id="email-address" class="text-xs">aishaaltenhofen@gmail.com</div>
     </div>
     
     
-    <!-- Fixed Right Panel for Navigation Titles - MOVED BELOW LEFT PANEL ON MOBILE -->
-    <nav id="fixed-right-nav" class="hidden md:flex"> 
-        <ul class="space-y-4 text-lg">
-            <li><a href="#" class="project-link interactable-text italic" data-series="carrier">The Carrier</a></li>
-            <li><a href="#" class="project-link interactable-text italic" data-series="aabb">AABB</a></li>
-            <li><a href="#" class="project-link interactable-text italic" data-series="exposure">First Exposure</a></li>
-            <li><a href="#" class="project-link interactable-text italic" data-series="aftertext">Aftertext</a></li>
-            <li><a href="#" class="project-link interactable-text italic" data-series="trouble">trouble!</a></li>
+    <!-- Fixed Right Panel for Navigation Titles - MOVED BELOW LEFT PANEL ON MOBILE --><nav id="fixed-right-nav" class="hidden md:flex"> 
+        <ul class="space-y-2 text-sm">
+            <!-- Hinzugefügte Klasse "nav-link-italic" für Kursivschrift -->
+            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
+            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
+            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
         </ul>
     </nav>
 
 
-    <!-- Scrollable Center Panel: Content Area -->
-    <section id="content-area">
+    <!-- Scrollable Center Panel: Content Area --><section id="content-area">
         
         <!-- Mobile Nav: Only visible on small screens to ensure titles are accessible -->
         <nav id="mobile-nav" class="md:hidden">
             <ul class="flex space-x-6 text-sm">
-                <li><a href="#" class="project-link interactable-text italic" data-series="carrier">The Carrier</a></li>
-                <li><a href="#" class="project-link interactable-text italic" data-series="aabb">AABB</a></li>
-                <li><a href="#" class="project-link interactable-text italic" data-series="exposure">First Exposure</a></li>
-                <li><a href="#" class="project-link interactable-text italic" data-series="aftertext">Aftertext</a></li>
-                <li><a href="#" class="project-link interactable-text italic" data-series="trouble">trouble!</a></li>
+                 <!-- Hinzugefügte Klasse "nav-link-italic" für Kursivschrift -->
+                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
+                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
+                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
             </ul>
         </nav>
 
         <!-- Initial Welcome State (REMOVED: Now intentionally blank) -->
-
-        <!-- Dynamic Gallery Content will be injected here -->
-        <div id="gallery-viewer" class="hidden mt-8 md:mt-0">
-            <!-- Images and series titles appear here when a link is clicked -->
-        </div>
+        <div id="gallery-viewer" class="hidden"> 
+            <!-- Images and series titles appear here when a link is clicked --></div>
 
     </section>
 
     <script>
         // --- DATA SETUP ---
+        // Basis-URL zur GitHub-Repository-Datei (angepasst für RAW Content)
+        // WICHTIG: Pfade müssen exakt mit Groß-/Kleinschreibung und Dateiendung übereinstimmen.
+        const GITHUB_BASE_URL = "https://raw.githubusercontent.com/aishaaltenhofen/AA/main/images/";
+
         const seriesData = {
             carrier: {
                 title: "The Carrier",
-                location: "The Old Post Office Gallery",
-                dates: "01.01.2025 — 31.01.2025",
-                city: "London, UK",
+                location: "University of the Arts", 
+                dates: "16.07.2025 — 22.07.2025", 
+                city: "Berlin, DE", 
                 images: [
-                    // Title (italic), Year (not italic), Media (not italic), Size (not italic)
-                    { src: "https://placehold.co/1200x800/000000/ffffff?text=The+Carrier+1", caption: "<i>Untitled (Carrier 1)</i>, 2024, Digital C-Print, 100 x 80 cm" },
-                    { src: "https://placehold.co/900x1200/000000/ffffff?text=The+Carrier+2", caption: "<i>Fugue State (Carrier 2)</i>, 2023, Inkjet on Aluminum, 90 x 120 cm" },
-                    { src: "https://placehold.co/1600x900/000000/ffffff?text=The+Carrier+3", caption: "<i>Passage (Carrier 3)</i>, 2024, Archival Pigment Print, 160 x 90 cm" },
-                    { src: "https://placehold.co/1200x600/1e1e1e/ffffff?text=Installation+View", caption: "" }, 
+                    // INSTALLATION VIEWS (Image 1-8)
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 02.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 03.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 04.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 05.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 06.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 07.jpg", caption: "" }, 
+                    { src: GITHUB_BASE_URL + "Graduation 2025 - 08.jpg", caption: "" }, 
+                    
+                    // REPRODUCTION IMAGES (Image 9-14)
+                    { 
+                        src: GITHUB_BASE_URL + "2025- Repro-01.jpg", 
+                        caption: "<i>The Carrier (2318, 2344)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" 
+                    },
+                    { src: GITHUB_BASE_URL + "2025-Repro-02.jpg", caption: "<i>The Carrier (2318, 2348)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
+                    { src: GITHUB_BASE_URL + "2025-Repro-03.jpg", caption: "<i>The Carrier (1649)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
+                    { src: GITHUB_BASE_URL + "2025-Repro-04.jpg", caption: "<i>The Carrier (2330, 2357)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
+                    { src: GITHUB_BASE_URL + "2025-Repro-05.jpg", caption: "<i>The Carrier (2398, 2318)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
+                    { src: GITHUB_BASE_URL + "2025-Repro-06.jpg", caption: "<i>The Carrier (2367, 2391)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
                 ]
             },
             aabb: {
                 title: "AABB",
-                location: "The Warehouse Project",
-                dates: "05.03.2024 — 15.03.2024",
-                city: "New York, USA",
+                location: "Dorothea Konwiarz Stiftung", 
+                subtitle: "Duo Exhibition with Bonnie Barth", 
+                dates: "18.12.2024 — 28.03.2025", 
+                city: "Berlin, DE", 
                 images: [
                     { src: "https://placehold.co/1000x1000/a3a3a3/000000?text=AABB+Image+01", caption: "<i>Boundary Condition</i>, 2022, Oil on Canvas, 100 x 100 cm" },
                     { src: "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02", caption: "<i>Enclosure Study</i>, 2022, Charcoal and Pastel, 80 x 120 cm" }
@@ -268,65 +287,58 @@
             },
             exposure: {
                 title: "First Exposure",
-                location: "Student Exhibition Space",
-                dates: "20.11.2023 — 30.11.2023",
-                city: "Basel, Switzerland",
+                location: "Austin Space", 
+                dates: "20.07.2024 — 25.08.2024", 
+                city: "Munich, DE", 
                 images: [
-                    { src: "https://placehold.co/1400x700/858585/000000?text=Luminance+I", caption: "<i>Luminance I</i>, 2020, Silver Gelatin Print, 70 x 140 cm" },
-                    { src: "https://placehold.co/1000x1400/7d7d7d/000000?text=Grain+Field", caption: "<i>Grain Field</i>, 2021, Mixed Media, 100 x 140 cm" },
-                    { src: "https://placehold.co/1200x1000/707070/000000?text=Reflection+Study", caption: "<i>Reflection Study</i>, 2021, Digital Scan, 120 x 100 cm" }
+                    // INSTALLATION VIEWS 1-6 (Caption: "")
+                    { src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-02-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-03-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-04-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-05-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-06-install.jpg", caption: "" },
+
+                    // REPRODUCTION VIEWS 7-10
+                    { src: GITHUB_BASE_URL + "2024-FE-07-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
+                    { src: GITHUB_BASE_URL + "2024-FE-08-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
+                    { src: GITHUB_BASE_URL + "2024-FE-09-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
+                    { src: GITHUB_BASE_URL + "2024-FE-10-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
+
+                    // INSTALLATION VIEWS 12-14
+                    { src: GITHUB_BASE_URL + "2024-FE-12-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-13-install.jpg", caption: "" },
+                    { src: GITHUB_BASE_URL + "2024-FE-14-install.jpg", caption: "" },
+                    
+                    // REPRODUCTION VIEW 15
+                    { src: GITHUB_BASE_URL + "2024-FE-15-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
                 ]
             },
-            aftertext: {
-                title: "Aftertext",
-                location: "Gallery R.101",
-                dates: "15.08.2023 — 15.09.2023",
-                city: "Kyoto, Japan",
-                images: [
-                    { src: "https://placehold.co/1100x750/616161/000000?text=Typographic+Ghost", caption: "<i>Typographic Ghost</i>, 2023, Installation View, Dimensions Variable" },
-                    { src: "https://placehold.co/1300x850/545454/000000?text=Marginalia", caption: "<i>Marginalia</i>, 2023, Screenprint on Paper, 130 x 85 cm" },
-                ]
-            },
-            trouble: {
-                title: "trouble!", 
-                location: "Alternative Art Space",
-                dates: "10.05.2023 — 20.05.2023",
-                city: "Accra, Ghana",
-                images: [
-                    { src: "https://placehold.co/1000x700/404040/000000?text=System+Overload", caption: "<i>System Overload</i>, 2024, Video Still, 03:00 Loop" },
-                    { src: "https://placehold.co/900x900/3d3d3d/000000?text=The+Glitch", caption: "<i>The Glitch</i>, 2024, Glazed Ceramic, 90 x 90 cm" },
-                    { src: "https://placehold.co/1500x800/292929/000000?text=Disruption+Pattern", caption: "<i>Disruption Pattern</i>, 2024, Mixed Media on Wood, 150 x 80 cm" }
-                ]
-            }
         };
 
         const newsData = [
-            { date: "01.01.2025", text: "Solo Exhibition opening at The Old Post Office Gallery.", link: "#" },
-            { date: "12.2024", text: "Featured in Art Monthly, January Issue.", link: "#" },
-            { date: "10.2024", text: "Received Basel Art Grant.", link: "#" }
+            { text: "The Carrier to be published in Currents Magazine, Tufts University.", link: "#" }, 
         ];
 
         // --- ELEMENTS ---
         const galleryViewer = document.getElementById('gallery-viewer');
         const contentArea = document.getElementById('content-area');
         const nameLink = document.getElementById('name-link');
+        // Combined selection for both desktop and mobile project links
         const projectLinks = document.querySelectorAll('.project-link');
-        const desktopNav = document.getElementById('fixed-right-nav');
-        const mobileNav = document.getElementById('mobile-nav');
+        const newsUpdates = document.getElementById('news-updates');
         const newsList = document.getElementById('news-list');
 
         // --- FUNCTIONS ---
         
         // Generates the News List HTML
         function renderNews() {
-            if (!newsList) return;
+            if (!newsUpdates || !newsList) return; 
 
             newsList.innerHTML = newsData.map(item => `
                 <li>
-                    <!-- New format: Title (italic, block) followed by Date (block, indented ml-2) -->
-                    <a href="${item.link}" class="interactable-text text-xs leading-snug">
+                    <!-- Text only, keeping italic for the news entry itself --><a href="${item.link}" class="interactable-text text-xs leading-snug">
                         <span class="block italic">${item.text}</span>
-                        <span class="block ml-2">${item.date}</span>
                     </a>
                 </li>
             `).join('');
@@ -337,17 +349,20 @@
             const data = seriesData[series];
             // Title block (City line has mb-2)
             let html = `
-                <h2 class="text-base font-medium italic mb-1">${data.title}</h2>
+                <!-- Ausstellungstitel: text-sm -->
+                <h2 class="text-sm font-medium italic mb-0">${data.title}</h2>
+                <!-- Die Location-Zeile (erste <p>) wird direkt unter dem Titel platziert -->
                 <p class="text-xs mb-0">${data.location}</p>
+                ${data.subtitle ? `<p class="text-xs mb-0">${data.subtitle}</p>` : ''} <!-- SUBTITLE HIER EINGEFÜGT -->
                 <p class="text-xs mb-0">${data.dates}</p>
                 <p class="text-xs mb-2">${data.city}</p> 
             `;
             
             data.images.forEach((imgData, index) => {
                 // Image element
-                // ADDED: mb-2 (0.5rem margin-bottom) to separate the image from the text description below it.
+                // Hinzugefügt: onerror-Handler, um Ladefehler zu visualisieren
                 html += `
-                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-2">
+                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-2" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error+(${index + 1})';">
                 `;
                 
                 // Conditional Caption/Spacing
@@ -355,20 +370,66 @@
                     // Caption exists: increased spacing to mb-6 (1.5rem)
                     html += `<p class="text-xs max-w-lg mb-6">${imgData.caption}</p>`;
                 } else {
-                    // No caption: minimal spacing, increased to mb-2 (0.5rem)
-                    html += `<div class="mb-2"></div>`;
+                    // No caption: minimal spacing, reduced to mb-4 (1rem) for tighter grouping
+                    html += `<div class="mb-4"></div>`; // Angepasster Abstand ohne Caption
                 }
             });
             
-            // Add Exhibition Information text field
+            // Add Text Field
+            // Breite ist nun w-full mit max-w-[900px] analog zu den Bildern
             html += `
-                <div class="mt-4 max-w-lg"> 
-                    <h3 class="text-sm font-medium mb-2">Exhibition Information</h3> 
-                    <p class="text-xs leading-relaxed">
+                <div class="mt-4 w-full max-w-[900px]"> 
+            `;
+            
+            if (series === 'carrier') {
+                // Specific text for 'The Carrier'
+                html += `
+                    <!-- Abstand nach dem Haupttext auf mb-4 erhöht, um Platz zur Dokumentationszeile zu schaffen -->
+                    <p class="text-xs leading-relaxed mb-4"> 
+                        The Carrier is a series of eleven photographs taken at Villa Necchi Campiglio in Milan. Ten were shot through the villa's curved glass facade, while moving between interior and exterior. Another
+                        image was shot through a serving cart inside the house.
+                        The villa was built between 1932 and 1935 for the Necchi-Campiglio industrial family. During the
+                        Fascist regime, it was confiscated and used as one of Mussolini's local headquarters. After the war,
+                        the family returned to the house.
+                    </p>
+                `;
+            } else if (series === 'exposure') {
+                // FÜR 'First Exposure' wird der Textblock übersprungen.
+
+            } else {
+                // Generic placeholder for all other series (aabb)
+                html += `
+                    <p class="text-xs leading-relaxed mb-4">
                         [This is the text field placeholder. Please replace this with your actual exhibition details, artist statement, or dates for the ${data.title} series.]
                     </p>
-                </div>
+                `;
+            }
+
+            // UNIVERSAL EXHIBITION DOCUMENTATION LINE (Added for every show)
+            // Ersetzt: mt-4 und mb-4 für konsistente Abstände, falls kein Textblock da ist.
+            const needsTopMargin = series === 'exposure' || series === 'aabb';
+            html += `
+                <p class="text-xs leading-relaxed ${needsTopMargin ? 'mt-4' : ''} mb-4">
+                    Exhibition Documentation: Julian Blum
+                </p>
             `;
+
+
+            // CONDITIONAL: Add Press link ONLY for "First Exposure" (exposure)
+            if (series === 'exposure') {
+                html += `
+                    <!-- Press Section -->
+                    <h3 class="text-sm font-medium mb-1 mt-4">Press</h3>
+                    <p class="text-xs leading-relaxed mb-4">
+                        <a href="https://www.gallerytalk.net/aisha-altenhofen-austin-space/" target="_blank" class="interactable-text text-xs leading-snug underline">
+                            Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space
+                        </a>
+                    </p>
+                `;
+            }
+            
+            // Close the text content div
+            html += `</div>`;
 
             // Add extra spacing at the bottom
             html += '<div style="height: 100px;"></div>';
@@ -377,22 +438,32 @@
 
         // Handles displaying a specific series gallery
         function showSeries(series, clickedLink) {
+            // Check if the series still exists in the data
+            if (!seriesData[series]) {
+                console.error(`Serie ${series} nicht gefunden. Zeige Index.`);
+                showIndex({preventDefault: () => {}}); // Fallback zur Indexseite
+                return;
+            }
+
             const galleryHTML = createGalleryHTML(series);
             
-            // 1. Clear previous active state from all project links
+            // 1. News ausblenden
+            newsUpdates.classList.add('hidden');
+
+            // 2. Clear previous active state from all project links
             projectLinks.forEach(link => link.classList.remove('active-series-link'));
             
-            // 2. Set new active state on the clicked link
+            // 3. Set new active state on the clicked link
             clickedLink.classList.add('active-series-link'); // Apply persistent underline
 
-            // 3. Show the gallery viewer
+            // 4. Show the gallery viewer
             galleryViewer.classList.remove('hidden');
             galleryViewer.innerHTML = galleryHTML;
             
-            // 4. Reset scroll position to the top of the content area
+            // 5. Reset scroll position to the top of the content area
             contentArea.scrollTo(0, 0); 
             
-            // 5. Fade in images sequentially
+            // 6. Fade in images sequentially
             setTimeout(() => {
                 const images = galleryViewer.querySelectorAll('.gallery-image');
                 images.forEach((img, index) => {
@@ -407,16 +478,19 @@
         function showIndex(event) {
             event.preventDefault();
             
-            // 1. Hide gallery 
+            // 1. News einblenden
+            newsUpdates.classList.remove('hidden');
+
+            // 2. Hide gallery 
             galleryViewer.classList.add('hidden');
             galleryViewer.innerHTML = '';
             
-            // 2. Clear all active link states
+            // 3. Clear all active link states
             projectLinks.forEach(link => link.classList.remove('active-series-link')); // Remove all underlines
             
-            // 3. The center area remains blank until a series is selected.
+            // 4. The center area remains blank until a series is selected.
 
-            // 4. Reset scroll position to the top
+            // 5. Reset scroll position to the top
             contentArea.scrollTo(0, 0); 
         }
 
