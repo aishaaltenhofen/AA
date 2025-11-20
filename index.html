@@ -29,7 +29,12 @@
             left: 0;
             width: 230px; 
             height: 100%;
-            padding: 2.5rem 1.5rem; 
+            /*
+            *** NEUE ANPASSUNG ***
+            Setzt das Top Padding auf 1.5rem, um dem Left/Right Padding von 1.5rem zu entsprechen
+            und somit das "genau gleiche" Padding zu gewährleisten.
+            */
+            padding: 1.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
@@ -41,14 +46,16 @@
             position: fixed;
             top: 0;
             right: 0;
-            /* BEIBEHALTEN: Breite auf 230px, um Platz für lange Titel zu haben */
+            /*
+            *** NEUE ANPASSUNG ***
+            Setzt das Top Padding auf 1.5rem für Alignment mit Fixed Left Panel.
+            */
             width: 230px; 
             height: 100%;
-            padding: 2.5rem 1.5rem; 
+            padding: 1.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
-            /* BEIBEHALTEN: align-items auf flex-start, um die Titel nach links zu rücken */
             align-items: flex-start; 
             z-index: 20; 
         }
@@ -58,11 +65,17 @@
             position: absolute;
             top: 0;
             left: 230px; 
-            /* BEIBEHALTEN: Rechter Rand auf 230px, passend zur Navigationsbreite */
             right: 230px; 
             bottom: 0;
             overflow-y: scroll; 
-            padding: 2.5rem; 
+            
+            /*
+            *** NEUE ANPASSUNG ***
+            Setzt das Top Padding auf 1.5rem, um es mit den beiden fixierten Seitenpanels abzustimmen. 
+            Horizontaler Abstand bleibt bei 2.5rem (für mehr Platz im Content-Bereich).
+            */
+            padding: 1.5rem 2.5rem 2.5rem 2.5rem; 
+            
             /* HIDE SCROLLBAR FOR FIREFOX */
             scrollbar-width: none; 
         }
@@ -86,6 +99,7 @@
                 position: static;
                 width: 100%;
                 height: auto;
+                /* Mobile Padding bleibt 1.5rem 1rem */
                 padding: 1.5rem 1rem;
             }
             
@@ -93,7 +107,7 @@
             .fixed-left {
                 flex-direction: column; 
                 border-bottom: 1px solid #eee;
-                gap: 1.5rem; /* Abstand zwischen Name/Email-Block und News-Block */
+                gap: 1.5rem; 
             }
             
             /* Navigation Titles (now below Name/Email and News) */
@@ -101,7 +115,6 @@
                 border-bottom: 1px solid #eee;
                 justify-content: flex-start; 
                 align-items: flex-start;
-                /* Mobile: Breite auf 100% zurücksetzen */
                 width: 100%;
             }
 
@@ -216,6 +229,9 @@
             <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
             <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
             <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
+            <!-- NEUE AUSSTELLUNGEN -->
+            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="trouble">trouble!</a></li>
+            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="oneTwo">1,2</a></li>
         </ul>
     </nav>
 
@@ -229,6 +245,9 @@
                 <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
                 <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
                 <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
+                <!-- NEUE AUSSTELLUNGEN -->
+                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="trouble">trouble!</a></li>
+                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="oneTwo">1,2</a></li>
             </ul>
         </nav>
 
@@ -311,6 +330,31 @@
                     
                     // REPRODUCTION VIEW 15
                     { src: GITHUB_BASE_URL + "2024-FE-15-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
+                ]
+            },
+            // NEUE SERIE 1: trouble!
+            trouble: {
+                title: "trouble!",
+                location: "Placeholder Gallery, City Center",
+                dates: "01.01.2023 — 31.01.2023",
+                city: "Munich, DE",
+                images: [
+                    { src: "https://placehold.co/900x600/c7d2fe/1e3a8a?text=trouble!+View+1", caption: "" },
+                    { src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=trouble!+View+2", caption: "" },
+                    { src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=trouble!+Repro+A", caption: "<i>Untitled (Trouble Study)</i>, 2023, Inkjet Print, 40 x 50 cm" },
+                    { src: "https://placehold.co/900x600/3b82f6/1e3a8a?text=trouble!+Repro+B", caption: "<i>Chaos (Blue)</i>, 2023, Inkjet Print, 40 x 50 cm" },
+                ]
+            },
+            // NEUE SERIE 2: 1,2
+            oneTwo: {
+                title: "1,2",
+                location: "The Studio Gallery",
+                dates: "15.05.2022 — 15.06.2022",
+                city: "Berlin, DE",
+                images: [
+                    { src: "https://placehold.co/900x900/fecaca/991b1b?text=1,2+View+A", caption: "" },
+                    { src: "https://placehold.co/900x600/fca5a5/991b1b?text=1,2+View+B", caption: "" },
+                    { src: "https://placehold.co/900x1200/f87171/991b1b?text=1,2+Repro+X", caption: "<i>Duet (First Part)</i>, 2022, Archival print, 50 x 70 cm" },
                 ]
             },
         };
@@ -403,6 +447,20 @@
                         [Text für First Exposure. Bitte ersetzen Sie diesen Platzhalter durch Ihren tatsächlichen Künstler-Statement oder Ausstellungstext.]
                     </p>
                 `;
+            } else if (series === 'trouble') {
+                // NEU: Specific text for 'trouble!'
+                 html += `
+                    <p class="text-xs leading-relaxed mb-4">
+                        This series, titled "trouble!", explores themes of fragility, disruption, and containment through fragmented portraiture and installation views. The work focuses on the psychological landscape created by minor, persistent anxieties. (Placeholder Text)
+                    </p>
+                `;
+            } else if (series === 'oneTwo') {
+                // NEU: Specific text for '1,2'
+                 html += `
+                    <p class="text-xs leading-relaxed mb-4">
+                        "1,2" is a documentation of early works focusing purely on form and dualism. The images serve as foundational studies for later projects, experimenting with light and shadow in a controlled studio environment. (Placeholder Text)
+                    </p>
+                `;
             } else {
                 // Generic placeholder for all other series (aabb)
                 html += `
@@ -414,7 +472,7 @@
 
             // UNIVERSAL EXHIBITION DOCUMENTATION LINE (Added for every show)
             // Ersetzt: mt-4 und mb-4 für konsistente Abstände, falls kein Textblock da ist.
-            const needsTopMargin = series === 'exposure' || series === 'aabb';
+            const needsTopMargin = series === 'exposure' || series === 'aabb' || series === 'trouble' || series === 'oneTwo';
             html += `
                 <p class="text-xs leading-relaxed ${needsTopMargin ? 'mt-4' : ''} mb-4">
                     Exhibition Documentation: Julian Blum
@@ -482,6 +540,12 @@
                     setTimeout(() => {
                         img.style.opacity = '1';
                     }, index * 100); // Staggered fade-in effect
+                    
+                    // Added: Preload high-priority images (first 2) after load
+                    if (index < 2) {
+                        const nextImg = new Image();
+                        nextImg.src = img.src;
+                    }
                 });
             }, 50);
         }
