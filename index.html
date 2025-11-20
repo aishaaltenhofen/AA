@@ -41,16 +41,14 @@
             position: fixed;
             top: 0;
             right: 0;
-            /* WIEDERHERGESTELLT: Breite auf 230px gesetzt, um Platz für lange Titel zu haben */
+            /* BEIBEHALTEN: Breite auf 230px, um Platz für lange Titel zu haben */
             width: 230px; 
             height: 100%;
             padding: 2.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
-            /* GEÄNDERT: align-items auf flex-start gesetzt. 
-               Dadurch rücken die Titel an den LINKEN Rand dieser Spalte (nah an die Bilder),
-               lassen aber rechts den gewünschten Weißraum. */
+            /* BEIBEHALTEN: align-items auf flex-start, um die Titel nach links zu rücken */
             align-items: flex-start; 
             z-index: 20; 
         }
@@ -60,7 +58,7 @@
             position: absolute;
             top: 0;
             left: 230px; 
-            /* WIEDERHERGESTELLT: Rechter Rand auf 230px, passend zur Navigationsbreite */
+            /* BEIBEHALTEN: Rechter Rand auf 230px, passend zur Navigationsbreite */
             right: 230px; 
             bottom: 0;
             overflow-y: scroll; 
@@ -202,6 +200,7 @@
 
         <!-- 3. News Updates (MITTE Links auf Desktop) -->
         <div id="news-updates" class="text-xs push-down-md">
+            <!-- WICHTIG: Auf Startseite sichtbar -->
             <h3 class="font-medium text-sm mb-2">News</h3>
             <ul id="news-list" class="space-y-2">
                 <!-- News items will be injected here by the script -->
@@ -213,7 +212,7 @@
     
     <!-- Fixed Right Panel for Navigation Titles - MOVED BELOW LEFT PANEL ON MOBILE --><nav id="fixed-right-nav" class="hidden md:flex"> 
         <ul class="space-y-2 text-sm">
-            <!-- Hinzugefügte Klasse "nav-link-italic" für Kursivschrift -->
+            <!-- CHRONOLOGISCHE REIHENFOLGE: Neueste (Carrier) zuerst -->
             <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
             <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
             <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
@@ -226,16 +225,16 @@
         <!-- Mobile Nav: Only visible on small screens to ensure titles are accessible -->
         <nav id="mobile-nav" class="md:hidden">
             <ul class="flex space-x-6 text-sm">
-                 <!-- Hinzugefügte Klasse "nav-link-italic" für Kursivschrift -->
+                 <!-- CHRONOLOGISCHE REIHENFOLGE: Neueste (Carrier) zuerst -->
                 <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
                 <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
                 <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
             </ul>
         </nav>
 
-        <!-- Initial Welcome State (REMOVED: Now intentionally blank) -->
+        <!-- Gallery Viewer: Standardmäßig beim Start versteckt, zeigt Inhalt von Ausstellungen -->
         <div id="gallery-viewer" class="hidden"> 
-            <!-- Images and series titles appear here when a link is clicked --></div>
+            <!-- Images and series titles appear here --></div>
 
     </section>
 
@@ -320,6 +319,10 @@
             { text: "The Carrier to be published in Currents Magazine, Tufts University.", link: "#" }, 
         ];
 
+        // --- CONSTANTS ---
+        // Die chronologisch neueste Ausstellung, die standardmäßig angezeigt werden soll
+        const DEFAULT_SERIES = 'carrier'; 
+
         // --- ELEMENTS ---
         const galleryViewer = document.getElementById('gallery-viewer');
         const contentArea = document.getElementById('content-area');
@@ -344,7 +347,7 @@
             `).join('');
         }
 
-        // Generates the HTML for the image gallery
+        // Generates the HTML for the full image gallery view
         function createGalleryHTML(series) {
             const data = seriesData[series];
             // Title block (City line has mb-2)
@@ -394,8 +397,12 @@
                     </p>
                 `;
             } else if (series === 'exposure') {
-                // FÜR 'First Exposure' wird der Textblock übersprungen.
-
+                // Specific text for 'First Exposure'
+                 html += `
+                    <p class="text-xs leading-relaxed mb-4">
+                        [Text für First Exposure. Bitte ersetzen Sie diesen Platzhalter durch Ihren tatsächlichen Künstler-Statement oder Ausstellungstext.]
+                    </p>
+                `;
             } else {
                 // Generic placeholder for all other series (aabb)
                 html += `
@@ -436,20 +443,25 @@
             return html;
         }
 
-        // Handles displaying a specific series gallery
+        // Handles displaying a specific series gallery (full view)
         function showSeries(series, clickedLink) {
             // Check if the series still exists in the data
             if (!seriesData[series]) {
-                console.error(`Serie ${series} nicht gefunden. Zeige Index.`);
-                showIndex({preventDefault: () => {}}); // Fallback zur Indexseite
+                console.error(`Serie ${series} nicht gefunden.`);
                 return;
+            }
+
+            // 1. Manage News visibility based on the selected series
+            if (series === DEFAULT_SERIES) {
+                // Wenn die neueste/Standard-Ausstellung geklickt wird, News anzeigen
+                newsUpdates.classList.remove('hidden');
+            } else {
+                // Bei allen anderen Ausstellungen, News ausblenden
+                newsUpdates.classList.add('hidden');
             }
 
             const galleryHTML = createGalleryHTML(series);
             
-            // 1. News ausblenden
-            newsUpdates.classList.add('hidden');
-
             // 2. Clear previous active state from all project links
             projectLinks.forEach(link => link.classList.remove('active-series-link'));
             
@@ -474,23 +486,30 @@
             }, 50);
         }
 
-        // Handles returning to the main navigation list (show index/start page)
-        function showIndex(event) {
-            event.preventDefault();
-            
-            // 1. News einblenden
-            newsUpdates.classList.remove('hidden');
+        // Handles the initial state or return to index state (zeigt News UND Standard-Ausstellung an)
+        function initPage(event) {
+            if (event) {
+                event.preventDefault();
+            }
 
-            // 2. Hide gallery 
-            galleryViewer.classList.add('hidden');
-            galleryViewer.innerHTML = '';
-            
-            // 3. Clear all active link states
-            projectLinks.forEach(link => link.classList.remove('active-series-link')); // Remove all underlines
-            
-            // 4. The center area remains blank until a series is selected.
+            const series = DEFAULT_SERIES;
 
-            // 5. Reset scroll position to the top
+            // Finde den Link für die Standard-Serie
+            let defaultLink = document.querySelector(`.project-link[data-series="${series}"]`);
+
+            if (defaultLink) {
+                // showSeries wird aufgerufen. Es lädt den Inhalt und setzt die Unterstreichung.
+                // WICHTIG: Da series === DEFAULT_SERIES ist, wird News in showSeries sichtbar gemacht.
+                showSeries(series, defaultLink);
+            } else {
+                console.error(`Standard-Link für Serie ${series} nicht gefunden. Zeige nur News.`);
+                // Fallback: Nur News anzeigen und Galerie ausblenden, falls der Link fehlt
+                newsUpdates.classList.remove('hidden');
+                galleryViewer.classList.add('hidden');
+                projectLinks.forEach(link => link.classList.remove('active-series-link'));
+            }
+            
+            // Scroll-Position zurücksetzen
             contentArea.scrollTo(0, 0); 
         }
 
@@ -499,8 +518,8 @@
         // Render the news items on load
         renderNews();
         
-        // Name link listener (for Index function)
-        nameLink.addEventListener('click', showIndex);
+        // Name link listener (für Startseite -> News UND Default-Ausstellung)
+        nameLink.addEventListener('click', initPage); 
         
         // Project titles listeners for both desktop and mobile nav
         projectLinks.forEach(link => {
@@ -512,8 +531,8 @@
             });
         });
 
-        // Set the initial view to be blank (by hiding the gallery)
-        showIndex({preventDefault: () => {}}); 
+        // Initial setup: Starte die Seite mit der News-Sektion und der neuesten Ausstellung
+        initPage(); 
         
     </script>
 </body>
