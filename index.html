@@ -3,54 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aisha Altenhofen Portfolio</title>
-    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <title>Aisha Altenhofen Portfolio | Asymmetrie</title>
+    <!-- Tailwind CSS wird für die Struktur verwendet --><script src="https://cdn.tailwindcss.com"></script>
     <style>
         /*
-        CORE AESTHETIC: Fixed positioning for text, scrollable content for images.
-        White background, black text, small serif font, precise geometry.
+        LAYOUT: ASYMMETRISCHES RASTER (150px | Content | 230px)
+        TYPOGRAFIE: Zurückgesetzt auf normale Schriftstärke.
         */
         body {
             background-color: white;
             color: black;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 0.8rem; /* Very small text for elegance */
+            font-size: 0.8rem; 
+            /* overflow: hidden; BEIBEHALTEN, da Sidebar fixiert sind.
+               Der zentrale Inhalt (#content-area) scrollt stattdessen. */
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Prevent body scroll, content area will scroll */
+            overflow: hidden; 
         }
 
-        /* --- DESKTOP LAYOUT (Default: screens >= 768px) --- */
+        /* 1. ZEILENABSTAND VEREINHEITLICHUNG (Funktionale Klarheit) */
+        .text-container {
+            line-height: 1.5; 
+        }
+        
+        /* --- DESKTOP LAYOUT (Raster Anpassung für Asymmetrie) --- */
 
-        /* Fixed Left Panel for Name/Email/News */
+        /* 1. FIXED LEFT PANEL (Info/Autor): KLEINER (150px) */
         .fixed-left {
             position: fixed;
             top: 0;
             left: 0;
-            width: 230px; 
+            width: 150px; /* Reduzierte Breite */
             height: 100%;
-            /*
-            *** NEUE ANPASSUNG ***
-            Setzt das Top Padding auf 1.5rem, um dem Left/Right Padding von 1.5rem zu entsprechen
-            und somit das "genau gleiche" Padding zu gewährleisten.
-            */
-            padding: 1.5rem 1.5rem; 
+            padding: 1.5rem 1rem 1.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
             z-index: 20; 
         }
         
-        /* Fixed Right Panel for Titles */
+        /* 2. FIXED RIGHT PANEL (Navigation): GRÖSSER (230px) */
         #fixed-right-nav {
             position: fixed;
             top: 0;
             right: 0;
-            /*
-            *** NEUE ANPASSUNG ***
-            Setzt das Top Padding auf 1.5rem für Alignment mit Fixed Left Panel.
-            */
-            width: 230px; 
+            width: 230px; /* Größere Breite */
             height: 100%;
             padding: 1.5rem 1.5rem; 
             display: flex;
@@ -60,33 +58,26 @@
             z-index: 20; 
         }
 
-        /* Scrollable Center Panel for Images */
+        /* 3. SCROLLABLE CENTER PANEL (Inhalt): VERSCHOBENE MITTE */
         #content-area {
             position: absolute;
             top: 0;
-            left: 230px; 
-            right: 230px; 
+            left: 150px; /* Beginnt nach linker Leiste */
+            right: 230px; /* Endet vor rechter Leiste */
             bottom: 0;
-            overflow-y: scroll; 
-            
-            /*
-            *** NEUE ANPASSUNG ***
-            Setzt das Top Padding auf 1.5rem, um es mit den beiden fixierten Seitenpanels abzustimmen. 
-            Horizontaler Abstand bleibt bei 2.5rem (für mehr Platz im Content-Bereich).
-            */
+            overflow-y: scroll; /* Primäre Scroll-Area */
+            /* Inneres Padding für Luft: */
             padding: 1.5rem 2.5rem 2.5rem 2.5rem; 
-            
-            /* HIDE SCROLLBAR FOR FIREFOX */
             scrollbar-width: none; 
         }
 
-        /* HIDE SCROLLBAR FOR WEBKIT (Chrome, Safari, Edge) */
+        /* HIDE SCROLLBAR */
         #content-area::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
 
-        /* --- MOBILE LAYOUT (Applied to screens < 768px) --- */
+        /* --- MOBILE LAYOUT (Unverändert) --- */
 
         @media (max-width: 767px) {
             body {
@@ -94,23 +85,19 @@
                 height: auto;
             }
 
-            /* Stack all panels vertically */
             .fixed-left, #fixed-right-nav, #content-area {
                 position: static;
                 width: 100%;
                 height: auto;
-                /* Mobile Padding bleibt 1.5rem 1rem */
                 padding: 1.5rem 1rem;
             }
             
-            /* Restructure fixed-left for mobile: Name/Email top, News below */
             .fixed-left {
                 flex-direction: column; 
                 border-bottom: 1px solid #eee;
                 gap: 1.5rem; 
             }
             
-            /* Navigation Titles (now below Name/Email and News) */
             #fixed-right-nav {
                 border-bottom: 1px solid #eee;
                 justify-content: flex-start; 
@@ -118,7 +105,6 @@
                 width: 100%;
             }
 
-            /* Content area sits below navigation */
             #content-area {
                 padding: 1.5rem 1rem; 
                 overflow-y: visible;
@@ -126,7 +112,6 @@
             }
             
             #fixed-right-nav ul {
-                 /* Use Flexbox for a horizontal scrollable menu on mobile */
                 display: flex;
                 overflow-x: scroll;
                 white-space: nowrap;
@@ -139,58 +124,52 @@
         }
         /* End Mobile Layout */
 
-        /* Shared Hover Style for all interactive text elements */
+        /* HOVER-EFFEKT: Kein Underline, blauer Text (BEIBEHALTEN) */
         .interactable-text {
             color: black;
             transition: color 0.2s;
             cursor: pointer;
-            text-decoration: none; 
+            text-decoration: none !important; 
             display: block;
         }
         .interactable-text:hover {
-            color: black; 
+            color: #0000FF; /* Reines Blau bei Hover */
             opacity: 1 !important; 
         }
         
-        /* New style for active series link: Underlined when viewing the series */
+        /* AKTIVER LINK bleibt Schwarz und nicht unterstrichen */
         .active-series-link {
-            text-decoration: underline;
+            text-decoration: none !important; 
+            color: black !important; 
         }
 
-        /* Specific project link styling */
+        /* Nav-Links sind NICHT mehr FONT-BOLD (RÜCKGÄNGIG) */
         .project-link {
-            line-height: 1.6;
             color: black;
         }
         
-        /* New style for italic navigation links */
-        .nav-link-italic {
-            font-style: italic;
-        }
-
-
         /* Gallery Styling */
         .gallery-image {
             width: 100%;
             max-width: 900px; 
             height: auto;
             object-fit: contain;
-            margin-top: 1rem; 
-            margin-bottom: 0; 
+            margin-top: 1rem; /* Beibehalten für Abstand zum vorherigen Element (Titel/Caption) */
+            margin-bottom: 0; /* Wichtig: MUSS 0 sein, um den Gap zu kontrollieren */
             opacity: 0; 
             transition: opacity 0.6s ease-out;
         }
 
-        /* Helper class for desktop to push content down (used for News block) */
-        .push-down-md {
-            margin-top: auto; 
-            margin-bottom: auto; /* Sorgt dafür, dass der News Block in der Mitte ist */
+        /* Abstand zwischen den kontinuierlich geladenen Serien */
+        .series-content-block {
+            margin-bottom: 80px; /* Großer Abstand zwischen den Serien */
         }
+
     </style>
 </head>
 <body>
 
-    <!-- Tailwind Config: Ensure custom font setup is active --><script>
+    <!-- Tailwind Config: Font (Times New Roman) --><script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -203,64 +182,49 @@
         }
     </script>
 
-    <!-- Fixed Left Panel: Name, Email, and News --><div class="fixed-left">
+    <!-- Fixed Left Panel: Name and Email (SCHMALER ANKER 150px) --><div class="fixed-left text-container">
         
         <!-- 1. Name: Aisha Altenhofen (Top Left) -->
-        <h1 id="name-link" class="text-sm font-medium interactable-text mb-0">Aisha Altenhofen</h1>
+        <h1 id="name-link" class="font-medium interactable-text mb-0">Aisha Altenhofen</h1>
         
         <!-- 2. Email -->
-        <div id="email-address" class="text-xs mb-6">aishaaltenhofen@gmail.com</div>
-
-        <!-- 3. News Updates (MITTE Links auf Desktop) -->
-        <div id="news-updates" class="text-xs push-down-md">
-            <!-- WICHTIG: Auf Startseite sichtbar -->
-            <h3 class="font-medium text-sm mb-2">News</h3>
-            <ul id="news-list" class="space-y-2">
-                <!-- News items will be injected here by the script -->
-            </ul>
-        </div>
+        <div id="email-address" class="mb-6">aishaaltenhofen@gmail.com</div>
         
     </div>
     
     
-    <!-- Fixed Right Panel for Navigation Titles - MOVED BELOW LEFT PANEL ON MOBILE --><nav id="fixed-right-nav" class="hidden md:flex"> 
-        <ul class="space-y-2 text-sm">
-            <!-- CHRONOLOGISCHE REIHENFOLGE: Neueste (Carrier) zuerst -->
-            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
-            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
-            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
-            <!-- NEUE AUSSTELLUNGEN -->
-            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="trouble">trouble!</a></li>
-            <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="oneTwo">1,2</a></li>
+    <!-- Fixed Right Panel for Navigation Titles (BREITERE FÜHRUNG 230px) --><nav id="fixed-right-nav" class="hidden md:flex text-container"> 
+        <ul>
+            <li><a href="#" class="project-link interactable-text" data-series="carrier">The Carrier</a></li>
+            <li><a href="#" class="project-link interactable-text" data-series="aabb">AABB</a></li>
+            <li><a href="#" class="project-link interactable-text" data-series="exposure">First Exposure</a></li>
+            <li><a href="#" class="project-link interactable-text" data-series="trouble">trouble!</a></li>
+            <li><a href="#" class="project-link interactable-text" data-series="oneTwo">1,2</a></li>
         </ul>
     </nav>
 
 
-    <!-- Scrollable Center Panel: Content Area --><section id="content-area">
+    <!-- Scrollable Center Panel: Content Area (OFF-CENTER) --><section id="content-area">
         
-        <!-- Mobile Nav: Only visible on small screens to ensure titles are accessible -->
-        <nav id="mobile-nav" class="md:hidden">
-            <ul class="flex space-x-6 text-sm">
-                 <!-- CHRONOLOGISCHE REIHENFOLGE: Neueste (Carrier) zuerst -->
-                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="carrier">The Carrier</a></li>
-                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="aabb">AABB</a></li>
-                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="exposure">First Exposure</a></li>
-                <!-- NEUE AUSSTELLUNGEN -->
-                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="trouble">trouble!</a></li>
-                <li><a href="#" class="project-link interactable-text nav-link-italic" data-series="oneTwo">1,2</a></li>
+        <!-- Mobile Nav: Nur auf kleinen Bildschirmen sichtbar -->
+        <nav id="mobile-nav" class="md:hidden text-container">
+            <ul class="flex space-x-6">
+                 <li><a href="#" class="project-link interactable-text" data-series="carrier">The Carrier</a></li>
+                <li><a href="#" class="project-link interactable-text" data-series="aabb">AABB</a></li>
+                <li><a href="#" class="project-link interactable-text" data-series="exposure">First Exposure</a></li>
+                <li><a href="#" class="project-link interactable-text" data-series="trouble">trouble!</a></li>
+                <li><a href="#" class="project-link interactable-text" data-series="oneTwo">1,2</a></li>
             </ul>
         </nav>
 
-        <!-- Gallery Viewer: Standardmäßig beim Start versteckt, zeigt Inhalt von Ausstellungen -->
-        <div id="gallery-viewer" class="hidden"> 
+        <!-- Gallery Viewer: Inhalt wird hier geladen -->
+        <div id="gallery-viewer" class="hidden text-container"> 
             <!-- Images and series titles appear here --></div>
 
     </section>
 
     <script>
         // --- DATA SETUP ---
-        // Basis-URL zur GitHub-Repository-Datei (angepasst für RAW Content)
-        // WICHTIG: Pfade müssen exakt mit Groß-/Kleinschreibung und Dateiendung übereinstimmen.
         const GITHUB_BASE_URL = "https://raw.githubusercontent.com/aishaaltenhofen/AA/main/images/";
 
         const seriesData = {
@@ -332,7 +296,6 @@
                     { src: GITHUB_BASE_URL + "2024-FE-15-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
                 ]
             },
-            // NEUE SERIE 1: trouble!
             trouble: {
                 title: "trouble!",
                 location: "Placeholder Gallery, City Center",
@@ -345,7 +308,6 @@
                     { src: "https://placehold.co/900x600/3b82f6/1e3a8a?text=trouble!+Repro+B", caption: "<i>Chaos (Blue)</i>, 2023, Inkjet Print, 40 x 50 cm" },
                 ]
             },
-            // NEUE SERIE 2: 1,2
             oneTwo: {
                 title: "1,2",
                 location: "The Studio Gallery",
@@ -359,123 +321,105 @@
             },
         };
 
-        const newsData = [
-            { text: "The Carrier to be published in Currents Magazine, Tufts University.", link: "#" }, 
-        ];
+        // Define the explicit order for continuous loading
+        const seriesOrder = ['carrier', 'aabb', 'exposure', 'trouble', 'oneTwo'];
+        // State to track the last series index that was successfully loaded into the viewer
+        let lastLoadedIndex = -1;
+        // Flag to prevent multiple simultaneous load calls from the scroll listener
+        let isLoadingNext = false; 
 
         // --- CONSTANTS ---
-        // Die chronologisch neueste Ausstellung, die standardmäßig angezeigt werden soll
         const DEFAULT_SERIES = 'carrier'; 
+        const SCROLL_THRESHOLD = 500; // Nächste Serie laden, wenn 500px vor dem Ende gescrollt wird
 
         // --- ELEMENTS ---
         const galleryViewer = document.getElementById('gallery-viewer');
         const contentArea = document.getElementById('content-area');
         const nameLink = document.getElementById('name-link');
-        // Combined selection for both desktop and mobile project links
         const projectLinks = document.querySelectorAll('.project-link');
-        const newsUpdates = document.getElementById('news-updates');
-        const newsList = document.getElementById('news-list');
-
+        
         // --- FUNCTIONS ---
         
-        // Generates the News List HTML
-        function renderNews() {
-            if (!newsUpdates || !newsList) return; 
+        function renderNews() {}
 
-            newsList.innerHTML = newsData.map(item => `
-                <li>
-                    <!-- Text only, keeping italic for the news entry itself --><a href="${item.link}" class="interactable-text text-xs leading-snug">
-                        <span class="block italic">${item.text}</span>
-                    </a>
-                </li>
-            `).join('');
-        }
-
-        // Generates the HTML for the full image gallery view
+        // Generates the HTML for a single series block
         function createGalleryHTML(series) {
             const data = seriesData[series];
-            // Title block (City line has mb-2)
-            let html = `
-                <!-- Ausstellungstitel: text-sm -->
-                <h2 class="text-sm font-medium italic mb-0">${data.title}</h2>
-                <!-- Die Location-Zeile (erste <p>) wird direkt unter dem Titel platziert -->
-                <p class="text-xs mb-0">${data.location}</p>
-                ${data.subtitle ? `<p class="text-xs mb-0">${data.subtitle}</p>` : ''} <!-- SUBTITLE HIER EINGEFÜGT -->
-                <p class="text-xs mb-0">${data.dates}</p>
-                <p class="text-xs mb-2">${data.city}</p> 
+            // Added wrapper div with unique ID for scrolling/anchoring
+            let html = `<div id="series-content-${series}" class="series-content-block">`; 
+            
+            // Titel ist nur kursiv
+            html += `
+                <h2 class="italic mb-0">${data.title}</h2>
+                <!-- Details bleiben normal für Hierarchie -->
+                <p class="mb-0">${data.location}</p>
+                ${data.subtitle ? `<p class="mb-0">${data.subtitle}</p>` : ''} 
+                <p class="mb-0">${data.dates}</p>
+                <p class="mb-2">${data.city}</p> 
             `;
             
             data.images.forEach((imgData, index) => {
-                // Image element
-                // Hinzugefügt: onerror-Handler, um Ladefehler zu visualisieren
+                // NEU: image-text-block wendet den konsistenten Zeilenabstand (mb-5) nach jedem Element an.
+                html += `<div class="image-text-block mb-5">`; 
+                
+                // Image element (mb-0 ist wichtig für die Steuerung durch den Wrapper)
                 html += `
-                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-2" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error+(${index + 1})';">
+                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-0" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Bild+Ladefehler+(${index + 1})';">
                 `;
                 
-                // Conditional Caption/Spacing
+                // Conditional Caption
                 if (imgData.caption && imgData.caption.trim() !== '') {
-                    // Caption exists: increased spacing to mb-6 (1.5rem)
-                    html += `<p class="text-xs max-w-lg mb-6">${imgData.caption}</p>`;
-                } else {
-                    // No caption: minimal spacing, reduced to mb-4 (1rem) for tighter grouping
-                    html += `<div class="mb-4"></div>`; // Angepasster Abstand ohne Caption
-                }
+                    // Caption exists: mt-2 für minimalen Abstand zum Bild, mb-0 für konsistenten Gap durch Wrapper.
+                    html += `<p class="max-w-lg mt-2 mb-0">${imgData.caption}</p>`;
+                } 
+                // Wenn keine Caption existiert, wird kein extra Abstand benötigt, da mb-5 am Wrapper den Gap regelt.
+
+                // Close the block wrapper
+                html += `</div>`;
             });
             
             // Add Text Field
-            // Breite ist nun w-full mit max-w-[900px] analog zu den Bildern
             html += `
                 <div class="mt-4 w-full max-w-[900px]"> 
             `;
             
             if (series === 'carrier') {
-                // Specific text for 'The Carrier'
                 html += `
-                    <!-- Abstand nach dem Haupttext auf mb-4 erhöht, um Platz zur Dokumentationszeile zu schaffen -->
-                    <p class="text-xs leading-relaxed mb-4"> 
-                        The Carrier is a series of eleven photographs taken at Villa Necchi Campiglio in Milan. Ten were shot through the villa's curved glass facade, while moving between interior and exterior. Another
-                        image was shot through a serving cart inside the house.
-                        The villa was built between 1932 and 1935 for the Necchi-Campiglio industrial family. During the
-                        Fascist regime, it was confiscated and used as one of Mussolini's local headquarters. After the war,
-                        the family returned to the house.
+                    <p class="mb-4"> 
+                        The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus.
+                        Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück.
                     </p>
                 `;
             } else if (series === 'exposure') {
-                // Specific text for 'First Exposure'
                  html += `
-                    <p class="text-xs leading-relaxed mb-4">
+                    <p class="mb-4">
                         [Text für First Exposure. Bitte ersetzen Sie diesen Platzhalter durch Ihren tatsächlichen Künstler-Statement oder Ausstellungstext.]
                     </p>
                 `;
             } else if (series === 'trouble') {
-                // NEU: Specific text for 'trouble!'
                  html += `
-                    <p class="text-xs leading-relaxed mb-4">
-                        This series, titled "trouble!", explores themes of fragility, disruption, and containment through fragmented portraiture and installation views. The work focuses on the psychological landscape created by minor, persistent anxieties. (Placeholder Text)
+                    <p class="mb-4">
+                        Diese Serie mit dem Titel "trouble!" erkundet Themen wie Zerbrechlichkeit, Störung und Eindämmung durch fragmentierte Porträts und Installationsansichten. Die Arbeit konzentriert sich auf die psychologische Landschaft, die durch kleinere, anhaltende Ängste entsteht. (Platzhaltertext)
                     </p>
                 `;
             } else if (series === 'oneTwo') {
-                // NEU: Specific text for '1,2'
                  html += `
-                    <p class="text-xs leading-relaxed mb-4">
-                        "1,2" is a documentation of early works focusing purely on form and dualism. The images serve as foundational studies for later projects, experimenting with light and shadow in a controlled studio environment. (Placeholder Text)
+                    <p class="mb-4">
+                        "1,2" ist eine Dokumentation früher Arbeiten, die sich ausschließlich auf Form und Dualismus konzentrieren. Die Bilder dienen als grundlegende Studien für spätere Projekte und experimentieren mit Licht und Schatten in einer kontrollierten Studio-Umgebung. (Platzhaltertext)
                     </p>
                 `;
             } else {
-                // Generic placeholder for all other series (aabb)
                 html += `
-                    <p class="text-xs leading-relaxed mb-4">
-                        [This is the text field placeholder. Please replace this with your actual exhibition details, artist statement, or dates for the ${data.title} series.]
+                    <p class="mb-4">
+                        [Dies ist der Platzhalter für den Text. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails, Ihr Künstler-Statement oder die Daten für die Serie ${data.title}.]
                     </p>
                 `;
             }
 
-            // UNIVERSAL EXHIBITION DOCUMENTATION LINE (Added for every show)
-            // Ersetzt: mt-4 und mb-4 für konsistente Abstände, falls kein Textblock da ist.
-            const needsTopMargin = series === 'exposure' || series === 'aabb' || series === 'trouble' || series === 'oneTwo';
+            // UNIVERSAL EXHIBITION DOCUMENTATION LINE
             html += `
-                <p class="text-xs leading-relaxed ${needsTopMargin ? 'mt-4' : ''} mb-4">
-                    Exhibition Documentation: Julian Blum
+                <p class="${series !== 'carrier' ? 'mt-4' : ''} mb-4">
+                    Ausstellungsdokumentation: Julian Blum
                 </p>
             `;
 
@@ -484,9 +428,9 @@
             if (series === 'exposure') {
                 html += `
                     <!-- Press Section -->
-                    <h3 class="text-sm font-medium mb-1 mt-4">Press</h3>
-                    <p class="text-xs leading-relaxed mb-4">
-                        <a href="https://www.gallerytalk.net/aisha-altenhofen-austin-space/" target="_blank" class="interactable-text text-xs leading-snug underline">
+                    <h3 class="font-medium mb-1 mt-4">Presse</h3>
+                    <p class="mb-4">
+                        <a href="https://www.gallerytalk.net/aisha-altenhofen-austin-space/" target="_blank" class="interactable-text">
                             Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space
                         </a>
                     </p>
@@ -496,52 +440,102 @@
             // Close the text content div
             html += `</div>`;
 
-            // Add extra spacing at the bottom
-            html += '<div style="height: 100px;"></div>';
+            // Close the series content block
+            html += '</div>';
+
             return html;
         }
 
-        // Handles displaying a specific series gallery (full view)
-        function showSeries(series, clickedLink) {
-            // Check if the series still exists in the data
-            if (!seriesData[series]) {
-                console.error(`Serie ${series} nicht gefunden.`);
+        // Lädt die nächste Serie dynamisch und hängt sie an den Viewer an.
+        function loadNextSeries(smoothScroll = false) {
+            if (isLoadingNext) return; // Verhindert mehrfaches gleichzeitiges Laden
+
+            const nextIndex = lastLoadedIndex + 1;
+            
+            if (nextIndex >= seriesOrder.length) {
+                // Ende der Liste erreicht
                 return;
             }
 
-            // 1. Manage News visibility based on the selected series
-            if (series === DEFAULT_SERIES) {
-                // Wenn die neueste/Standard-Ausstellung geklickt wird, News anzeigen
-                newsUpdates.classList.remove('hidden');
+            isLoadingNext = true;
+            
+            const nextSeriesKey = seriesOrder[nextIndex];
+            const nextSeriesHTML = createGalleryHTML(nextSeriesKey);
+            
+            galleryViewer.insertAdjacentHTML('beforeend', nextSeriesHTML);
+
+            // Update state
+            lastLoadedIndex = nextIndex;
+            isLoadingNext = false;
+            
+            // Optional: Scroll zum neu geladenen Inhalt (nicht bei Scroll-Trigger)
+            if (smoothScroll) {
+                 const newContent = document.getElementById(`series-content-${nextSeriesKey}`);
+                 if (newContent) {
+                    newContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                 }
+            }
+        }
+        
+        // Überprüft die Scroll-Position und triggert das Laden der nächsten Serie bei Annäherung an das Ende.
+        function checkScrollPosition() {
+            // Überprüfen, ob der Benutzer nahe dem Ende des scrollbaren Inhaltsbereichs ist
+            const isNearEnd = contentArea.scrollTop + contentArea.clientHeight >= contentArea.scrollHeight - SCROLL_THRESHOLD;
+
+            if (isNearEnd) {
+                // Laden der nächsten Serie triggern, wenn der Benutzer nahe am Ende ist
+                loadNextSeries(false); 
+            }
+        }
+
+
+        // Behandelt die Anzeige einer bestimmten Seriengalerie (beginnt den kontinuierlichen Fluss von dieser Serie aus)
+        function showSeries(seriesKey, clickedLink, scrollIntoView = false) {
+            if (!seriesData[seriesKey]) {
+                console.error(`Serie ${seriesKey} nicht gefunden.`);
+                return;
+            }
+            
+            // 1. Viewer leeren und Zustand zurücksetzen
+            galleryViewer.innerHTML = ''; 
+            galleryViewer.classList.remove('hidden');
+            lastLoadedIndex = -1;
+            
+            // 2. Initialserie laden
+            const initialSeriesHTML = createGalleryHTML(seriesKey);
+            galleryViewer.innerHTML = initialSeriesHTML;
+            
+            // Index der aktuellen Serie finden
+            const startIndex = seriesOrder.indexOf(seriesKey);
+            lastLoadedIndex = startIndex;
+            
+            // 3. Navigation hervorheben
+            projectLinks.forEach(link => link.classList.remove('active-series-link'));
+            clickedLink.classList.add('active-series-link'); 
+            
+            // 4. Scrollen
+            if (scrollIntoView) {
+                 // Bei Klick direkt an den Anfang scrollen
+                 contentArea.scrollTo({top: 0, behavior: 'smooth'}); 
             } else {
-                // Bei allen anderen Ausstellungen, News ausblenden
-                newsUpdates.classList.add('hidden');
+                 // Bei Initial-Load sofort an den Anfang scrollen
+                 contentArea.scrollTo(0, 0); 
+            }
+            
+            // 5. Die nächste Serie sofort laden, um den kontinuierlichen Scroll-Fluss zu starten (wenn nicht die letzte Serie)
+            if (startIndex < seriesOrder.length - 1) {
+                loadNextSeries(false); 
             }
 
-            const galleryHTML = createGalleryHTML(series);
-            
-            // 2. Clear previous active state from all project links
-            projectLinks.forEach(link => link.classList.remove('active-series-link'));
-            
-            // 3. Set new active state on the clicked link
-            clickedLink.classList.add('active-series-link'); // Apply persistent underline
-
-            // 4. Show the gallery viewer
-            galleryViewer.classList.remove('hidden');
-            galleryViewer.innerHTML = galleryHTML;
-            
-            // 5. Reset scroll position to the top of the content area
-            contentArea.scrollTo(0, 0); 
-            
-            // 6. Fade in images sequentially
+            // 6. Bilder einblenden (Fade-in)
             setTimeout(() => {
                 const images = galleryViewer.querySelectorAll('.gallery-image');
                 images.forEach((img, index) => {
                     setTimeout(() => {
                         img.style.opacity = '1';
-                    }, index * 100); // Staggered fade-in effect
+                    }, index * 100); 
                     
-                    // Added: Preload high-priority images (first 2) after load
+                    // Preload der nächsten Bilder
                     if (index < 2) {
                         const nextImg = new Image();
                         nextImg.src = img.src;
@@ -550,52 +544,48 @@
             }, 50);
         }
 
-        // Handles the initial state or return to index state (zeigt News UND Standard-Ausstellung an)
+        // Initialisiert die Seite mit der Standardserie
         function initPage(event) {
-            if (event) {
+             if (event) {
                 event.preventDefault();
             }
 
             const series = DEFAULT_SERIES;
 
-            // Finde den Link für die Standard-Serie
             let defaultLink = document.querySelector(`.project-link[data-series="${series}"]`);
 
             if (defaultLink) {
-                // showSeries wird aufgerufen. Es lädt den Inhalt und setzt die Unterstreichung.
-                // WICHTIG: Da series === DEFAULT_SERIES ist, wird News in showSeries sichtbar gemacht.
-                showSeries(series, defaultLink);
+                // Initialisierung mit der ersten Serie, was die kontinuierliche Ladelogik triggert
+                showSeries(series, defaultLink, false); 
             } else {
-                console.error(`Standard-Link für Serie ${series} nicht gefunden. Zeige nur News.`);
-                // Fallback: Nur News anzeigen und Galerie ausblenden, falls der Link fehlt
-                newsUpdates.classList.remove('hidden');
+                console.error(`Standard-Link für Serie ${series} nicht gefunden.`);
                 galleryViewer.classList.add('hidden');
                 projectLinks.forEach(link => link.classList.remove('active-series-link'));
             }
             
-            // Scroll-Position zurücksetzen
             contentArea.scrollTo(0, 0); 
         }
-
+        
         // --- EVENT LISTENERS & INITIALIZATION ---
         
-        // Render the news items on load
-        renderNews();
+        // 1. Scroll Listener zur Überprüfung der Position
+        contentArea.removeEventListener('scroll', checkScrollPosition); // Sicherstellen, dass nur ein Listener existiert
+        contentArea.addEventListener('scroll', checkScrollPosition);
         
-        // Name link listener (für Startseite -> News UND Default-Ausstellung)
-        nameLink.addEventListener('click', initPage); 
-        
-        // Project titles listeners for both desktop and mobile nav
+        // 2. Klick-Handler für die Navigation
         projectLinks.forEach(link => {
             link.addEventListener('click', (event) => {
                 event.preventDefault();
-                const series = link.getAttribute('data-series');
-                // Pass the clicked link element to showSeries to manage the active state
-                showSeries(series, link); 
+                const seriesKey = link.getAttribute('data-series');
+                // Der dritte Parameter (true) signalisiert, dass es ein Benutzerklick war und gescrollt werden soll
+                showSeries(seriesKey, link, true); 
             });
         });
-
-        // Initial setup: Starte die Seite mit der News-Sektion und der neuesten Ausstellung
+        
+        // 3. Klick-Handler für den Namen (Rückkehr zum Anfangs-Flow)
+        nameLink.addEventListener('click', initPage); 
+        
+        // 4. Initialisierung
         initPage(); 
         
     </script>
