@@ -1,109 +1,285 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aisha Altenhofen Portfolio | Asymmetrie</title>
+    <title>Aisha Altenhofen Portfolio | Minimal Design V64</title>
     <!-- Tailwind CSS wird für die Struktur verwendet --><script src="https://cdn.tailwindcss.com"></script>
     <style>
         /*
-        LAYOUT: ASYMMETRISCHES RASTER (150px | Content | 230px)
+        DESIGN PRINCIPLES: Times New Roman, EINE Schriftgröße, KEIN Fett, minimaler Abstand.
+        Layout: Full-Width Scroll-Landing Page, Vollbild-Modal rechts.
         */
+        
+        /* --- DESIGN VARIABLEN --- */
+        :root {
+            /* Einheitlicher Außenabstand für ALLE Ränder und Abstände zwischen Elementen */
+            --grid-padding: 1.25rem; /* 20px */
+            
+            /* Standardisierte Zeilenhöhe und Schriftgröße */
+            --caption-height: 1.5rem; /* ~24px */
+            --main-font-size: 0.9rem;
+            
+            /* Höhe des festen Modal-Headers: (2 Zeilen + 2 * --grid-padding)
+               Hier wird der Platz für das obere und untere Padding des Headers reserviert. */
+            --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--grid-padding));
+        }
+
         body {
             background-color: white;
             color: black;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 0.8rem; 
-            height: 100vh;
+            font-size: var(--main-font-size); 
+            line-height: var(--caption-height); 
             width: 100vw;
-            overflow: hidden; 
+            /* Scrollbar nur vertikal zulassen */
+            overflow-x: hidden; 
+            overflow-y: auto;
+            margin: 0; 
+            padding: 0; 
         }
 
-        /* 1. ZEILENABSTAND VEREINHEITLICHUNG (Funktionale Klarheit) */
-        .text-container {
-            line-height: 1.5; 
+        /* --- 1. Landing Page Sektion --- */
+        #nav-section {
+            position: relative;
+            width: 100vw;
+            min-height: 100vh;
+            z-index: 10; 
+            background-color: white; 
+            /* EINHEITLICHES PADDING FÜR AUSSENRÄNDER (WICHTIG!) */
+            padding: var(--grid-padding);
+            box-sizing: border-box; 
+            overflow-y: visible;
         }
         
-        /* --- DESKTOP LAYOUT (Raster Anpassung) --- */
+        /* --- TOP INFO BEREICH (Name, Email) --- */
 
-        /* 1. FIXED LEFT PANEL (Info/Autor): KLEINER (150px) */
-        .fixed-left {
+        /* Name/Email Interaktion */
+        #name-link-container {
+            cursor: pointer;
+            width: max-content; 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+            /* Abstand zur Galerie */
+            margin-bottom: var(--caption-height); 
+        }
+        
+        /* E-Mail Wrapper: Kontrolliert die Höhe */
+        #email-address-wrapper {
+            height: 0; 
+            overflow: hidden;
+            opacity: 0;
+            transition: height 0.3s ease-out, opacity 0.3s ease-out;
+            padding-left: 1rem; /* Einzug */
+        }
+        
+        /* JS-gesteuerter Expanded Zustand für E-Mail */
+        #email-address-wrapper.is-expanded {
+            height: var(--caption-height); 
+            opacity: 1;
+        }
+        
+        /* --- MAIN GALLERY SECTION (Enthält nun auch das Imprint) --- */
+
+        /* Container für die Vorschaubilder (Galerie der Serien + Imprint) */
+        #preview-image-nav {
+            display: flex;
+            flex-direction: column; 
+            /* EINHEITLICHER ABSTAND ZWISCHEN DEN ELEMENTEN */
+            gap: var(--grid-padding); 
+        }
+
+        /* Stil der einzelnen Vorschaubilder: Full Width, No Crop */
+        .preview-item-wrapper { 
+            width: 100%; 
+            height: auto; 
+            overflow: hidden; 
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        /* Einheitlicher Abstand zwischen Info und Bild/Platzhalter auf der Landing Page */
+        .preview-info-block {
+             /* EINHEITLICHER ABSTAND ZWISCHEN TEXT INFO UND BILD/ELEMENT (innerhalb der Serie) */
+            margin-bottom: var(--grid-padding); 
+        }
+
+        /* Nur für Serien-Titel (Kursiv) */
+        .preview-info-block .is-series-title {
+            font-style: italic;
+        }
+
+        .preview-image {
+            width: 100%; 
+            height: auto; 
+            object-fit: contain; 
+            opacity: 1; 
+            transition: opacity 0.2s;
+        }
+        
+        /* --- IMPRINT SPEZIFISCHES CSS --- */
+        
+        /* Imprint Wrapper (erste Zeile) */
+        .imprint-title-wrapper {
+            /* KEIN margin-bottom, da der Text direkt darunter hängt (ähnlich wie Name/Email) */
+            margin-bottom: 0;
+            width: max-content;
+        }
+
+        /* Aufklappbarer Imprint Text Wrapper */
+        #imprint-content-inline {
+            width: 100%;
+            /* Einzug: spiegelt die E-Mail-Einrückung */
+            padding-left: 1rem; 
+            /* Startzustand: Versteckt */
+            height: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.8s ease-in-out, opacity 0.4s ease-in-out; 
+            box-sizing: border-box;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        /* JS-gesteuerter Expanded Zustand für Imprint Text */
+        #imprint-content-inline.is-expanded {
+            /* Fügt den ABSTAND ZUR NÄCHSTEN SERIE hinzu */
+            margin-bottom: var(--grid-padding); 
+            /* Stellt die Höhe für den Inhalt her */
+            max-height: 20rem; 
+            height: auto;
+            opacity: 1;
+        }
+        
+        /* Absätze innerhalb des Imprint-Textes */
+        #imprint-content-inline p {
+            margin: 0; 
+            line-height: var(--caption-height);
+        }
+
+        /* --- 2. MODAL-VIEWER (Vollbild-Overlay) --- */
+        
+        /* Basis-Modal-Klasse für alle Overlays (NUR Galerie) */
+        .full-screen-modal {
             position: fixed;
             top: 0;
             left: 0;
-            width: 150px; 
-            height: 100%;
-            /* Padding 1.5rem bestimmt die Ausrichtung von Name/E-Mail */
-            padding: 1.5rem 1rem 1.5rem 1.5rem; 
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; 
-            z-index: 20; 
-            background-color: transparent; 
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            z-index: 20;
+            display: none; 
+            overflow: hidden; 
+        }
+        .full-screen-modal.is-active {
+            display: block; 
         }
         
-        /* 2. FIXED RIGHT PANEL (Navigation): GRÖSSER (230px) */
-        #fixed-right-nav {
+        /* Modal Header: Feste Position oben */
+        .modal-header {
             position: fixed;
             top: 0;
-            right: 0;
-            width: 230px; 
-            height: 100%;
-            padding: 1.5rem 1.5rem; 
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; 
-            align-items: flex-start; 
-            z-index: 20; 
+            left: 0;
+            width: 100%;
+            /* HÖHE WIEDER AUF 2*GRID-PADDING GEÄNDERT */
+            height: var(--modal-header-height); 
+            box-sizing: border-box;
             background-color: white;
+            z-index: 30; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: flex-start; 
+            /* EINHEITLICHES PADDING FÜR HEADER-INHALT (WICHTIG: ÜBERALL GLEICH) */
+            padding: var(--grid-padding); 
         }
 
-        /* 3. SCROLLABLE CENTER PANEL (Inhalt/Text) */
-        #content-area {
-            position: absolute;
-            left: 150px; /* Startet nach linker Leiste */
-            right: 230px; 
-            top: 0;
-            bottom: 0;
-            overflow-y: scroll; 
-            /* Inneres Padding für den Text- und Titel-Inhalt */
-            padding: 1.5rem 2.5rem 2.5rem 2.5rem; 
-            scrollbar-width: none; 
+        /* Container für Titel und Details (Links) */
+        .modal-info-left {
+            line-height: var(--caption-height);
+            display: flex;
+            flex-direction: column; 
+        }
+        
+        /* TITEL (Serien) IMMER KURSIV */
+        .modal-title-series {
+            font-style: italic;
+        }
+        
+        .close-modal-button {
+            cursor: pointer;
+            line-height: var(--caption-height);
+            flex-shrink: 0; 
+        }
+        
+        /* Scrollbarer Modal Content */
+        .modal-content-scroll {
+            margin-top: var(--modal-header-height); 
+            height: calc(100vh - var(--modal-header-height));
+            overflow-y: auto;
+            padding: 0; 
+            box-sizing: border-box;
+        }
+        
+        /* 1. GALLERY SECTION */
+        #modal-gallery-content {
+             /* padding-top: 0; Der Abstand wird durch das padding-bottom des Headers erzeugt. */
+             padding-top: 0; 
+             /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+             padding-left: var(--grid-padding);
+             padding-right: var(--grid-padding);
+             padding-bottom: 0; 
+        }
+        
+        .image-block {
+             padding: 0; 
+             /* EINHEITLICHER ABSTAND ZWISCHEN den Bildern (unten) */
+             margin-bottom: var(--grid-padding); 
+        }
+        
+        .modal-gallery-image {
+            width: 100%; 
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+        
+        /* Entfernt den Abstand NACH dem letzten Bild der Galerie, wenn der Textblock direkt folgt */
+        #modal-gallery-content .image-block:last-child {
+            /* Dieser Abstand MUSS 0 sein, da der vertikale Abstand zum Textblock durch modal-text-wrapper hinzugefügt wird. */
+            margin-bottom: 0; 
         }
 
-        /* HIDE SCROLLBAR */
-        #content-area::-webkit-scrollbar {
-            width: 0;
-            height: 0;
+        /* 2. TEXT SECTION (Für alle Texte) */
+        .modal-text-wrapper {
+            /* Vertikales Padding: Oben (Abstand zur Galerie), Unten (Abstand zum Footer) */
+            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+            padding: var(--grid-padding) var(--grid-padding) 0 var(--grid-padding); 
+        }
+        
+        .modal-text-block {
+            max-width: 700px; 
+        }
+        
+        .modal-text-block p {
+            /* Normale Zeilenhöhe zwischen Absätzen */
+            margin: 0 0 var(--caption-height) 0;
+        }
+        
+        /* Entfernt den Abstand nach dem letzten Absatz im Textblock. */
+        .modal-text-block p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* 3. FOOTER SECTION */
+        .modal-footer {
+            /* Setzt den Abstand unten (zum Bildschirmrand) und oben (zum Textblock) */
+            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+            padding: var(--grid-padding) var(--grid-padding) var(--grid-padding) var(--grid-padding);
         }
 
-        /* --- MOBILE LAYOUT --- */
-        @media (max-width: 767px) {
-            body {
-                overflow-y: scroll; 
-                height: auto;
-            }
-            .fixed-left, #fixed-right-nav {
-                background-color: transparent; 
-            }
-
-            .fixed-left, #fixed-right-nav, #content-area {
-                position: static;
-                width: 100%;
-                height: auto;
-                /* Mobile Padding (Links/Rechts 1rem) */
-                padding: 1.5rem 1rem;
-            }
-            
-            #content-area {
-                overflow-y: visible;
-                scrollbar-width: auto;
-                padding-left: 1rem; /* Sicherstellen, dass der Text auf Mobile nicht durch 2.5rem zu eng wird */
-            }
-        }
-        /* End Mobile Layout */
-
-        /* HOVER-EFFEKT: Kein Underline, blauer Text */
+        /* --- TYPOGRAFIE & INTERAKTION --- */
         .interactable-text {
             color: black;
             transition: color 0.2s;
@@ -111,65 +287,31 @@
             text-decoration: none !important; 
             display: block;
         }
-        .interactable-text:hover {
-            color: #0000FF; 
-            opacity: 1 !important; 
-        }
         
-        /* AKTIVER LINK bleibt Schwarz und nicht unterstrichen */
-        .active-series-link {
-            text-decoration: none !important; 
+        /* KEIN BLAUER HOVER MEHR */
+        .interactable-text:hover { 
             color: black !important; 
         }
         
-        /* Gallery Styling */
-        .gallery-image {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            margin-bottom: 0; 
-            opacity: 0; 
-            transition: opacity 0.6s ease-out;
+        /* --- MOBILE ANPASSUNGEN --- */
+        @media (max-width: 1024px) {
+            :root {
+                /* Einheitliches, reduziertes Mobile Padding */
+                --grid-padding: 0.75rem; /* 12px */
+                /* Die Berechnung des Headers muss nur angepasst werden */
+                --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--grid-padding)); 
+            }
+            
+            #nav-section {
+                width: 100%;
+                padding-bottom: var(--grid-padding); 
+            }
         }
-           
-        /* Abstand zwischen den kontinuierlich geladenen Serien */
-        .series-content-block {
-            margin-bottom: 80px; 
-        }
-
-        /* Abstand zwischen Bildelementen (CONTAINER-ABSTAND) */
-        .image-text-block {
-            /* Minimaler Abstand zwischen den Blöcken: 2px (0.125rem) */
-            margin-bottom: 0.125rem; 
-            /* Wichtig für Hover-Effekt: Muss als relative Basis für den Hover-Selector dienen */
-        }
-        
-        /* WICHTIG: Die Caption muss immer die Höhe beibehalten, auch wenn sie leer ist. */
-        .caption-placeholder {
-            /* Behält die Zeilenhöhe bei, auch wenn der Inhalt leer ist */
-            min-height: 1em; 
-        }
-
-        /* NEU: Steuerung der Sichtbarkeit der Caption */
-        .caption-text-content {
-            /* Standardmäßig unsichtbar (Opacity 0) */
-            opacity: 0;
-            /* Sanfter Übergang beim Hover */
-            transition: opacity 0.3s ease-in-out;
-            /* Stellt sicher, dass das Zeichen (&nbsp;) gerendert wird, um Platz zu beanspruchen */
-            display: inline-block; 
-        }
-        
-        /* NEU: Caption wird beim Hovern über den gesamten Block sichtbar */
-        .image-text-block:hover .caption-text-content {
-            opacity: 1;
-        }
-        
     </style>
 </head>
 <body>
 
-    <!-- Tailwind Config: Font (Times New Roman) --><script>
+    <!-- Tailwind Config: Nur zur Sicherstellung der Schriftart --><script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -181,422 +323,290 @@
             }
         }
     </script>
+    
+    <!-- 1. Landing Page: NAVIGATION (FULL-WIDTH LANDING PAGE) --><nav id="nav-section">
+        
+        <!-- Name und Email --><div id="top-info-area">
+            
+            <!-- 1. Name und E-Mail Container (Click-Target) -->
+            <div id="name-link-container">
+                <!-- Name -->
+                <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
+                
+                <!-- E-Mail Wrapper: Wird per Klick getoggelt -->
+                <div id="email-address-wrapper">
+                    <div id="email-address" class="mb-0">aishaaltenhofen@gmail.com</div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Vorschaubilder Navigation (Serien + Imprint) -->
+        <div id="preview-image-nav">
+             <!-- Elemente werden hier durch JS eingefügt -->
+        </div>
+        
+    </nav>
+    
+    <!-- 2. MODAL-VIEWER FÜR GALERIE-DETAILS --><div id="show-modal" class="full-screen-modal">
+        
+        <!-- Fester Header --><div class="modal-header">
+            <!-- Titel, Ort, Datum (Links) in zwei Zeilen -->
+            <div id="modal-info-left" class="modal-info-left">
+                <!-- 1. Zeile: Titel (kursiv) -->
+                <div id="modal-title" class="modal-title-series"></div>
+                <!-- 2. Zeile: Details (wird als kombinierter String im JS gefüllt) -->
+                <div id="modal-details-block"></div>
+            </div>
+            
+            <!-- Close Button (Rechts) -->
+            <div id="close-modal" class="close-modal-button interactable-text">close</div>
+        </div>
+        
+        <!-- Scrollbarer Inhalt --><div id="modal-content-scroll" class="modal-content-scroll">
+            
+            <!-- 1. Galerie -->
+            <div id="modal-gallery-content"></div>
+            
+            <!-- 2. Text -->
+            <div id="modal-text-wrapper" class="modal-text-wrapper">
+                <div id="modal-text" class="modal-text-block"></div>
+            </div>
 
-    <!-- Fixed Left Panel: Name and Email (SCHMALER ANKER 150px) --><div class="fixed-left text-container">
-        
-        <!-- 1. Name: Aisha Altenhofen (Startet bei 1.5rem) -->
-        <h1 id="name-link" class="font-medium interactable-text mb-0">Aisha Altenhofen</h1>
-        
-        <!-- 2. Email -->
-        <div id="email-address" class="mb-6">aishaaltenhofen@gmail.com</div>
+            <!-- 3. Footer -->
+            <div id="modal-footer" class="modal-footer"></div>
+            
+        </div>
         
     </div>
-    
-    
-    <!-- Fixed Right Panel for Navigation Titles (BREITERE FÜHRUNG 230px) --><nav id="fixed-right-nav" class="hidden md:flex text-container"> 
-        <ul>
-            <li><a href="#" class="project-link interactable-text" data-series="carrier">The Carrier</a></li>
-            <li><a href="#" class="project-link interactable-text" data-series="aabb">AABB</a></li>
-            <li><a href="#" class="project-link interactable-text" data-series="exposure">First Exposure</a></li>
-            <li><a href="#" class="project-link interactable-text" data-series="aftertext">Aftertext</a></li>
-            <li><a href="#" class="project-link interactable-text" data-series="conditionedAir">Conditioned Air</a></li>
-        </ul>
-    </nav>
-
-
-    <!-- Scrollable Center Panel: Content Area (OFF-CENTER) --><section id="content-area">
-        
-        <!-- Mobile Nav: Nur auf kleinen Bildschirmen sichtbar -->
-        <nav id="mobile-nav" class="md:hidden text-container">
-            <ul class="flex space-x-6">
-                 <li><a href="#" class="project-link interactable-text" data-series="carrier">The Carrier</a></li>
-                <li><a href="#" class="project-link interactable-text" data-series="aabb">AABB</a></li>
-                <li><a href="#" class="project-container-link" data-series="exposure">First Exposure</a></li>
-                <li><a href="#" class="project-link interactable-text" data-series="aftertext">Aftertext</a></li>
-                <li><a href="#" class="project-link interactable-text" data-series="conditionedAir">Conditioned Air</a></li>
-            </ul>
-        </nav>
-
-        <!-- Gallery Viewer: Inhalt wird hier geladen -->
-        <div id="gallery-viewer" class="hidden text-container"> 
-            <!-- Alle Inhalte der Serie erscheinen hier -->
-        </div>
-
-    </section>
 
     <script>
         // --- DATA SETUP ---
         const GITHUB_BASE_URL = "https://raw.githubusercontent.com/aishaaltenhofen/AA/main/images/";
-
+        
         const seriesData = {
             carrier: {
                 title: "The Carrier",
-                location: "University of the Arts", 
-                dates: "16.07.2025 — 22.07.2025", 
-                city: "Berlin, DE", 
+                info: ["University of the Arts", "Berlin, DE", "16 July 2025 – 22 July 2025"], 
+                description: `The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus. Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück. Ausstellungsdokumentation: Julian Blum.`,
                 images: [
-                    // INSTALLATION VIEWS (Image 1-8)
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 02.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 03.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 04.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 05.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 06.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 07.jpg", caption: "" }, 
-                    { src: GITHUB_BASE_URL + "Graduation 2025 - 08.jpg", caption: "" }, 
-                    
-                    // REPRODUCTION IMAGES (Image 9-14)
-                    { 
-                        src: GITHUB_BASE_URL + "2025- Repro-01.jpg", 
-                        caption: "<i>The Carrier (2318, 2344)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" 
-                    },
-                    { src: GITHUB_BASE_URL + "2025-Repro-02.jpg", caption: "<i>The Carrier (2318, 2348)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
-                    { src: GITHUB_BASE_URL + "2025-Repro-03.jpg", caption: "<i>The Carrier (1649)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
-                    { src: GITHUB_BASE_URL + "2025-Repro-04.jpg", caption: "<i>The Carrier (2330, 2357)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
-                    { src: GITHUB_BASE_URL + "2025-Repro-05.jpg", caption: "<i>The Carrier (2398, 2318)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
-                    { src: GITHUB_BASE_URL + "2025-Repro-06.jpg", caption: "<i>The Carrier (2367, 2391)</i>, Archival pigment print on baryta paper, 30 x 40 cm, framed" },
+                    { id: "img-carrier-01", src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", caption: "" }, 
+                    { id: "img-carrier-02", src: GITHUB_BASE_URL + "Graduation 2025 - 02.jpg", caption: "" }, 
+                    { id: "img-carrier-03", src: GITHUB_BASE_URL + "Graduation 2025 - 03.jpg", caption: "" }, 
+                    { id: "img-carrier-04", src: GITHUB_BASE_URL + "Graduation 2025 - 04.jpg", caption: "" }, 
+                    { id: "img-carrier-05", src: GITHUB_BASE_URL + "Graduation 2025 - 05.jpg", caption: "" }, 
+                    { id: "img-carrier-06", src: GITHUB_BASE_URL + "Graduation 2025 - 06.jpg", caption: "" }, 
+                    { id: "img-carrier-07", src: GITHUB_BASE_URL + "Graduation 2025 - 07.jpg", caption: "" }, 
+                    { id: "img-carrier-08", src: GITHUB_BASE_URL + "Graduation 2025 - 08.jpg", caption: "" }, 
+                    { id: "img-carrier-09", src: GITHUB_BASE_URL + "2025- Repro-01.jpg", caption: "" },
+                    { id: "img-carrier-10", src: GITHUB_BASE_URL + "2025-Repro-02.jpg", caption: "" },
+                    { id: "img-carrier-11", src: GITHUB_BASE_URL + "2025-Repro-03.jpg", caption: "" },
                 ]
             },
             aabb: {
                 title: "AABB",
-                location: "Dorothea Konwiarz Stiftung", 
-                subtitle: "Duo Exhibition with Bonnie Barth", 
-                dates: "18.12.2024 — 28.03.2025", 
-                city: "Berlin, DE", 
+                info: ["Dorothea Konwiarz Stiftung", "Duo Exhibition with Bonnie Barth", "Berlin, DE", "18 December 2024 – 28 March 2025"], 
+                description: `[Dies ist der Platzhalter für den Text der Serie AABB. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.]`,
                 images: [
-                    { src: "https://placehold.co/1000x1000/a3a3a3/000000?text=AABB+Image+01", caption: "<i>Boundary Condition</i>, 2022, Oil on Canvas, 100 x 100 cm" },
-                    { src: "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02", caption: "<i>Enclosure Study</i>, 2022, Charcoal and Pastel, 80 x 120 cm" }
+                    // Platzhalterbilder
+                    { id: "img-aabb-01", src: "https://placehold.co/1500x800/a3a3a3/000000?text=AABB+Image+01", caption: "" },
+                    { id: "img-aabb-02", src: "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02", caption: "" }
                 ]
             },
             exposure: {
                 title: "First Exposure",
-                location: "Austin Space", 
-                dates: "20.07.2024 — 25.08.2024", 
-                city: "Munich, DE", 
+                info: ["Austin Space", "Munich, DE", "20 July 2024 – 25 August 2024"], 
+                description: `Die Ausstellung fand im Austin Space statt. Presse: Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space (Link: https://www.gallerytalk.net/aisha-altenhofen-austin-space/) Ausstellungsdokumentation: Julian Blum.`,
                 images: [
-                    // INSTALLATION VIEWS 1-6 (Caption: "")
-                    { src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-02-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-03-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-04-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-05-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-06-install.jpg", caption: "" },
-
-                    // REPRODUCTION VIEWS 7-10
-                    { src: GITHUB_BASE_URL + "2024-FE-07-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
-                    { src: GITHUB_BASE_URL + "2024-FE-08-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
-                    { src: GITHUB_BASE_URL + "2024-FE-09-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
-                    { src: GITHUB_BASE_URL + "2024-FE-10-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
-
-                    // INSTALLATION VIEWS 12-14
-                    { src: GITHUB_BASE_URL + "2024-FE-12-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-13-install.jpg", caption: "" },
-                    { src: GITHUB_BASE_URL + "2024-FE-14-install.jpg", caption: "" },
-                    
-                    // REPRODUCTION VIEW 15
-                    { src: GITHUB_BASE_URL + "2024-FE-15-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
+                    { id: "img-exp-01", src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", caption: "" },
+                    { id: "img-exp-02", src: GITHUB_BASE_URL + "2024-FE-02-install.jpg", caption: "" },
+                    { id: "img-exp-03", src: GITHUB_BASE_URL + "2024-FE-03-install.jpg", caption: "" },
+                    { id: "img-exp-04", src: GITHUB_BASE_URL + "2024-FE-04-install.jpg", caption: "" },
+                    { id: "img-exp-05", src: GITHUB_BASE_URL + "2024-FE-05-install.jpg", caption: "" },
+                    { id: "img-exp-06", src: GITHUB_BASE_URL + "2024-FE-07-repro.jpg", caption: "" },
+                    { id: "img-exp-07", src: GITHUB_BASE_URL + "2024-FE-08-repro.jpg", caption: "" },
+                    { id: "img-exp-08", src: GITHUB_BASE_URL + "2024-FE-09-repro.jpg", caption: "" },
                 ]
             },
             aftertext: {
                 title: "Aftertext", 
-                location: "Placeholder Gallery, City Center",
-                dates: "01.01.2023 — 31.01.2023",
-                city: "Munich, DE",
+                info: ["Placeholder Gallery", "City Center, Munich, DE", "01 January – 31 January 2023"],
+                description: `[Dies ist der Platzhalter für den Text der Serie Aftertext. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.]`,
                 images: [
-                    { src: "https://placehold.co/900x600/c7d2fe/1e3a8a?text=Aftertext+View+1", caption: "" },
-                    { src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=Aftertext+View+2", caption: "" },
-                    { src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=Aftertext+Repro+A", caption: "<i>Untitled (Aftertext Study)</i>, 2023, Inkjet Print, 40 x 50 cm" },
-                    { src: "https://placehold.co/900x600/3b82f6/1e3a8a?text=Aftertext+Repro+B", caption: "<i>Chaos (Blue)</i>, 2023, Inkjet Print, 40 x 50 cm" },
+                    { id: "img-at-01", src: "https://placehold.co/1500x800/c7d2fe/1e3a8a?text=Aftertext+View+1", caption: "" },
+                    { id: "img-at-02", src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=Aftertext+View+2", caption: "" },
+                    { id: "img-at-03", src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=Aftertext+Repro+A", caption: "" },
                 ]
             },
             conditionedAir: {
                 title: "Conditioned Air", 
-                location: "The Studio Gallery",
-                dates: "15.05.2022 — 15.06.2022",
-                city: "Berlin, DE",
+                info: ["The Studio Gallery", "Berlin, DE", "15 May – 15 June 2022"],
+                description: `[Dies ist der Platzhalter für den Text der Serie Conditioned Air. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.]`,
                 images: [
-                    { src: "https://placehold.co/900x900/fecaca/991b1b?text=Conditioned+Air+View+A", caption: "" },
-                    { src: "https://placehold.co/900x600/fca5a5/991b1b?text=Conditioned+Air+View+B", caption: "" },
-                    { src: "https://placehold.co/900x1200/f87171/991b1b?text=Conditioned+Air+Repro+X", caption: "<i>Duet (First Part)</i>, 2022, Archival print, 50 x 70 cm" },
+                    { id: "img-ca-01", src: "https://placehold.co/1500x800/fecaca/991b1b?text=Conditioned+Air+View+A", caption: "" },
+                    { id: "img-ca-02", src: "https://placehold.co/900x600/fca5a5/991b1b?text=Conditioned+Air+View+B", caption: "" },
+                    { id: "img-ca-03", src: "https://placehold.co/900x1200/f87171/991b1b?text=Duet+X", caption: "" },
                 ]
             },
+            imprint: { 
+                title: "Imprint",
+                info: [],
+                description: `
+                    This website is independently operated by Aisha Altenhofen. For contact, please use the email address aishaaltenhofen@gmail.com. The responsible party is Aisha Altenhofen, located at Sonnenallee 159, Berlin, 12059. All photographic works and textual content presented here are protected by copyright. Unauthorized use of this material is prohibited. The rights for all images and texts remain with the artist, unless explicitly noted otherwise.
+                `,
+                images: [] // Keine Bilder für Imprint
+            }
         };
 
-        // Define the explicit order for continuous loading
-        const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir'];
-        // State to track the last series index that was successfully loaded into the viewer
-        let lastLoadedIndex = -1;
-        // Flag to prevent multiple simultaneous load calls from the scroll listener
-        let isLoadingNext = false; 
-
-        // --- CONSTANTS ---
-        const DEFAULT_SERIES = 'carrier'; 
-        const SCROLL_THRESHOLD = 500; // Nächste Serie laden, wenn 500px vor dem Ende gescrollt wird
-
-        // --- ELEMENTS ---
-        const galleryViewer = document.getElementById('gallery-viewer');
-        const contentArea = document.getElementById('content-area');
-        const nameLink = document.getElementById('name-link');
-        const projectLinks = document.querySelectorAll('.project-link');
+        // Imprint ist wieder Teil der Hauptnavigation
+        const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir', 'imprint']; 
         
+        // --- ELEMENTS ---
+        const nameLinkContainer = document.getElementById('name-link-container');
+        const emailAddressWrapper = document.getElementById('email-address-wrapper');
+        const previewImageNav = document.getElementById('preview-image-nav');
+        
+        // GALERIE MODAL Elemente
+        const showModal = document.getElementById('show-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDetailsBlock = document.getElementById('modal-details-block');
+        const modalGalleryContent = document.getElementById('modal-gallery-content');
+        const modalText = document.getElementById('modal-text');
+        const modalContentScroll = document.getElementById('modal-content-scroll');
+        
+        // Funktion zum Schließen aller Modals
+        function closeAllModals() {
+             showModal.classList.remove('is-active');
+        }
+
         // --- FUNCTIONS ---
         
-        function renderNews() {}
+        // Füllt die Landing Page mit den Serien-Vorschaubildern und dem Imprint-Link
+        function renderPreviewImages() {
+            let html = '';
+            seriesOrder.forEach(seriesKey => {
+                const data = seriesData[seriesKey];
+                if (!data) return;
 
-        // Generates the HTML for a single series block
-        function createGalleryHTML(series) {
-            const data = seriesData[series];
-            // Added wrapper div with unique ID for scrolling/anchoring
-            let html = `<div id="series-content-${series}" class="series-content-block">`; 
-            
-            // 1. TITEL-BLOCK (Höchste Hierarchie)
-            html += `
-                <h2 class="italic mb-0">${data.title}</h2>
-                <p class="mb-0">${data.location}</p>
-                ${data.subtitle ? `<p class="mb-0">${data.subtitle}</p>` : ''} 
-                <p class="mb-0">${data.dates}</p>
-                <p class="mb-0">${data.city}</p> 
-            `;
+                // Für reguläre Serien (mit Bild)
+                if (seriesKey !== 'imprint') {
+                    const firstImage = data.images[0];
+                    html += `
+                        <div class="preview-item-wrapper gallery-item" data-series="${seriesKey}">
+                             <!-- Titel und Details über dem Bild -->
+                             <div class="preview-info-block">
+                                 <!-- Serie-Titel ist kursiv -->
+                                 <div class="is-series-title">${data.title}</div>
+                                 <div>${data.info.join(', ')}</div> 
+                             </div>
+                            <img src="${firstImage.src}" 
+                                 alt="${data.title} Preview" 
+                                 class="preview-image"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/1500x800/f3f4f6/000000?text=Image+Load+Error';"
+                                 title="${data.title}"
+                            >
+                        </div>
+                    `;
+                } else {
+                    // Für den Imprint-Eintrag (Text-Link + Toggle-Content)
+                    const cleanText = data.description.replace(/\s+/g, ' ').trim();
+                    html += `
+                        <!-- Wrapper als Click-Target für das Impressum -->
+                        <!-- Der Imprint-Link braucht KEIN gap nach unten, da der aufklappbare Text direkt folgt -->
+                        <div class="preview-item-wrapper imprint-toggle-link" data-series="${seriesKey}">
+                            
+                            <!-- 1. Zeile: Imprint Titel (NICHT kursiv) - Spiegelt #name-link-container -->
+                            <div class="imprint-title-wrapper interactable-text" id="imprint-title-link">
+                                <div class="imprint-title">${data.title}</div>
+                            </div>
 
-            
-            data.images.forEach((imgData, index) => {
-                // WICHTIGE ÄNDERUNG: Abstand zwischen Metadaten und dem ersten Bild. mt-12 = 48px (BLEIBT GROSS)
-                const firstImageMargin = index === 0 ? 'mt-12' : ''; 
-                
-                // Abstand zwischen Bildelementen (CONTAINER mit minimaler Marge)
-                html += `<div class="image-text-block">`; 
-                
-                // Image element - hat keine eigene Marge (mb-0)
-                html += `
-                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-0 ${firstImageMargin}" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Bild+Ladefehler+(${index + 1})';">
-                `;
-                
-                // KONSISTENTE CAPTION / PLATZHALTER:
-                // Generiert immer ein <p> Element mit symmetrischen Rändern (mt-1, mb-1).
-                // Der eigentliche Text ist in einem Span, um die Opazität zu steuern.
-                const captionContent = imgData.caption && imgData.caption.trim() !== '' 
-                                       ? imgData.caption
-                                       : '&nbsp;'; // Non-breaking space, um zu garantieren, dass das P-Element nicht 0px hoch ist
-
-                // Das SPAN-Element wird verwendet, um die Sichtbarkeit zu steuern
-                html += `
-                    <p class="max-w-lg mt-1 mb-1 caption-placeholder">
-                        <span class="caption-text-content">${captionContent}</span>
-                    </p>
-                `;
-                
-                // Close the block wrapper
-                html += `</div>`;
+                            <!-- 2. Zeile: Aufklappbarer Text, eingerückt und mit Lücke zur nächsten Serie -->
+                            <div id="imprint-content-inline">
+                                <p>${cleanText}</p>
+                            </div>
+                        </div>
+                    `;
+                }
             });
+            previewImageNav.innerHTML = html;
             
-            // 2. TEXT-BLOCK (Wieder ein deutlicher Abstand nach dem letzten Bild)
-            html += `
-                <div class="mt-8 w-full max-w-[900px]"> 
-            `;
-            
-            if (series === 'carrier') {
-                html += `
-                    <p class="mb-6"> 
-                        The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus.
-                        Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück.
-                    </p>
-                `;
-            } else if (series === 'exposure') {
-                 html += `
-                    <p class="mb-6">
-                        [Text für First Exposure. Bitte ersetzen Sie diesen Platzhalter durch Ihren tatsächlichen Künstler-Statement oder Ausstellungstext.]
-                    </p>
-                `;
-            } else if (series === 'aftertext') { 
-                 html += `
-                    <p class="mb-6">
-                        Diese Serie mit dem Titel "Aftertext" erkundet Themen wie Zerbrechlichkeit, Störung und Eindämmung durch fragmentierte Porträts und Installationsansichten. Die Arbeit konzentriert sich auf die psychologische Landschaft, die durch kleinere, anhaltende Ängste entsteht. (Platzhaltertext)
-                    </p>
-                `;
-            } else if (series === 'conditionedAir') { 
-                 html += `
-                    <p class="mb-6">
-                        "Conditioned Air" ist eine Dokumentation früher Arbeiten, die sich ausschließlich auf Form und Dualismus konzentrieren. Die Bilder dienen als grundlegende Studien für spätere Projekte und experimentieren mit Licht und Schatten in einer kontrollierten Studio-Umgebung. (Platzhaltertext)
-                    </p>
-                `;
-            } else {
-                html += `
-                    <p class="mb-6">
-                        [Dies ist der Platzhalter für den Text. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails, Ihr Künstler-Statement oder die Daten für die Serie ${data.title}.]
-                    </p>
-                `;
-            }
-
-            // UNIVERSAL EXHIBITION DOCUMENTATION LINE (Abstand nach dem Text)
-            html += `
-                <p class="mt-4 mb-6"> 
-                    Ausstellungsdokumentation: Julian Blum
-                </p>
-            `;
-
-
-            // CONDITIONAL: Add Press link ONLY for "First Exposure" (exposure)
-            if (series === 'exposure') {
-                html += `
-                    <!-- Press Section -->
-                    <h3 class="font-medium mb-2 mt-4">Presse</h3>
-                    <p class="mb-6">
-                        <a href="https://www.gallerytalk.net/aisha-altenhofen-austin-space/" target="_blank" class="interactable-text">
-                            Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space
-                        </a>
-                    </p>
-                `;
-            }
-            
-            // Close the text content div
-            html += `</div>`;
-
-            // Close the series content block
-            html += '</div>';
-
-            return html;
-        }
-
-        // Lädt die nächste Serie dynamisch und hängt sie an den Viewer an.
-        function loadNextSeries(smoothScroll = false) {
-            if (isLoadingNext) return; 
-
-            const nextIndex = lastLoadedIndex + 1;
-            
-            if (nextIndex >= seriesOrder.length) {
-                return;
-            }
-
-            isLoadingNext = true;
-            
-            const nextSeriesKey = seriesOrder[nextIndex];
-            const nextSeriesHTML = createGalleryHTML(nextSeriesKey);
-            
-            galleryViewer.insertAdjacentHTML('beforeend', nextSeriesHTML);
-
-            // Update state
-            lastLoadedIndex = nextIndex;
-            isLoadingNext = false;
-            
-            if (smoothScroll) {
-                 const newContent = document.getElementById(`series-content-${nextSeriesKey}`);
-                 if (newContent) {
-                    newContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                 }
-            }
-        }
-        
-        // Überprüft die Scroll-Position und triggert das Laden der nächsten Serie bei Annäherung an das Ende.
-        function checkScrollPosition() {
-            const isNearEnd = contentArea.scrollTop + contentArea.clientHeight >= contentArea.scrollHeight - SCROLL_THRESHOLD;
-
-            if (isNearEnd) {
-                loadNextSeries(false); 
-            }
-        }
-
-
-        // Behandelt die Anzeige einer bestimmten Seriengalerie 
-        function showSeries(seriesKey, clickedLink, scrollIntoView = false) {
-            if (!seriesData[seriesKey]) {
-                console.error(`Serie ${seriesKey} nicht gefunden.`);
-                return;
-            }
-            
-            // 1. Viewer leeren und Zustand zurücksetzen
-            galleryViewer.innerHTML = ''; 
-            galleryViewer.classList.remove('hidden');
-            lastLoadedIndex = -1;
-            
-            // 2. Initialserie laden
-            const initialSeriesHTML = createGalleryHTML(seriesKey);
-            galleryViewer.innerHTML = initialSeriesHTML; 
-            
-            // Index der aktuellen Serie finden
-            const startIndex = seriesOrder.indexOf(seriesKey);
-            lastLoadedIndex = startIndex;
-            
-            // 3. Navigation hervorheben
-            projectLinks.forEach(link => link.classList.remove('active-series-link'));
-            
-            // Finde den richtigen Link, da querySelectorAll am Anfang ausgeführt wird.
-            let activeLink = clickedLink;
-            if (!activeLink) {
-                 activeLink = document.querySelector(`.project-link[data-series="${seriesKey}"]`);
-            }
-            if (activeLink) {
-                activeLink.classList.add('active-series-link'); 
-            }
-
-            // 4. Scrollen
-            if (scrollIntoView) {
-                 contentArea.scrollTo({top: 0, behavior: 'smooth'}); 
-            } else {
-                 contentArea.scrollTo(0, 0); 
-            }
-            
-            // 5. Die nächste Serie sofort laden
-            if (startIndex < seriesOrder.length - 1) {
-                loadNextSeries(false); 
-            }
-
-            // 6. Bilder einblenden (Fade-in)
-            setTimeout(() => {
-                const images = galleryViewer.querySelectorAll('.gallery-image');
-                images.forEach((img, index) => {
-                    setTimeout(() => {
-                        img.style.opacity = '1';
-                    }, index * 100); 
+            // Event Listener für alle Einträge hinzufügen (Galerie und Imprint)
+            document.querySelectorAll('.preview-item-wrapper').forEach(wrapper => {
+                wrapper.addEventListener('click', (event) => {
+                    const seriesKey = wrapper.getAttribute('data-series');
                     
-                    if (index < 2) {
-                        const nextImg = new Image();
-                        nextImg.src = img.src;
+                    if (seriesKey === 'imprint') {
+                        // Toggle Imprint Content (Inline auf der Landing Page)
+                        const imprintContent = wrapper.querySelector('#imprint-content-inline');
+                        if (imprintContent) {
+                            imprintContent.classList.toggle('is-expanded');
+                        }
+                    } else {
+                        // Open Gallery Modal
+                        openShowModal(seriesKey);
                     }
                 });
-            }, 50);
+            });
         }
+        
+        // Öffnet das Modal für Galerie-Details
+        function openShowModal(seriesKey) {
+            closeAllModals(); // Sicherstellen, dass andere Modals geschlossen sind
+            const data = seriesData[seriesKey];
+            if (!data) return;
 
-        // Initialisiert die Seite mit der Standardserie
-        function initPage(event) {
-             if (event) {
-                event.preventDefault();
-            }
+            // 1. Header füllen
+            // TITEL IMMER KURSIV
+            modalTitle.innerHTML = `<i>${data.title}</i>`;
+            modalDetailsBlock.innerHTML = data.info.join(', ');
 
-            const series = DEFAULT_SERIES;
-
-            let defaultLink = document.querySelector(`.project-link[data-series="${series}"]`);
-
-            if (defaultLink) {
-                showSeries(series, defaultLink, false); 
-            } else {
-                console.error(`Standard-Link für Serie ${series} nicht gefunden.`);
-                galleryViewer.classList.add('hidden');
-                projectLinks.forEach(link => link.classList.remove('active-series-link'));
-            }
+            // 2. Scrollbaren Inhalt füllen
             
-            contentArea.scrollTo(0, 0); 
+            // Text füllen (Absätze aus Zeilenumbrüchen erstellen)
+            modalText.innerHTML = data.description.split('\n')
+                .filter(p => p.trim() !== '') // Leere Zeilen entfernen
+                .map(p => `<p>${p.trim()}</p>`).join('');
+            
+            // Galerie füllen
+            let galleryHtml = '';
+            data.images.forEach(imgData => {
+                galleryHtml += `
+                    <div class="image-block">
+                        <img src="${imgData.src}" 
+                             alt="${data.title}" 
+                             class="modal-gallery-image"
+                             onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';"
+                        >
+                    </div>
+                `;
+            });
+            
+            modalGalleryContent.innerHTML = galleryHtml;
+
+            
+            // 3. Modal anzeigen und nach oben scrollen
+            showModal.classList.add('is-active');
+            modalContentScroll.scrollTop = 0; 
         }
+
         
         // --- EVENT LISTENERS & INITIALIZATION ---
         
-        // 1. Scroll Listener zur Überprüfung der Position
-        contentArea.removeEventListener('scroll', checkScrollPosition); 
-        contentArea.addEventListener('scroll', checkScrollPosition);
-        
-        // 2. Klick-Handler für die Navigation
-        projectLinks.forEach(link => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault();
-                const seriesKey = link.getAttribute('data-series');
-                showSeries(seriesKey, link, true); 
-            });
+        // 1. E-Mail Toggle 
+        nameLinkContainer.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            emailAddressWrapper.classList.toggle('is-expanded');
         });
         
-        // 3. Klick-Handler für den Namen (Rückkehr zum Anfangs-Flow)
-        nameLink.addEventListener('click', initPage); 
+        // Close Button für das Galerie-Modal
+        closeModalButton.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            closeAllModals();
+        });
         
-        // 4. Initialisierung
-        initPage(); 
+        // Initialisierung
+        window.addEventListener('load', renderPreviewImages); 
         
     </script>
 </body>
