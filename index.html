@@ -8,15 +8,12 @@
     <style>
         /*
         LAYOUT: ASYMMETRISCHES RASTER (150px | Content | 230px)
-        TYPOGRAFIE: Zurückgesetzt auf normale Schriftstärke.
         */
         body {
             background-color: white;
             color: black;
             font-family: 'Times New Roman', Times, serif;
             font-size: 0.8rem; 
-            /* overflow: hidden; BEIBEHALTEN, da Sidebar fixiert sind.
-               Der zentrale Inhalt (#content-area) scrollt stattdessen. */
             height: 100vh;
             width: 100vw;
             overflow: hidden; 
@@ -27,20 +24,22 @@
             line-height: 1.5; 
         }
         
-        /* --- DESKTOP LAYOUT (Raster Anpassung für Asymmetrie) --- */
+        /* --- DESKTOP LAYOUT (Raster Anpassung) --- */
 
         /* 1. FIXED LEFT PANEL (Info/Autor): KLEINER (150px) */
         .fixed-left {
             position: fixed;
             top: 0;
             left: 0;
-            width: 150px; /* Reduzierte Breite */
+            width: 150px; 
             height: 100%;
+            /* Padding 1.5rem bestimmt die Ausrichtung von Name/E-Mail */
             padding: 1.5rem 1rem 1.5rem 1.5rem; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
             z-index: 20; 
+            background-color: transparent; 
         }
         
         /* 2. FIXED RIGHT PANEL (Navigation): GRÖSSER (230px) */
@@ -48,7 +47,7 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 230px; /* Größere Breite */
+            width: 230px; 
             height: 100%;
             padding: 1.5rem 1.5rem; 
             display: flex;
@@ -56,17 +55,18 @@
             justify-content: flex-start; 
             align-items: flex-start; 
             z-index: 20; 
+            background-color: white;
         }
 
-        /* 3. SCROLLABLE CENTER PANEL (Inhalt): VERSCHOBENE MITTE */
+        /* 3. SCROLLABLE CENTER PANEL (Inhalt/Text) */
         #content-area {
             position: absolute;
+            left: 150px; /* Startet nach linker Leiste */
+            right: 230px; 
             top: 0;
-            left: 150px; /* Beginnt nach linker Leiste */
-            right: 230px; /* Endet vor rechter Leiste */
             bottom: 0;
-            overflow-y: scroll; /* Primäre Scroll-Area */
-            /* Inneres Padding für Luft: */
+            overflow-y: scroll; 
+            /* Inneres Padding für den Text- und Titel-Inhalt */
             padding: 1.5rem 2.5rem 2.5rem 2.5rem; 
             scrollbar-width: none; 
         }
@@ -77,54 +77,33 @@
             height: 0;
         }
 
-        /* --- MOBILE LAYOUT (Unverändert) --- */
-
+        /* --- MOBILE LAYOUT --- */
         @media (max-width: 767px) {
             body {
                 overflow-y: scroll; 
                 height: auto;
+            }
+            .fixed-left, #fixed-right-nav {
+                background-color: transparent; 
             }
 
             .fixed-left, #fixed-right-nav, #content-area {
                 position: static;
                 width: 100%;
                 height: auto;
+                /* Mobile Padding (Links/Rechts 1rem) */
                 padding: 1.5rem 1rem;
             }
             
-            .fixed-left {
-                flex-direction: column; 
-                border-bottom: 1px solid #eee;
-                gap: 1.5rem; 
-            }
-            
-            #fixed-right-nav {
-                border-bottom: 1px solid #eee;
-                justify-content: flex-start; 
-                align-items: flex-start;
-                width: 100%;
-            }
-
             #content-area {
-                padding: 1.5rem 1rem; 
                 overflow-y: visible;
                 scrollbar-width: auto;
-            }
-            
-            #fixed-right-nav ul {
-                display: flex;
-                overflow-x: scroll;
-                white-space: nowrap;
-                padding-bottom: 0.5rem;
-            }
-
-            #fixed-right-nav li {
-                margin-right: 1.5rem; 
+                padding-left: 1rem; /* Sicherstellen, dass der Text auf Mobile nicht durch 2.5rem zu eng wird */
             }
         }
         /* End Mobile Layout */
 
-        /* HOVER-EFFEKT: Kein Underline, blauer Text (BEIBEHALTEN) */
+        /* HOVER-EFFEKT: Kein Underline, blauer Text */
         .interactable-text {
             color: black;
             transition: color 0.2s;
@@ -133,7 +112,7 @@
             display: block;
         }
         .interactable-text:hover {
-            color: #0000FF; /* Reines Blau bei Hover */
+            color: #0000FF; 
             opacity: 1 !important; 
         }
         
@@ -142,29 +121,50 @@
             text-decoration: none !important; 
             color: black !important; 
         }
-
-        /* Nav-Links sind NICHT mehr FONT-BOLD (RÜCKGÄNGIG) */
-        .project-link {
-            color: black;
-        }
         
         /* Gallery Styling */
         .gallery-image {
             width: 100%;
-            max-width: 900px; 
             height: auto;
             object-fit: contain;
-            margin-top: 1rem; /* Beibehalten für Abstand zum vorherigen Element (Titel/Caption) */
-            margin-bottom: 0; /* Wichtig: MUSS 0 sein, um den Gap zu kontrollieren */
+            margin-bottom: 0; 
             opacity: 0; 
             transition: opacity 0.6s ease-out;
         }
-
+           
         /* Abstand zwischen den kontinuierlich geladenen Serien */
         .series-content-block {
-            margin-bottom: 80px; /* Großer Abstand zwischen den Serien */
+            margin-bottom: 80px; 
         }
 
+        /* Abstand zwischen Bildelementen (CONTAINER-ABSTAND) */
+        .image-text-block {
+            /* Minimaler Abstand zwischen den Blöcken: 2px (0.125rem) */
+            margin-bottom: 0.125rem; 
+            /* Wichtig für Hover-Effekt: Muss als relative Basis für den Hover-Selector dienen */
+        }
+        
+        /* WICHTIG: Die Caption muss immer die Höhe beibehalten, auch wenn sie leer ist. */
+        .caption-placeholder {
+            /* Behält die Zeilenhöhe bei, auch wenn der Inhalt leer ist */
+            min-height: 1em; 
+        }
+
+        /* NEU: Steuerung der Sichtbarkeit der Caption */
+        .caption-text-content {
+            /* Standardmäßig unsichtbar (Opacity 0) */
+            opacity: 0;
+            /* Sanfter Übergang beim Hover */
+            transition: opacity 0.3s ease-in-out;
+            /* Stellt sicher, dass das Zeichen (&nbsp;) gerendert wird, um Platz zu beanspruchen */
+            display: inline-block; 
+        }
+        
+        /* NEU: Caption wird beim Hovern über den gesamten Block sichtbar */
+        .image-text-block:hover .caption-text-content {
+            opacity: 1;
+        }
+        
     </style>
 </head>
 <body>
@@ -184,7 +184,7 @@
 
     <!-- Fixed Left Panel: Name and Email (SCHMALER ANKER 150px) --><div class="fixed-left text-container">
         
-        <!-- 1. Name: Aisha Altenhofen (Top Left) -->
+        <!-- 1. Name: Aisha Altenhofen (Startet bei 1.5rem) -->
         <h1 id="name-link" class="font-medium interactable-text mb-0">Aisha Altenhofen</h1>
         
         <!-- 2. Email -->
@@ -198,8 +198,8 @@
             <li><a href="#" class="project-link interactable-text" data-series="carrier">The Carrier</a></li>
             <li><a href="#" class="project-link interactable-text" data-series="aabb">AABB</a></li>
             <li><a href="#" class="project-link interactable-text" data-series="exposure">First Exposure</a></li>
-            <li><a href="#" class="project-link interactable-text" data-series="trouble">trouble!</a></li>
-            <li><a href="#" class="project-link interactable-text" data-series="oneTwo">1,2</a></li>
+            <li><a href="#" class="project-link interactable-text" data-series="aftertext">Aftertext</a></li>
+            <li><a href="#" class="project-link interactable-text" data-series="conditionedAir">Conditioned Air</a></li>
         </ul>
     </nav>
 
@@ -211,15 +211,16 @@
             <ul class="flex space-x-6">
                  <li><a href="#" class="project-link interactable-text" data-series="carrier">The Carrier</a></li>
                 <li><a href="#" class="project-link interactable-text" data-series="aabb">AABB</a></li>
-                <li><a href="#" class="project-link interactable-text" data-series="exposure">First Exposure</a></li>
-                <li><a href="#" class="project-link interactable-text" data-series="trouble">trouble!</a></li>
-                <li><a href="#" class="project-link interactable-text" data-series="oneTwo">1,2</a></li>
+                <li><a href="#" class="project-container-link" data-series="exposure">First Exposure</a></li>
+                <li><a href="#" class="project-link interactable-text" data-series="aftertext">Aftertext</a></li>
+                <li><a href="#" class="project-link interactable-text" data-series="conditionedAir">Conditioned Air</a></li>
             </ul>
         </nav>
 
         <!-- Gallery Viewer: Inhalt wird hier geladen -->
         <div id="gallery-viewer" class="hidden text-container"> 
-            <!-- Images and series titles appear here --></div>
+            <!-- Alle Inhalte der Serie erscheinen hier -->
+        </div>
 
     </section>
 
@@ -296,33 +297,33 @@
                     { src: GITHUB_BASE_URL + "2024-FE-15-repro.jpg", caption: "<i>First Exposure (Untitled)</i>, 2024, Archival Pigment Print, 30 x 40 cm" },
                 ]
             },
-            trouble: {
-                title: "trouble!",
+            aftertext: {
+                title: "Aftertext", 
                 location: "Placeholder Gallery, City Center",
                 dates: "01.01.2023 — 31.01.2023",
                 city: "Munich, DE",
                 images: [
-                    { src: "https://placehold.co/900x600/c7d2fe/1e3a8a?text=trouble!+View+1", caption: "" },
-                    { src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=trouble!+View+2", caption: "" },
-                    { src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=trouble!+Repro+A", caption: "<i>Untitled (Trouble Study)</i>, 2023, Inkjet Print, 40 x 50 cm" },
-                    { src: "https://placehold.co/900x600/3b82f6/1e3a8a?text=trouble!+Repro+B", caption: "<i>Chaos (Blue)</i>, 2023, Inkjet Print, 40 x 50 cm" },
+                    { src: "https://placehold.co/900x600/c7d2fe/1e3a8a?text=Aftertext+View+1", caption: "" },
+                    { src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=Aftertext+View+2", caption: "" },
+                    { src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=Aftertext+Repro+A", caption: "<i>Untitled (Aftertext Study)</i>, 2023, Inkjet Print, 40 x 50 cm" },
+                    { src: "https://placehold.co/900x600/3b82f6/1e3a8a?text=Aftertext+Repro+B", caption: "<i>Chaos (Blue)</i>, 2023, Inkjet Print, 40 x 50 cm" },
                 ]
             },
-            oneTwo: {
-                title: "1,2",
+            conditionedAir: {
+                title: "Conditioned Air", 
                 location: "The Studio Gallery",
                 dates: "15.05.2022 — 15.06.2022",
                 city: "Berlin, DE",
                 images: [
-                    { src: "https://placehold.co/900x900/fecaca/991b1b?text=1,2+View+A", caption: "" },
-                    { src: "https://placehold.co/900x600/fca5a5/991b1b?text=1,2+View+B", caption: "" },
-                    { src: "https://placehold.co/900x1200/f87171/991b1b?text=1,2+Repro+X", caption: "<i>Duet (First Part)</i>, 2022, Archival print, 50 x 70 cm" },
+                    { src: "https://placehold.co/900x900/fecaca/991b1b?text=Conditioned+Air+View+A", caption: "" },
+                    { src: "https://placehold.co/900x600/fca5a5/991b1b?text=Conditioned+Air+View+B", caption: "" },
+                    { src: "https://placehold.co/900x1200/f87171/991b1b?text=Conditioned+Air+Repro+X", caption: "<i>Duet (First Part)</i>, 2022, Archival print, 50 x 70 cm" },
                 ]
             },
         };
 
         // Define the explicit order for continuous loading
-        const seriesOrder = ['carrier', 'aabb', 'exposure', 'trouble', 'oneTwo'];
+        const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir'];
         // State to track the last series index that was successfully loaded into the viewer
         let lastLoadedIndex = -1;
         // Flag to prevent multiple simultaneous load calls from the scroll listener
@@ -348,77 +349,87 @@
             // Added wrapper div with unique ID for scrolling/anchoring
             let html = `<div id="series-content-${series}" class="series-content-block">`; 
             
-            // Titel ist nur kursiv
+            // 1. TITEL-BLOCK (Höchste Hierarchie)
             html += `
                 <h2 class="italic mb-0">${data.title}</h2>
-                <!-- Details bleiben normal für Hierarchie -->
                 <p class="mb-0">${data.location}</p>
                 ${data.subtitle ? `<p class="mb-0">${data.subtitle}</p>` : ''} 
                 <p class="mb-0">${data.dates}</p>
-                <p class="mb-2">${data.city}</p> 
+                <p class="mb-0">${data.city}</p> 
             `;
+
             
             data.images.forEach((imgData, index) => {
-                // NEU: image-text-block wendet den konsistenten Zeilenabstand (mb-5) nach jedem Element an.
-                html += `<div class="image-text-block mb-5">`; 
+                // WICHTIGE ÄNDERUNG: Abstand zwischen Metadaten und dem ersten Bild. mt-12 = 48px (BLEIBT GROSS)
+                const firstImageMargin = index === 0 ? 'mt-12' : ''; 
                 
-                // Image element (mb-0 ist wichtig für die Steuerung durch den Wrapper)
+                // Abstand zwischen Bildelementen (CONTAINER mit minimaler Marge)
+                html += `<div class="image-text-block">`; 
+                
+                // Image element - hat keine eigene Marge (mb-0)
                 html += `
-                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-0" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Bild+Ladefehler+(${index + 1})';">
+                    <img src="${imgData.src}" alt="${data.title} - Image ${index + 1}" class="gallery-image mb-0 ${firstImageMargin}" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Bild+Ladefehler+(${index + 1})';">
                 `;
                 
-                // Conditional Caption
-                if (imgData.caption && imgData.caption.trim() !== '') {
-                    // Caption exists: mt-2 für minimalen Abstand zum Bild, mb-0 für konsistenten Gap durch Wrapper.
-                    html += `<p class="max-w-lg mt-2 mb-0">${imgData.caption}</p>`;
-                } 
-                // Wenn keine Caption existiert, wird kein extra Abstand benötigt, da mb-5 am Wrapper den Gap regelt.
+                // KONSISTENTE CAPTION / PLATZHALTER:
+                // Generiert immer ein <p> Element mit symmetrischen Rändern (mt-1, mb-1).
+                // Der eigentliche Text ist in einem Span, um die Opazität zu steuern.
+                const captionContent = imgData.caption && imgData.caption.trim() !== '' 
+                                       ? imgData.caption
+                                       : '&nbsp;'; // Non-breaking space, um zu garantieren, dass das P-Element nicht 0px hoch ist
 
+                // Das SPAN-Element wird verwendet, um die Sichtbarkeit zu steuern
+                html += `
+                    <p class="max-w-lg mt-1 mb-1 caption-placeholder">
+                        <span class="caption-text-content">${captionContent}</span>
+                    </p>
+                `;
+                
                 // Close the block wrapper
                 html += `</div>`;
             });
             
-            // Add Text Field
+            // 2. TEXT-BLOCK (Wieder ein deutlicher Abstand nach dem letzten Bild)
             html += `
-                <div class="mt-4 w-full max-w-[900px]"> 
+                <div class="mt-8 w-full max-w-[900px]"> 
             `;
             
             if (series === 'carrier') {
                 html += `
-                    <p class="mb-4"> 
+                    <p class="mb-6"> 
                         The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus.
                         Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück.
                     </p>
                 `;
             } else if (series === 'exposure') {
                  html += `
-                    <p class="mb-4">
+                    <p class="mb-6">
                         [Text für First Exposure. Bitte ersetzen Sie diesen Platzhalter durch Ihren tatsächlichen Künstler-Statement oder Ausstellungstext.]
                     </p>
                 `;
-            } else if (series === 'trouble') {
+            } else if (series === 'aftertext') { 
                  html += `
-                    <p class="mb-4">
-                        Diese Serie mit dem Titel "trouble!" erkundet Themen wie Zerbrechlichkeit, Störung und Eindämmung durch fragmentierte Porträts und Installationsansichten. Die Arbeit konzentriert sich auf die psychologische Landschaft, die durch kleinere, anhaltende Ängste entsteht. (Platzhaltertext)
+                    <p class="mb-6">
+                        Diese Serie mit dem Titel "Aftertext" erkundet Themen wie Zerbrechlichkeit, Störung und Eindämmung durch fragmentierte Porträts und Installationsansichten. Die Arbeit konzentriert sich auf die psychologische Landschaft, die durch kleinere, anhaltende Ängste entsteht. (Platzhaltertext)
                     </p>
                 `;
-            } else if (series === 'oneTwo') {
+            } else if (series === 'conditionedAir') { 
                  html += `
-                    <p class="mb-4">
-                        "1,2" ist eine Dokumentation früher Arbeiten, die sich ausschließlich auf Form und Dualismus konzentrieren. Die Bilder dienen als grundlegende Studien für spätere Projekte und experimentieren mit Licht und Schatten in einer kontrollierten Studio-Umgebung. (Platzhaltertext)
+                    <p class="mb-6">
+                        "Conditioned Air" ist eine Dokumentation früher Arbeiten, die sich ausschließlich auf Form und Dualismus konzentrieren. Die Bilder dienen als grundlegende Studien für spätere Projekte und experimentieren mit Licht und Schatten in einer kontrollierten Studio-Umgebung. (Platzhaltertext)
                     </p>
                 `;
             } else {
                 html += `
-                    <p class="mb-4">
+                    <p class="mb-6">
                         [Dies ist der Platzhalter für den Text. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails, Ihr Künstler-Statement oder die Daten für die Serie ${data.title}.]
                     </p>
                 `;
             }
 
-            // UNIVERSAL EXHIBITION DOCUMENTATION LINE
+            // UNIVERSAL EXHIBITION DOCUMENTATION LINE (Abstand nach dem Text)
             html += `
-                <p class="${series !== 'carrier' ? 'mt-4' : ''} mb-4">
+                <p class="mt-4 mb-6"> 
                     Ausstellungsdokumentation: Julian Blum
                 </p>
             `;
@@ -428,8 +439,8 @@
             if (series === 'exposure') {
                 html += `
                     <!-- Press Section -->
-                    <h3 class="font-medium mb-1 mt-4">Presse</h3>
-                    <p class="mb-4">
+                    <h3 class="font-medium mb-2 mt-4">Presse</h3>
+                    <p class="mb-6">
                         <a href="https://www.gallerytalk.net/aisha-altenhofen-austin-space/" target="_blank" class="interactable-text">
                             Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space
                         </a>
@@ -448,12 +459,11 @@
 
         // Lädt die nächste Serie dynamisch und hängt sie an den Viewer an.
         function loadNextSeries(smoothScroll = false) {
-            if (isLoadingNext) return; // Verhindert mehrfaches gleichzeitiges Laden
+            if (isLoadingNext) return; 
 
             const nextIndex = lastLoadedIndex + 1;
             
             if (nextIndex >= seriesOrder.length) {
-                // Ende der Liste erreicht
                 return;
             }
 
@@ -468,7 +478,6 @@
             lastLoadedIndex = nextIndex;
             isLoadingNext = false;
             
-            // Optional: Scroll zum neu geladenen Inhalt (nicht bei Scroll-Trigger)
             if (smoothScroll) {
                  const newContent = document.getElementById(`series-content-${nextSeriesKey}`);
                  if (newContent) {
@@ -479,17 +488,15 @@
         
         // Überprüft die Scroll-Position und triggert das Laden der nächsten Serie bei Annäherung an das Ende.
         function checkScrollPosition() {
-            // Überprüfen, ob der Benutzer nahe dem Ende des scrollbaren Inhaltsbereichs ist
             const isNearEnd = contentArea.scrollTop + contentArea.clientHeight >= contentArea.scrollHeight - SCROLL_THRESHOLD;
 
             if (isNearEnd) {
-                // Laden der nächsten Serie triggern, wenn der Benutzer nahe am Ende ist
                 loadNextSeries(false); 
             }
         }
 
 
-        // Behandelt die Anzeige einer bestimmten Seriengalerie (beginnt den kontinuierlichen Fluss von dieser Serie aus)
+        // Behandelt die Anzeige einer bestimmten Seriengalerie 
         function showSeries(seriesKey, clickedLink, scrollIntoView = false) {
             if (!seriesData[seriesKey]) {
                 console.error(`Serie ${seriesKey} nicht gefunden.`);
@@ -503,7 +510,7 @@
             
             // 2. Initialserie laden
             const initialSeriesHTML = createGalleryHTML(seriesKey);
-            galleryViewer.innerHTML = initialSeriesHTML;
+            galleryViewer.innerHTML = initialSeriesHTML; 
             
             // Index der aktuellen Serie finden
             const startIndex = seriesOrder.indexOf(seriesKey);
@@ -511,18 +518,24 @@
             
             // 3. Navigation hervorheben
             projectLinks.forEach(link => link.classList.remove('active-series-link'));
-            clickedLink.classList.add('active-series-link'); 
             
+            // Finde den richtigen Link, da querySelectorAll am Anfang ausgeführt wird.
+            let activeLink = clickedLink;
+            if (!activeLink) {
+                 activeLink = document.querySelector(`.project-link[data-series="${seriesKey}"]`);
+            }
+            if (activeLink) {
+                activeLink.classList.add('active-series-link'); 
+            }
+
             // 4. Scrollen
             if (scrollIntoView) {
-                 // Bei Klick direkt an den Anfang scrollen
                  contentArea.scrollTo({top: 0, behavior: 'smooth'}); 
             } else {
-                 // Bei Initial-Load sofort an den Anfang scrollen
                  contentArea.scrollTo(0, 0); 
             }
             
-            // 5. Die nächste Serie sofort laden, um den kontinuierlichen Scroll-Fluss zu starten (wenn nicht die letzte Serie)
+            // 5. Die nächste Serie sofort laden
             if (startIndex < seriesOrder.length - 1) {
                 loadNextSeries(false); 
             }
@@ -535,7 +548,6 @@
                         img.style.opacity = '1';
                     }, index * 100); 
                     
-                    // Preload der nächsten Bilder
                     if (index < 2) {
                         const nextImg = new Image();
                         nextImg.src = img.src;
@@ -555,7 +567,6 @@
             let defaultLink = document.querySelector(`.project-link[data-series="${series}"]`);
 
             if (defaultLink) {
-                // Initialisierung mit der ersten Serie, was die kontinuierliche Ladelogik triggert
                 showSeries(series, defaultLink, false); 
             } else {
                 console.error(`Standard-Link für Serie ${series} nicht gefunden.`);
@@ -569,7 +580,7 @@
         // --- EVENT LISTENERS & INITIALIZATION ---
         
         // 1. Scroll Listener zur Überprüfung der Position
-        contentArea.removeEventListener('scroll', checkScrollPosition); // Sicherstellen, dass nur ein Listener existiert
+        contentArea.removeEventListener('scroll', checkScrollPosition); 
         contentArea.addEventListener('scroll', checkScrollPosition);
         
         // 2. Klick-Handler für die Navigation
@@ -577,7 +588,6 @@
             link.addEventListener('click', (event) => {
                 event.preventDefault();
                 const seriesKey = link.getAttribute('data-series');
-                // Der dritte Parameter (true) signalisiert, dass es ein Benutzerklick war und gescrollt werden soll
                 showSeries(seriesKey, link, true); 
             });
         });
