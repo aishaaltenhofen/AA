@@ -575,6 +575,186 @@
             }
         }
         
+        /* Mobile Version (Tablet und kleiner) */
+        @media (max-width: 768px) {
+            /* Name fixiert auf allen Seiten, klickbar führt zur Startseite */
+            #fixed-name-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+                background-color: white;
+                z-index: 1000;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: var(--grid-padding);
+                box-sizing: border-box;
+            }
+            
+            #name-link-container {
+                cursor: pointer;
+                padding-left: var(--grid-padding);
+                margin-top: 0;
+            }
+            
+            #name-right-top {
+                display: none; /* Verstecken auf Mobile */
+            }
+            
+            #expandable-text-wrapper {
+                display: none; /* Verstecken auf Mobile */
+            }
+            
+            /* Startseite: Liste mit Ausstellungsinformationen zuerst */
+            .mobile-exhibition-list {
+                display: block !important;
+                margin-top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+                padding: var(--grid-padding);
+                grid-column: 1 / -1;
+            }
+            
+            .mobile-exhibition-item {
+                cursor: pointer;
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+                padding: 0;
+            }
+            
+            .mobile-exhibition-item:hover {
+                color: #808080;
+            }
+            
+            .mobile-exhibition-title {
+                font-style: italic;
+                line-height: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            .mobile-exhibition-date,
+            .mobile-exhibition-location {
+                line-height: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            /* Bilder auf Startseite verstecken auf Mobile */
+            .preview-item-wrapper {
+                display: none;
+            }
+            
+            /* Modal/Ausstellungsseiten Mobile */
+            .full-screen-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: white;
+                z-index: 20;
+                display: none;
+                overflow-y: auto;
+            }
+            
+            .full-screen-modal.is-active {
+                display: block;
+            }
+            
+            .modal-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+                background-color: white;
+                z-index: 30;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: var(--grid-padding);
+                box-sizing: border-box;
+            }
+            
+            #modal-name-container {
+                cursor: pointer;
+            }
+            
+            #modal-name-right {
+                display: none;
+            }
+            
+            .close-modal-button {
+                display: none; /* Close Button verstecken auf Mobile */
+            }
+            
+            .modal-content-area {
+                position: relative;
+                top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+                left: 0;
+                width: 100%;
+                min-height: calc(100vh - var(--caption-height) * var(--line-height-ratio) - 2 * var(--grid-padding));
+                display: flex;
+                flex-direction: column;
+                padding: var(--grid-padding);
+                box-sizing: border-box;
+            }
+            
+            /* Ausstellungsinfo oben */
+            .modal-exhibition-info-side {
+                width: 100%;
+                padding: 0;
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+                position: relative;
+                order: 1;
+            }
+            
+            /* Galerie Section - Bilder volle Breite */
+            .modal-gallery-section {
+                width: 100%;
+                padding: 0;
+                order: 2;
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            .image-block {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            .modal-gallery-image {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            /* Bildunterschriften untereinander nach dem letzten Bild */
+            .image-caption-wrapper {
+                margin-top: var(--grid-padding);
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            .image-caption-wrapper:last-child {
+                margin-bottom: 0;
+            }
+            
+            /* Text nach Bildern */
+            .modal-text-wrapper {
+                order: 3;
+                padding: 0;
+                margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            /* Next Exhibition Auto-Scroll */
+            #next-exhibition-wrapper {
+                order: 4;
+                margin-top: calc(2 * var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            /* Imprint auf Mobile */
+            #imprint-section-bottom {
+                justify-content: flex-end;
+                padding-right: var(--grid-padding);
+                margin-top: calc(2 * var(--caption-height) * var(--line-height-ratio));
+            }
+        }
+        
         @media (max-width: 480px) {
             :root {
                 --grid-columns: 1; /* Eine Spalte auf sehr kleinen Bildschirmen */
@@ -621,6 +801,11 @@
         
         <!-- Top Info Area (nur Spacer) -->
         <div id="top-info-area"></div>
+        
+        <!-- Mobile Exhibition List (nur auf Mobile sichtbar) -->
+        <div id="mobile-exhibition-list" class="mobile-exhibition-list" style="display: none;">
+            <!-- Wird per JS gefüllt -->
+        </div>
         
         <!-- Vorschaubilder Navigation (Serien) -->
         <div id="preview-image-nav">
@@ -823,12 +1008,13 @@
             if (!previewImageNav) return;
             
             let html = '';
+            let mobileHtml = '';
             
             seriesOrder.forEach(seriesKey => {
                 const data = seriesData[seriesKey];
                 if (!data || !data.images || data.images.length === 0) return;
                 
-                // Für reguläre Serien (mit Bild) - Bild und Info nebeneinander
+                // Desktop: Bild und Info nebeneinander
                 const firstImage = data.images[0];
                 html += `
                     <div class="preview-item-wrapper gallery-item" data-series="${seriesKey}">
@@ -847,14 +1033,39 @@
                         </div>
                     </div>
                 `;
+                
+                // Mobile: Nur Ausstellungsinformationen als Liste
+                mobileHtml += `
+                    <div class="mobile-exhibition-item" data-series="${seriesKey}">
+                        <div class="mobile-exhibition-title">${data.title}</div>
+                        <div class="mobile-exhibition-date">${data.date}</div>
+                        <div class="mobile-exhibition-location">${data.location}</div>
+                    </div>
+                `;
             });
             
             previewImageNav.innerHTML = html;
             
-            // Event Listener für alle Galerie-Einträge hinzufügen
+            // Mobile Liste füllen
+            const mobileList = document.getElementById('mobile-exhibition-list');
+            if (mobileList) {
+                mobileList.innerHTML = mobileHtml;
+            }
+            
+            // Event Listener für Desktop Galerie-Einträge
             document.querySelectorAll('.preview-item-wrapper').forEach(wrapper => {
                 wrapper.addEventListener('click', (event) => {
                     const seriesKey = wrapper.getAttribute('data-series');
+                    if (seriesKey) {
+                        openShowModal(seriesKey);
+                    }
+                });
+            });
+            
+            // Event Listener für Mobile Ausstellungsliste
+            document.querySelectorAll('.mobile-exhibition-item').forEach(item => {
+                item.addEventListener('click', (event) => {
+                    const seriesKey = item.getAttribute('data-series');
                     if (seriesKey) {
                         openShowModal(seriesKey);
                     }
@@ -881,9 +1092,13 @@
             
             // 2. Galerie füllen mit Captions
             let galleryHtml = '';
+            let captionsHtml = ''; // Für Mobile: Alle Bildunterschriften nach dem letzten Bild
             if (data.images && data.images.length > 0) {
                 data.images.forEach((imgData, index) => {
                     const hasCaption = imgData.title || imgData.material || imgData.dimensions;
+                    const isLast = index === data.images.length - 1;
+                    
+                    // Desktop: Caption unter jedem Bild
                     galleryHtml += `
                         <div class="image-block">
                             <img src="${imgData.src}" alt="${data.title || 'Image'}" class="modal-gallery-image" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';">
@@ -898,9 +1113,37 @@
                             ` : `<div class="image-caption-wrapper" style="margin-top: var(--grid-padding);"></div>`}
                         </div>
                     `;
+                    
+                    // Mobile: Captions sammeln für nach dem letzten Bild
+                    if (hasCaption) {
+                        captionsHtml += `
+                            <div class="image-caption-wrapper">
+                                <div class="image-caption">
+                                    ${imgData.title ? `<div class="image-caption-title">${imgData.title}</div>` : ''}
+                                    ${imgData.material ? `<div class="image-caption-material">${imgData.material}</div>` : ''}
+                                    ${imgData.dimensions ? `<div class="image-caption-dimensions">${imgData.dimensions}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
                 });
             }
             modalGalleryContent.innerHTML = galleryHtml;
+            
+            // Mobile: Bildunterschriften nach dem letzten Bild hinzufügen
+            if (window.innerWidth <= 768 && captionsHtml) {
+                setTimeout(() => {
+                    const lastImageBlock = modalGalleryContent.querySelector('.image-block:last-child');
+                    if (lastImageBlock) {
+                        // Entferne Captions von einzelnen Bildern auf Mobile
+                        modalGalleryContent.querySelectorAll('.image-block .image-caption-wrapper').forEach(cap => {
+                            cap.remove();
+                        });
+                        // Füge alle Captions nach dem letzten Bild hinzu
+                        lastImageBlock.insertAdjacentHTML('afterend', captionsHtml);
+                    }
+                }, 100);
+            }
             
             // Text füllen (Absätze aus Zeilenumbrüchen erstellen) + Exhibition Documentation
             if (data.description) {
@@ -948,6 +1191,52 @@
             if (gallerySection) {
                 gallerySection.scrollTop = 0;
             }
+            
+            // Mobile: Auto-Scroll zur nächsten Ausstellung am Ende
+            if (window.innerWidth <= 768) {
+                setupMobileAutoScroll();
+            }
+        }
+        
+        // Mobile Auto-Scroll zur nächsten Ausstellung
+        function setupMobileAutoScroll() {
+            if (window.innerWidth > 768) return; // Nur auf Mobile
+            
+            const modal = document.getElementById('show-modal');
+            if (!modal) return;
+            
+            let hasScrolledToEnd = false;
+            let scrollTimeout;
+            
+            const checkScroll = () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const scrollHeight = document.documentElement.scrollHeight;
+                    const clientHeight = window.innerHeight;
+                    
+                    // Wenn am Ende (innerhalb 150px) und noch nicht gescrollt
+                    if (scrollHeight - scrollTop - clientHeight < 150 && !hasScrolledToEnd) {
+                        hasScrolledToEnd = true;
+                        // Warte 2 Sekunden, dann zur nächsten Ausstellung
+                        setTimeout(() => {
+                            const nextIndex = (currentSeriesIndex + 1) % seriesOrder.length;
+                            const nextSeriesKey = seriesOrder[nextIndex];
+                            openShowModal(nextSeriesKey);
+                        }, 2000);
+                    }
+                }, 200);
+            };
+            
+            window.addEventListener('scroll', checkScroll);
+            
+            // Cleanup beim Schließen
+            const closeButton = document.getElementById('close-modal');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    window.removeEventListener('scroll', checkScroll);
+                });
+            }
         }
         
         // Toggle Expandable Text under name
@@ -985,11 +1274,33 @@
             imprintContentInline = document.getElementById('imprint-content-inline');
             
             // --- EVENT LISTENERS ---
-            // 1. Expandable Text Toggle (under name)
-            if (nameLinkContainer && expandableTextWrapper) {
+            // 1. Name klickbar - führt zur Startseite (auf Mobile)
+            if (nameLinkContainer) {
                 nameLinkContainer.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    toggleExpandableText();
+                    if (window.innerWidth <= 768) {
+                        // Mobile: Zur Startseite
+                        event.preventDefault();
+                        closeAllModals();
+                        window.scrollTo(0, 0);
+                    } else {
+                        // Desktop: Expandable Text Toggle
+                        if (expandableTextWrapper) {
+                            event.preventDefault();
+                            toggleExpandableText();
+                        }
+                    }
+                });
+            }
+            
+            // Modal Name klickbar - führt zur Startseite (auf Mobile)
+            const modalNameContainer = document.getElementById('modal-name-container');
+            if (modalNameContainer) {
+                modalNameContainer.addEventListener('click', (event) => {
+                    if (window.innerWidth <= 768) {
+                        event.preventDefault();
+                        closeAllModals();
+                        window.scrollTo(0, 0);
+                    }
                 });
             }
             
