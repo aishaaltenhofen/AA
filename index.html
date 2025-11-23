@@ -65,7 +65,7 @@
             gap: var(--grid-gutter);
         }
         
-        /* --- TOP INFO BEREICH (Name, Email, Imprint) --- */
+        /* --- TOP INFO BEREICH (Name, Email) --- */
         #top-info-area {
             grid-column: 1 / -1;
             display: flex;
@@ -73,9 +73,10 @@
             align-items: flex-start;
             margin-top: var(--row-top-margin);
             margin-bottom: var(--row-spacing);
+            min-height: 20rem; /* Genug Platz für ausklappbaren Text */
         }
         
-        /* Name/Email Interaktion */
+        /* Name/Text Interaktion */
         #name-link-container {
             cursor: pointer;
             width: max-content;
@@ -84,27 +85,35 @@
             align-items: flex-start;
         }
         
-        /* Whitespace unter dem Namen (grid-aligned) */
-        #name-link-container::after {
-            content: '';
-            display: block;
-            height: var(--row-spacing);
+        /* Expandable Text Wrapper unter dem Namen */
+        #expandable-text-wrapper {
             width: 100%;
-        }
-        
-        /* E-Mail Wrapper: Kontrolliert die Höhe */
-        #email-address-wrapper {
+            max-width: 50vw; /* Max 50% Bildschirmbreite */
+            padding-left: 0;
+            /* Startzustand: Versteckt */
             height: 0;
+            max-height: 0;
             overflow: hidden;
             opacity: 0;
-            transition: height 0.3s ease-out, opacity 0.3s ease-out;
-            padding-left: 1rem; /* Einzug */
+            transition: max-height 0.8s ease-in-out, opacity 0.4s ease-in-out;
+            box-sizing: border-box;
+            word-break: break-word;
+            white-space: normal;
+            margin-top: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
-        /* JS-gesteuerter Expanded Zustand für E-Mail */
-        #email-address-wrapper.is-expanded {
-            height: var(--caption-height);
+        /* JS-gesteuerter Expanded Zustand für Text */
+        #expandable-text-wrapper.is-expanded {
+            max-height: 30rem;
+            height: auto;
             opacity: 1;
+            margin-bottom: calc(6 * var(--caption-height) * var(--line-height-ratio)); /* 6 Zeilen Abstand */
+        }
+        
+        /* Email Address (rechts oben) */
+        #email-address-top {
+            text-align: right;
+            align-self: flex-start;
         }
         
         /* --- MAIN GALLERY SECTION (Enthält nun auch das Imprint) --- */
@@ -152,34 +161,41 @@
         }
         
         .preview-image {
-            width: 100%;
+            width: 50%;
+            max-width: 50vw;
             height: auto;
             object-fit: contain;
             opacity: 1;
             transition: opacity 0.2s;
+            display: block;
+        }
+        
+        /* Responsive: Wenn Bild nicht mehr passt, wird es kleiner */
+        @media (max-width: 1024px) {
+            .preview-image {
+                width: 100%;
+                max-width: 100%;
+            }
         }
         
         /* --- IMPRINT SPEZIFISCHES CSS --- */
-        /* Imprint auf derselben Zeile wie Name, rechts ausgerichtet */
-        #imprint-link-top {
-            cursor: pointer;
-            text-align: right;
-            align-self: flex-start;
+        /* Imprint am Ende der Startseite, links ausgerichtet */
+        #imprint-section-bottom {
+            grid-column: 1 / -1;
+            margin-top: var(--row-spacing);
+            width: max-content;
         }
         
-        /* Imprint Wrapper (erste Zeile) */
-        .imprint-title-wrapper {
-            /* KEIN margin-bottom, da der Text direkt darunter hängt (ähnlich wie Name/Email) */
-            margin-bottom: 0;
+        #imprint-link-bottom {
+            cursor: pointer;
             width: max-content;
         }
         
         /* Aufklappbarer Imprint Text Wrapper */
         #imprint-content-inline {
-            grid-column: 1 / -1;
             width: 100%;
-            /* Einzug: spiegelt die E-Mail-Einrückung */
-            padding-left: 1rem;
+            max-width: 50vw;
+            padding-left: 0;
             /* Startzustand: Versteckt */
             height: 0;
             max-height: 0;
@@ -189,24 +205,21 @@
             box-sizing: border-box;
             word-break: break-word;
             white-space: normal;
-            margin-top: 0;
+            margin-top: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
         /* JS-gesteuerter Expanded Zustand für Imprint Text */
         #imprint-content-inline.is-expanded {
-            /* Fügt den ABSTAND ZUR NÄCHSTEN SERIE hinzu */
-            margin-bottom: var(--row-spacing);
-            margin-top: var(--row-spacing);
-            /* Stellt die Höhe für den Inhalt her */
             max-height: 20rem;
             height: auto;
             opacity: 1;
         }
         
-        /* Absätze innerhalb des Imprint-Textes */
-        #imprint-content-inline p {
+        /* Absätze innerhalb des Imprint-Textes und expandable text */
+        #imprint-content-inline p,
+        #expandable-text-content p {
             margin: 0;
-            line-height: var(--caption-height);
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
         /* --- 2. MODAL-VIEWER (Vollbild-Overlay) --- */
@@ -299,8 +312,11 @@
         
         .image-block {
             padding: 0;
-            /* EINHEITLICHER ABSTAND ZWISCHEN den Bildern (unten) */
-            margin-bottom: var(--grid-padding);
+            margin-bottom: 0;
+            width: 50%;
+            max-width: 50vw;
+            display: flex;
+            flex-direction: column;
         }
         
         .modal-gallery-image {
@@ -310,31 +326,71 @@
             display: block;
         }
         
+        /* Image Caption Styling */
+        .image-caption {
+            margin-top: var(--grid-padding);
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        .image-caption-title {
+            font-style: italic;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        .image-caption-material,
+        .image-caption-dimensions {
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        /* Abstand nach Caption: 2 leere Zeilen + konsistentes Padding */
+        .image-caption-wrapper {
+            margin-bottom: calc(2 * var(--caption-height) * var(--line-height-ratio) + var(--grid-padding));
+        }
+        
+        /* Responsive: Wenn Bild nicht mehr passt, wird es kleiner */
+        @media (max-width: 1024px) {
+            .image-block {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+        
         /* Entfernt den Abstand NACH dem letzten Bild der Galerie, wenn der Textblock direkt folgt */
-        #modal-gallery-content .image-block:last-child {
-            /* Dieser Abstand MUSS 0 sein, da der vertikale Abstand zum Textblock durch modal-text-wrapper hinzugefügt wird. */
+        #modal-gallery-content .image-block:last-child .image-caption-wrapper,
+        #modal-gallery-content .image-block:last-child > div:last-child {
             margin-bottom: 0;
         }
         
         /* 2. TEXT SECTION (Für alle Texte) */
         .modal-text-wrapper {
-            /* Vertikales Padding: Oben (Abstand zur Galerie), Unten (Abstand zum Footer) */
-            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
-            padding: var(--grid-padding) var(--grid-padding) 0 var(--grid-padding);
+            /* Vertikales Padding: Oben (Abstand zur Galerie) */
+            /* Horizontales Padding: Links = 2x Top, Rechts normal */
+            padding: var(--grid-padding) var(--grid-padding) 0 calc(2 * var(--grid-padding));
         }
         
         .modal-text-block {
-            max-width: 700px;
+            max-width: none; /* Text läuft so breit wie Platz ist */
+            width: 100%;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .modal-text-block p {
             /* Normale Zeilenhöhe zwischen Absätzen */
-            margin: 0 0 var(--caption-height) 0;
+            margin: 0 0 calc(var(--caption-height) * var(--line-height-ratio)) 0;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
         /* Entfernt den Abstand nach dem letzten Absatz im Textblock. */
         .modal-text-block p:last-child {
             margin-bottom: 0;
+        }
+        
+        /* Exhibition Documentation */
+        .exhibition-documentation {
+            margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
         /* 3. FOOTER SECTION */
@@ -420,31 +476,35 @@
     
     <!-- 1. Landing Page: NAVIGATION (FULL-WIDTH LANDING PAGE) -->
     <nav id="nav-section">
-        <!-- Name, Email und Imprint -->
+        <!-- Name und Email -->
         <div id="top-info-area">
-            <!-- 1. Name und E-Mail Container (Click-Target) -->
+            <!-- 1. Name und Expandable Text Container (Click-Target) -->
             <div id="name-link-container">
                 <!-- Name -->
                 <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
                 
-                <!-- E-Mail Wrapper: Wird per Klick getoggelt -->
-                <div id="email-address-wrapper">
-                    <div id="email-address" class="mb-0">aishaaltenhofen@gmail.com</div>
+                <!-- Expandable Text Wrapper: Wird per Klick getoggelt -->
+                <div id="expandable-text-wrapper">
+                    <div id="expandable-text-content"></div>
                 </div>
             </div>
             
-            <!-- Imprint Link (rechts ausgerichtet) -->
-            <div id="imprint-link-top" class="interactable-text">Imprint</div>
+            <!-- Email Address (rechts ausgerichtet) -->
+            <div id="email-address-top">aishaaltenhofen@gmail.com</div>
         </div>
         
-        <!-- Imprint Content (wird per JS getoggelt) -->
-        <div id="imprint-content-inline" style="grid-column: 1 / -1;">
-            <!-- Wird per JS gefüllt -->
-        </div>
-        
-        <!-- Vorschaubilder Navigation (Serien + Imprint) -->
+        <!-- Vorschaubilder Navigation (Serien) -->
         <div id="preview-image-nav">
             <!-- Elemente werden hier durch JS eingefügt -->
+        </div>
+        
+        <!-- Imprint Section (am Ende der Startseite) -->
+        <div id="imprint-section-bottom">
+            <div id="imprint-link-bottom" class="interactable-text">Imprint</div>
+            <!-- Aufklappbarer Imprint Text Wrapper -->
+            <div id="imprint-content-inline">
+                <!-- Wird per JS gefüllt -->
+            </div>
         </div>
     </nav>
     
@@ -532,68 +592,67 @@
                 title: "The Carrier",
                 date: "July 16, 2025 – July 22, 2025",
                 location: "University of the Arts, Berlin, DE",
-                description: `The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus. Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück. Ausstellungsdokumentation: Julian Blum.`,
+                description: `The Carrier is a series of eleven photographs taken at Villa Necchi Campiglio in Milan. Ten were taken through the curved glass facade of the villa as I moved between interior and exterior spaces. Another image was taken through a serving cart in the house. The villa was built between 1932 and 1935 for the Necchi-Campiglio industrial family. During the fascist regime, it was confiscated and used as one of Mussolini's local headquarters. After the war, the family returned to the house.`,
                 images: [
-                    { id: "img-carrier-01", src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", caption: "" },
-                    { id: "img-carrier-02", src: GITHUB_BASE_URL + "Graduation 2025 - 02.jpg", caption: "" },
-                    { id: "img-carrier-03", src: GITHUB_BASE_URL + "Graduation 2025 - 03.jpg", caption: "" },
-                    { id: "img-carrier-04", src: GITHUB_BASE_URL + "Graduation 2025 - 04.jpg", caption: "" },
-                    { id: "img-carrier-05", src: GITHUB_BASE_URL + "Graduation 2025 - 05.jpg", caption: "" },
-                    { id: "img-carrier-06", src: GITHUB_BASE_URL + "Graduation 2025 - 06.jpg", caption: "" },
-                    { id: "img-carrier-07", src: GITHUB_BASE_URL + "Graduation 2025 - 07.jpg", caption: "" },
-                    { id: "img-carrier-08", src: GITHUB_BASE_URL + "Graduation 2025 - 08.jpg", caption: "" },
-                    { id: "img-carrier-09", src: GITHUB_BASE_URL + "2025- Repro-01.jpg", caption: "" },
-                    { id: "img-carrier-10", src: GITHUB_BASE_URL + "2025-Repro-02.jpg", caption: "" },
-                    { id: "img-carrier-11", src: GITHUB_BASE_URL + "2025-Repro-03.jpg", caption: "" },
+                    { id: "img-carrier-01", src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-02", src: GITHUB_BASE_URL + "Graduation 2025 - 02.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-03", src: GITHUB_BASE_URL + "Graduation 2025 - 03.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-04", src: GITHUB_BASE_URL + "Graduation 2025 - 04.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-05", src: GITHUB_BASE_URL + "Graduation 2025 - 05.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-06", src: GITHUB_BASE_URL + "Graduation 2025 - 06.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-07", src: GITHUB_BASE_URL + "Graduation 2025 - 07.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-08", src: GITHUB_BASE_URL + "Graduation 2025 - 08.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-09", src: GITHUB_BASE_URL + "2025- Repro-01.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-10", src: GITHUB_BASE_URL + "2025-Repro-02.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-carrier-11", src: GITHUB_BASE_URL + "2025-Repro-03.jpg", title: "", material: "", dimensions: "" },
                 ]
             },
             aabb: {
                 title: "AABB",
                 date: "December 18, 2024 – March 28, 2025",
                 location: "Dorothea Konwiarz Stiftung, Duo Exhibition with Bonnie Barth, Berlin, DE",
-                description: `Dies ist der Platzhalter für den Text der Serie AABB. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.`,
+                description: `This is a placeholder for the AABB series text. Please replace this with your actual exhibition details or artist statement.`,
                 images: [
-                    // Platzhalterbilder
-                    { id: "img-aabb-01", src: "https://placehold.co/1500x800/a3a3a3/000000?text=AABB+Image+01", caption: "" },
-                    { id: "img-aabb-02", src: "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02", caption: "" }
+                    { id: "img-aabb-01", src: "https://placehold.co/1500x800/a3a3a3/000000?text=AABB+Image+01", title: "", material: "", dimensions: "" },
+                    { id: "img-aabb-02", src: "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02", title: "", material: "", dimensions: "" }
                 ]
             },
             exposure: {
                 title: "First Exposure",
                 date: "July 20, 2024 – August 25, 2024",
                 location: "Austin Space, Munich, DE",
-                description: `Die Ausstellung fand im Austin Space statt. Presse: Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space (Link: https://www.gallerytalk.net/aisha-altenhofen-austin-space/) Ausstellungsdokumentation: Julian Blum.`,
+                description: `The exhibition took place at Austin Space. Press: Quirin Brunnmeier: Contact and Engagement, Aisha Altenhofen at Austin Space (Link: https://www.gallerytalk.net/aisha-altenhofen-austin-space/)`,
                 images: [
-                    { id: "img-exp-01", src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", caption: "" },
-                    { id: "img-exp-02", src: GITHUB_BASE_URL + "2024-FE-02-install.jpg", caption: "" },
-                    { id: "img-exp-03", src: GITHUB_BASE_URL + "2024-FE-03-install.jpg", caption: "" },
-                    { id: "img-exp-04", src: GITHUB_BASE_URL + "2024-FE-04-install.jpg", caption: "" },
-                    { id: "img-exp-05", src: GITHUB_BASE_URL + "2024-FE-05-install.jpg", caption: "" },
-                    { id: "img-exp-06", src: GITHUB_BASE_URL + "2024-FE-07-repro.jpg", caption: "" },
-                    { id: "img-exp-07", src: GITHUB_BASE_URL + "2024-FE-08-repro.jpg", caption: "" },
-                    { id: "img-exp-08", src: GITHUB_BASE_URL + "2024-FE-09-repro.jpg", caption: "" },
+                    { id: "img-exp-01", src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-02", src: GITHUB_BASE_URL + "2024-FE-02-install.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-03", src: GITHUB_BASE_URL + "2024-FE-03-install.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-04", src: GITHUB_BASE_URL + "2024-FE-04-install.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-05", src: GITHUB_BASE_URL + "2024-FE-05-install.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-06", src: GITHUB_BASE_URL + "2024-FE-07-repro.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-07", src: GITHUB_BASE_URL + "2024-FE-08-repro.jpg", title: "", material: "", dimensions: "" },
+                    { id: "img-exp-08", src: GITHUB_BASE_URL + "2024-FE-09-repro.jpg", title: "", material: "", dimensions: "" },
                 ]
             },
             aftertext: {
                 title: "Aftertext",
                 date: "January 1, 2023 – January 31, 2023",
                 location: "Placeholder Gallery, City Center, Munich, DE",
-                description: `Dies ist der Platzhalter für den Text der Serie Aftertext. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.`,
+                description: `This is a placeholder for the Aftertext series text. Please replace this with your actual exhibition details or artist statement.`,
                 images: [
-                    { id: "img-at-01", src: "https://placehold.co/1500x800/c7d2fe/1e3a8a?text=Aftertext+View+1", caption: "" },
-                    { id: "img-at-02", src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=Aftertext+View+2", caption: "" },
-                    { id: "img-at-03", src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=Aftertext+Repro+A", caption: "" },
+                    { id: "img-at-01", src: "https://placehold.co/1500x800/c7d2fe/1e3a8a?text=Aftertext+View+1", title: "", material: "", dimensions: "" },
+                    { id: "img-at-02", src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=Aftertext+View+2", title: "", material: "", dimensions: "" },
+                    { id: "img-at-03", src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=Aftertext+Repro+A", title: "", material: "", dimensions: "" },
                 ]
             },
             conditionedAir: {
                 title: "Conditioned Air",
                 date: "May 15, 2022 – June 15, 2022",
                 location: "The Studio Gallery, Berlin, DE",
-                description: `Dies ist der Platzhalter für den Text der Serie Conditioned Air. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.`,
+                description: `This is a placeholder for the Conditioned Air series text. Please replace this with your actual exhibition details or artist statement.`,
                 images: [
-                    { id: "img-ca-01", src: "https://placehold.co/1500x800/fecaca/991b1b?text=Conditioned+Air+View+A", caption: "" },
-                    { id: "img-ca-02", src: "https://placehold.co/900x600/fca5a5/991b1b?text=Conditioned+Air+View+B", caption: "" },
-                    { id: "img-ca-03", src: "https://placehold.co/900x1200/f87171/991b1b?text=Duet+X", caption: "" },
+                    { id: "img-ca-01", src: "https://placehold.co/1500x800/fecaca/991b1b?text=Conditioned+Air+View+A", title: "", material: "", dimensions: "" },
+                    { id: "img-ca-02", src: "https://placehold.co/900x600/fca5a5/991b1b?text=Conditioned+Air+View+B", title: "", material: "", dimensions: "" },
+                    { id: "img-ca-03", src: "https://placehold.co/900x1200/f87171/991b1b?text=Duet+X", title: "", material: "", dimensions: "" },
                 ]
             },
             imprint: {
@@ -609,10 +668,14 @@
         const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir'];
         
         // --- GLOBAL VARIABLES ---
-        let nameLinkContainer, emailAddressWrapper, previewImageNav;
+        let nameLinkContainer, expandableTextWrapper, previewImageNav;
         let showModal, closeModalButton, modalTitle, modalDate, modalLocation;
         let modalGalleryContent, modalText, modalContentScroll;
-        let imprintLinkTop, imprintContentInline;
+        let imprintLinkBottom, imprintContentInline;
+        let currentSeriesIndex = 0;
+        
+        // Configurable expandable text under name (can be edited here)
+        const expandableTextContent = `Insert your text here that will be expandable under your name.`;
         
         // Funktion zum Schließen aller Modals
         function closeAllModals() {
@@ -672,42 +735,100 @@
             const data = seriesData[seriesKey];
             if (!data) return;
             
+            // Update current series index
+            currentSeriesIndex = seriesOrder.indexOf(seriesKey);
+            
             // 1. Header füllen - 3 Zeilen Format
             modalTitle.innerHTML = data.title || ''; // Wird durch CSS kursiv gemacht
             modalDate.innerHTML = data.date || '';
             modalLocation.innerHTML = data.location || '';
             
             // 2. Scrollbaren Inhalt füllen
-            // Text füllen (Absätze aus Zeilenumbrüchen erstellen)
-            if (data.description) {
-                modalText.innerHTML = data.description
-                    .split('\n')
-                    .filter(p => p.trim() !== '') // Leere Zeilen entfernen
-                    .map(p => `<p>${p.trim()}</p>`)
-                    .join('');
-            } else {
-                modalText.innerHTML = '';
-            }
-            
-            // Galerie füllen
+            // Galerie füllen mit Captions
             let galleryHtml = '';
             if (data.images && data.images.length > 0) {
-                data.images.forEach(imgData => {
+                data.images.forEach((imgData, index) => {
+                    const hasCaption = imgData.title || imgData.material || imgData.dimensions;
+                    const isLast = index === data.images.length - 1;
+                    const lastStyle = isLast ? 'style="margin-bottom: 0;"' : '';
                     galleryHtml += `
                         <div class="image-block">
                             <img src="${imgData.src}" alt="${data.title || 'Image'}" class="modal-gallery-image" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';">
+                            ${hasCaption ? `
+                                <div class="image-caption-wrapper" ${lastStyle}>
+                                    <div class="image-caption">
+                                        ${imgData.title ? `<div class="image-caption-title">${imgData.title}</div>` : ''}
+                                        ${imgData.material ? `<div class="image-caption-material">${imgData.material}</div>` : ''}
+                                        ${imgData.dimensions ? `<div class="image-caption-dimensions">${imgData.dimensions}</div>` : ''}
+                                    </div>
+                                </div>
+                            ` : `<div class="image-caption-wrapper" style="margin-top: var(--grid-padding);" ${lastStyle}></div>`}
                         </div>
                     `;
                 });
             }
             modalGalleryContent.innerHTML = galleryHtml;
             
+            // Text füllen (Absätze aus Zeilenumbrüchen erstellen) + Exhibition Documentation
+            if (data.description) {
+                const descriptionHtml = data.description
+                    .split('\n')
+                    .filter(p => p.trim() !== '') // Leere Zeilen entfernen
+                    .map(p => `<p>${p.trim()}</p>`)
+                    .join('');
+                
+                modalText.innerHTML = descriptionHtml + `<div class="exhibition-documentation">Exhibition Documentation: Julian Blum</div>`;
+            } else {
+                modalText.innerHTML = `<div class="exhibition-documentation">Exhibition Documentation: Julian Blum</div>`;
+            }
+            
             // 3. Modal anzeigen und nach oben scrollen
             showModal.classList.add('is-active');
             modalContentScroll.scrollTop = 0;
+            
+            // Auto-advance: Scroll to bottom detection
+            setupAutoAdvance();
         }
         
-        // Toggle Imprint Content (Inline auf der Landing Page)
+        // Auto-advance to next exhibition when scrolling to bottom
+        function setupAutoAdvance() {
+            if (!modalContentScroll) return;
+            
+            const checkScroll = () => {
+                const scrollTop = modalContentScroll.scrollTop;
+                const scrollHeight = modalContentScroll.scrollHeight;
+                const clientHeight = modalContentScroll.clientHeight;
+                
+                // If scrolled to bottom (within 50px)
+                if (scrollHeight - scrollTop - clientHeight < 50) {
+                    // Remove listener to prevent multiple triggers
+                    modalContentScroll.removeEventListener('scroll', checkScroll);
+                    
+                    // Advance to next exhibition
+                    setTimeout(() => {
+                        advanceToNextExhibition();
+                    }, 500);
+                }
+            };
+            
+            modalContentScroll.addEventListener('scroll', checkScroll);
+        }
+        
+        // Advance to next exhibition
+        function advanceToNextExhibition() {
+            currentSeriesIndex = (currentSeriesIndex + 1) % seriesOrder.length;
+            const nextSeriesKey = seriesOrder[currentSeriesIndex];
+            openShowModal(nextSeriesKey);
+        }
+        
+        // Toggle Expandable Text under name
+        function toggleExpandableText() {
+            if (expandableTextWrapper) {
+                expandableTextWrapper.classList.toggle('is-expanded');
+            }
+        }
+        
+        // Toggle Imprint Content (at bottom of Landing Page)
         function toggleImprint() {
             if (imprintContentInline) {
                 imprintContentInline.classList.toggle('is-expanded');
@@ -718,7 +839,7 @@
         function initialize() {
             // Get all DOM elements
             nameLinkContainer = document.getElementById('name-link-container');
-            emailAddressWrapper = document.getElementById('email-address-wrapper');
+            expandableTextWrapper = document.getElementById('expandable-text-wrapper');
             previewImageNav = document.getElementById('preview-image-nav');
             
             // GALERIE MODAL Elemente
@@ -731,22 +852,22 @@
             modalText = document.getElementById('modal-text');
             modalContentScroll = document.getElementById('modal-content-scroll');
             
-            // Imprint Elements
-            imprintLinkTop = document.getElementById('imprint-link-top');
+            // Imprint Elements (at bottom)
+            imprintLinkBottom = document.getElementById('imprint-link-bottom');
             imprintContentInline = document.getElementById('imprint-content-inline');
             
             // --- EVENT LISTENERS ---
-            // 1. E-Mail Toggle
-            if (nameLinkContainer && emailAddressWrapper) {
+            // 1. Expandable Text Toggle (under name)
+            if (nameLinkContainer && expandableTextWrapper) {
                 nameLinkContainer.addEventListener('click', (event) => {
                     event.preventDefault();
-                    emailAddressWrapper.classList.toggle('is-expanded');
+                    toggleExpandableText();
                 });
             }
             
-            // 2. Imprint Toggle (oben rechts)
-            if (imprintLinkTop) {
-                imprintLinkTop.addEventListener('click', (event) => {
+            // 2. Imprint Toggle (at bottom)
+            if (imprintLinkBottom) {
+                imprintLinkBottom.addEventListener('click', (event) => {
                     event.preventDefault();
                     toggleImprint();
                 });
@@ -758,6 +879,12 @@
                     event.preventDefault();
                     closeAllModals();
                 });
+            }
+            
+            // Fill expandable text content
+            const expandableTextContentEl = document.getElementById('expandable-text-content');
+            if (expandableTextContentEl) {
+                expandableTextContentEl.innerHTML = `<p>${expandableTextContent}</p>`;
             }
             
             // Render preview images
@@ -781,3 +908,5 @@
     </script>
 </body>
 </html>
+
+
