@@ -65,83 +65,25 @@
             gap: var(--grid-gutter);
         }
         
-        /* --- FIXED HEADER (Aisha Altenhofen - immer sichtbar) --- */
+        /* --- FIXED HEADER (nur auf Mobile) --- */
         #fixed-name-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
-            background-color: white;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--grid-padding);
-            box-sizing: border-box;
+            display: none; /* Versteckt auf Desktop */
         }
         
-        /* Name/Text Interaktion (fixiert) */
-        #name-link-container {
-            cursor: pointer;
-            width: max-content;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding-left: calc(2 * var(--grid-padding)); /* Einrücken */
-            margin-top: calc(-1 * var(--caption-height) * var(--line-height-ratio)); /* Eine Zeile höher */
-        }
-        
-        /* Expandable Text Wrapper unter dem Namen (immer verfügbar) */
+        /* Expandable Text Wrapper (nur Desktop) */
         #expandable-text-wrapper {
-            position: fixed;
-            top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
-            left: calc(2 * var(--grid-padding)); /* Einrücken */
-            width: auto;
-            max-width: 50vw;
-            padding-left: 0;
-            /* Startzustand: Versteckt */
-            height: 0;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.8s ease-in-out, opacity 0.4s ease-in-out;
-            box-sizing: border-box;
-            word-break: break-word;
-            white-space: normal;
-            background-color: white;
-            z-index: 99;
+            display: none; /* Versteckt auf Desktop */
         }
         
-        /* JS-gesteuerter Expanded Zustand für Text */
-        #expandable-text-wrapper.is-expanded {
-            max-height: 30rem;
-            height: auto;
-            opacity: 1;
-        }
-        
-        /* Aisha Altenhofen (rechts oben, fixiert - an Stelle der E-Mail) */
-        #name-right-top {
-            text-align: right;
-            align-self: center;
-            padding-right: var(--grid-padding);
-        }
-        
-        /* Email Address (wird entfernt/ersetzt) */
-        #email-address-top {
-            display: none;
-        }
-        
-        /* Spacer für fixierten Header */
+        /* Spacer für fixierten Header (nur Mobile) */
         #header-spacer {
-            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
-            width: 100%;
+            display: none; /* Versteckt auf Desktop */
         }
         
         /* --- TOP INFO BEREICH (nur für Spacer) --- */
         #top-info-area {
             grid-column: 1 / -1;
-            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            height: 0; /* Kein Spacer auf Desktop */
         }
         
         /* --- MAIN GALLERY SECTION (Enthält nun auch das Imprint) --- */
@@ -171,6 +113,11 @@
             gap: var(--grid-padding); /* Abstand Bild-Info = linker Rand (dichter an Bildern) */
             margin-bottom: var(--grid-padding); /* Abstand zwischen Bildern = linker Rand */
             margin-left: var(--grid-padding); /* Bildabstand zu linkem Rand = Bildabstand zwischen Bildern */
+            margin-top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding)); /* Beginnt auf Höhe von Close */
+        }
+        
+        .preview-item-wrapper:first-child {
+            margin-top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding)); /* Erste Bild auf Höhe von Close */
         }
         
         .preview-image-container {
@@ -292,7 +239,7 @@
             display: block;
         }
         
-        /* Modal Header: Feste Position oben - Aisha Altenhofen fixiert */
+        /* Modal Header: Ausstellungstitel und Close in derselben Zeile */
         .modal-header {
             position: fixed;
             top: 0;
@@ -306,6 +253,19 @@
             justify-content: space-between;
             align-items: center;
             padding: var(--grid-padding);
+        }
+        
+        /* Ausstellungstitel in Header (links) */
+        #modal-title-header {
+            font-style: italic;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        /* Close Button (rechts, bleibt an Stelle) */
+        .close-modal-button {
+            cursor: pointer;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+            flex-shrink: 0;
         }
         
         /* Modal Content Area: Bilder und Info nebeneinander */
@@ -346,16 +306,6 @@
             position: sticky;
             top: 0;
             align-self: flex-start;
-        }
-        
-        /* Close Button - Oberkante auf Linie mit erstem Bild */
-        .close-modal-button {
-            position: fixed;
-            top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
-            right: var(--grid-padding);
-            z-index: 31;
-            cursor: pointer;
-            line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
         /* Container für Titel und Details (Links) */
@@ -595,12 +545,9 @@
             
             #name-link-container {
                 cursor: pointer;
-                padding-left: var(--grid-padding);
+                padding-left: 0; /* Nicht eingerückt */
                 margin-top: 0;
-            }
-            
-            #name-right-top {
-                display: none; /* Verstecken auf Mobile */
+                text-align: right; /* Rechtsbündig */
             }
             
             #expandable-text-wrapper {
@@ -666,18 +613,15 @@
                 background-color: white;
                 z-index: 30;
                 display: flex;
-                justify-content: flex-start;
+                justify-content: flex-end; /* Rechtsbündig mit Name */
                 align-items: center;
                 padding: var(--grid-padding);
+                padding-right: var(--grid-padding);
                 box-sizing: border-box;
             }
             
-            #modal-name-container {
-                cursor: pointer;
-            }
-            
-            #modal-name-right {
-                display: none;
+            #modal-title-header {
+                display: none; /* Titel nicht im Header auf Mobile */
             }
             
             .close-modal-button {
@@ -693,16 +637,18 @@
                 display: flex;
                 flex-direction: column;
                 padding: var(--grid-padding);
+                padding-right: var(--grid-padding); /* Rechtsbündig mit Name */
                 box-sizing: border-box;
             }
             
-            /* Ausstellungsinfo oben */
+            /* Ausstellungsinfo zuerst */
             .modal-exhibition-info-side {
                 width: 100%;
                 padding: 0;
                 margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
                 position: relative;
                 order: 1;
+                text-align: right; /* Rechtsbündig */
             }
             
             /* Galerie Section - Bilder volle Breite */
@@ -716,7 +662,11 @@
             .image-block {
                 width: 100%;
                 max-width: 100%;
-                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio) / 2); /* Halbierter Abstand */
+            }
+            
+            .image-block:last-child {
+                margin-bottom: 0; /* Kein Abstand nach letztem Bild */
             }
             
             .modal-gallery-image {
@@ -724,34 +674,55 @@
                 max-width: 100%;
             }
             
-            /* Bildunterschriften untereinander nach dem letzten Bild */
-            .image-caption-wrapper {
-                margin-top: var(--grid-padding);
-                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+            /* Desktop Info-Side verstecken auf Mobile */
+            .modal-exhibition-info-side {
+                display: none;
             }
             
-            .image-caption-wrapper:last-child {
-                margin-bottom: 0;
-            }
-            
-            /* Text nach Bildern */
-            .modal-text-wrapper {
+            /* Mobile Text Wrapper nach Bildern */
+            #modal-text-wrapper-mobile {
+                display: block !important;
                 order: 3;
                 padding: 0;
                 margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+                text-align: right; /* Rechtsbündig */
             }
             
-            /* Next Exhibition Auto-Scroll */
-            #next-exhibition-wrapper {
+            /* Bildunterschriften Container nach Text */
+            .mobile-captions-container {
                 order: 4;
-                margin-top: calc(2 * var(--caption-height) * var(--line-height-ratio));
+                margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+                text-align: right; /* Rechtsbündig */
             }
             
-            /* Imprint auf Mobile */
+            .mobile-captions-container .image-caption-wrapper {
+                margin-bottom: calc(var(--caption-height) * var(--line-height-ratio));
+            }
+            
+            .mobile-captions-container .image-caption-wrapper:last-child {
+                margin-bottom: 0;
+            }
+            
+            /* Exhibition Documentation nach Bildunterschriften */
+            #modal-documentation-mobile {
+                order: 5;
+                margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+                text-align: right; /* Rechtsbündig */
+            }
+            
+            /* Next Exhibition nach Documentation */
+            #next-exhibition-wrapper {
+                order: 6;
+                margin-top: calc(2 * var(--caption-height) * var(--line-height-ratio));
+                text-align: right; /* Rechtsbündig */
+            }
+            
+            /* Imprint auf Mobile - rechtsbündig, ganz unten, auf Linie mit Name */
             #imprint-section-bottom {
                 justify-content: flex-end;
                 padding-right: var(--grid-padding);
                 margin-top: calc(2 * var(--caption-height) * var(--line-height-ratio));
+                text-align: right;
             }
         }
         
@@ -777,26 +748,23 @@
         }
     </script>
     
-    <!-- Fixed Header: Aisha Altenhofen (immer sichtbar) -->
+    <!-- Fixed Header: Aisha Altenhofen (nur auf Mobile sichtbar) -->
     <div id="fixed-name-header">
         <!-- Name und Expandable Text Container (Click-Target) -->
         <div id="name-link-container">
             <!-- Name -->
             <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
         </div>
-        
-        <!-- Aisha Altenhofen (rechts, an Stelle der E-Mail) -->
-        <div id="name-right-top" class="interactable-text">Aisha Altenhofen</div>
     </div>
     
-    <!-- Expandable Text Wrapper (fixiert, unter Name) -->
+    <!-- Expandable Text Wrapper (nur Desktop) -->
     <div id="expandable-text-wrapper">
         <div id="expandable-text-content"></div>
     </div>
     
     <!-- 1. Landing Page: NAVIGATION (FULL-WIDTH LANDING PAGE) -->
     <nav id="nav-section">
-        <!-- Spacer für fixierten Header -->
+        <!-- Spacer für fixierten Header (nur Mobile) -->
         <div id="header-spacer"></div>
         
         <!-- Top Info Area (nur Spacer) -->
@@ -824,18 +792,14 @@
     
     <!-- 2. MODAL-VIEWER FÜR GALERIE-DETAILS -->
     <div id="show-modal" class="full-screen-modal">
-        <!-- Fester Header: Aisha Altenhofen (wie auf Startseite) -->
+        <!-- Fester Header: Ausstellungstitel und Close in derselben Zeile -->
         <div class="modal-header">
-            <div id="modal-name-container">
-                <div class="interactable-text">Aisha Altenhofen</div>
-            </div>
+            <!-- Ausstellungstitel (links) -->
+            <div id="modal-title-header" class="modal-exhibition-title"></div>
             
-            <!-- Aisha Altenhofen (rechts, an Stelle der E-Mail) -->
-            <div id="modal-name-right" class="interactable-text">Aisha Altenhofen</div>
+            <!-- Close Button (rechts) -->
+            <div id="close-modal" class="close-modal-button interactable-text">Close</div>
         </div>
-        
-        <!-- Close Button (Oberkante auf Linie mit erstem Bild) -->
-        <div id="close-modal" class="close-modal-button interactable-text">Close</div>
         
         <!-- Content Area: Bilder und Info nebeneinander -->
         <div class="modal-content-area">
@@ -846,7 +810,6 @@
             
             <!-- Exhibition Info und Text (rechts neben Bildern) -->
             <div class="modal-exhibition-info-side">
-                <div id="modal-title" class="modal-exhibition-title"></div>
                 <div id="modal-date" class="modal-exhibition-date"></div>
                 <div id="modal-location" class="modal-exhibition-location"></div>
                 
@@ -855,10 +818,13 @@
                     <div id="modal-text" class="modal-text-block"></div>
                 </div>
                 
-                <!-- Next Exhibition Link (weiter unten) -->
-                <div id="next-exhibition-wrapper"></div>
+                <!-- Exhibition Documentation -->
+                <div id="modal-documentation" class="exhibition-documentation"></div>
             </div>
         </div>
+        
+        <!-- Next Exhibition Link (Desktop: in Info-Side, Mobile: nach Bildern) -->
+        <div id="next-exhibition-wrapper"></div>
     </div>
     
     <script>
@@ -1085,8 +1051,13 @@
             // Update current series index
             currentSeriesIndex = seriesOrder.indexOf(seriesKey);
             
-            // 1. Exhibition Info rechts füllen - 3 Zeilen Format
-            modalTitle.innerHTML = data.title || ''; // Wird durch CSS kursiv gemacht
+            // 1. Header: Ausstellungstitel (Desktop) oder nichts (Mobile)
+            const modalTitleHeader = document.getElementById('modal-title-header');
+            if (modalTitleHeader) {
+                modalTitleHeader.innerHTML = window.innerWidth > 768 ? (data.title || '') : '';
+            }
+            
+            // Exhibition Info füllen - 2 Zeilen Format (Datum und Ort, Titel ist im Header)
             modalDate.innerHTML = data.date || '';
             modalLocation.innerHTML = data.location || '';
             
@@ -1130,41 +1101,63 @@
             }
             modalGalleryContent.innerHTML = galleryHtml;
             
-            // Mobile: Bildunterschriften nach dem letzten Bild hinzufügen
+            // Text füllen (Absätze aus Zeilenumbrüchen erstellen) - OHNE Exhibition Documentation (wird separat angezeigt)
+            const descriptionHtml = data.description ? data.description
+                .split('\n')
+                .filter(p => p.trim() !== '') // Leere Zeilen entfernen
+                .map(p => `<p>${p.trim()}</p>`)
+                .join('') : '';
+            
+            // Desktop: Text in Info-Side
+            if (modalText) {
+                modalText.innerHTML = descriptionHtml;
+            }
+            
+            // Mobile: Text nach Bildern
+            const modalTextMobile = document.getElementById('modal-text-mobile');
+            if (modalTextMobile) {
+                modalTextMobile.innerHTML = descriptionHtml;
+            }
+            
+            // Exhibition Documentation (Desktop)
+            const modalDocDesktop = document.getElementById('modal-documentation');
+            if (modalDocDesktop) {
+                modalDocDesktop.innerHTML = 'Exhibition Documentation: Julian Blum';
+            }
+            
+            // Exhibition Documentation (Mobile)
+            const modalDocMobile = document.getElementById('modal-documentation-mobile');
+            if (modalDocMobile) {
+                modalDocMobile.innerHTML = 'Exhibition Documentation: Julian Blum';
+            }
+            
+            // Mobile: Bildunterschriften nach Text verschieben
             if (window.innerWidth <= 768 && captionsHtml) {
                 setTimeout(() => {
-                    const lastImageBlock = modalGalleryContent.querySelector('.image-block:last-child');
-                    if (lastImageBlock) {
-                        // Entferne Captions von einzelnen Bildern auf Mobile
-                        modalGalleryContent.querySelectorAll('.image-block .image-caption-wrapper').forEach(cap => {
-                            cap.remove();
-                        });
-                        // Füge alle Captions nach dem letzten Bild hinzu
-                        lastImageBlock.insertAdjacentHTML('afterend', captionsHtml);
+                    // Entferne Captions von Bildern
+                    modalGalleryContent.querySelectorAll('.image-block .image-caption-wrapper').forEach(cap => {
+                        cap.remove();
+                    });
+                    
+                    // Erstelle Container für Bildunterschriften nach Text
+                    const textWrapperMobile = document.getElementById('modal-text-wrapper-mobile');
+                    if (textWrapperMobile && captionsHtml) {
+                        // Füge Captions nach Text hinzu
+                        const captionsContainer = document.createElement('div');
+                        captionsContainer.className = 'mobile-captions-container';
+                        captionsContainer.innerHTML = captionsHtml;
+                        textWrapperMobile.insertAdjacentElement('afterend', captionsContainer);
                     }
-                }, 100);
+                }, 200);
             }
             
-            // Text füllen (Absätze aus Zeilenumbrüchen erstellen) + Exhibition Documentation
-            if (data.description) {
-                const descriptionHtml = data.description
-                    .split('\n')
-                    .filter(p => p.trim() !== '') // Leere Zeilen entfernen
-                    .map(p => `<p>${p.trim()}</p>`)
-                    .join('');
-                
-                modalText.innerHTML = descriptionHtml + `<div class="exhibition-documentation">Exhibition Documentation: Julian Blum</div>`;
-            } else {
-                modalText.innerHTML = `<div class="exhibition-documentation">Exhibition Documentation: Julian Blum</div>`;
-            }
-            
-            // 3. Next Exhibition Link am Ende
+            // 3. Next Exhibition Link
             const nextIndex = (currentSeriesIndex + 1) % seriesOrder.length;
             const nextSeriesKey = seriesOrder[nextIndex];
             const nextData = seriesData[nextSeriesKey];
             const nextExhibitionWrapper = document.getElementById('next-exhibition-wrapper');
             if (nextExhibitionWrapper && nextData) {
-                nextExhibitionWrapper.innerHTML = `
+                const nextHtml = `
                     <div class="next-exhibition-link" data-next-series="${nextSeriesKey}">
                         <div>Next:</div>
                         <div style="height: calc(var(--caption-height) * var(--line-height-ratio));"></div>
@@ -1173,6 +1166,18 @@
                         <div class="next-exhibition-location">${nextData.location}</div>
                     </div>
                 `;
+                
+                // Desktop: In Info-Side einfügen
+                if (window.innerWidth > 768) {
+                    const infoSide = document.querySelector('.modal-exhibition-info-side');
+                    if (infoSide) {
+                        nextExhibitionWrapper.innerHTML = nextHtml;
+                        infoSide.appendChild(nextExhibitionWrapper);
+                    }
+                } else {
+                    // Mobile: Nach Documentation (wird durch CSS order: 6 positioniert)
+                    nextExhibitionWrapper.innerHTML = nextHtml;
+                }
                 
                 // Event Listener für Next Link
                 const nextLink = nextExhibitionWrapper.querySelector('.next-exhibition-link');
