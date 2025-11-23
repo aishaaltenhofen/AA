@@ -11,18 +11,20 @@
         Layout: Full-Width Scroll-Landing Page, Vollbild-Modal rechts.
         */
         
-        /* --- DESIGN VARIABLEN --- */
+        /* --- DESIGN VARIABLEN (ANGEPASST AN RASSTERVORGABEN) --- */
         :root {
-            /* Einheitlicher Außenabstand für ALLE Ränder und Abstände zwischen Elementen */
-            --grid-padding: 1.25rem; /* 20px */
-            
+            /* UNIVERSAL SPACING: 20px outer margin, 10px gutter */
+            --outer-margin: 1.25rem; /* 20px */
+            --grid-gutter: 0.625rem; /* 10px (Vertikaler und horizontaler Abstand zwischen Elementen/Zeilen) */
+
             /* Standardisierte Zeilenhöhe und Schriftgröße */
-            --caption-height: 1.5rem; /* ~24px */
             --main-font-size: 0.9rem;
+            /* Zeilenhöhe immer 105% */
+            --line-height-factor: 1.05; 
+            --caption-height: calc(var(--main-font-size) * var(--line-height-factor));
             
-            /* Höhe des festen Modal-Headers: (2 Zeilen + 2 * --grid-padding)
-               Hier wird der Platz für das obere und untere Padding des Headers reserviert. */
-            --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--grid-padding));
+            /* Höhe des festen Modal-Headers: (2 Zeilen + 2 * --outer-margin) */
+            --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--outer-margin));
         }
 
         body {
@@ -30,7 +32,7 @@
             color: black;
             font-family: 'Times New Roman', Times, serif;
             font-size: var(--main-font-size); 
-            line-height: var(--caption-height); 
+            line-height: var(--line-height-factor); /* 105% */
             width: 100vw;
             /* Scrollbar nur vertikal zulassen */
             overflow-x: hidden; 
@@ -39,7 +41,7 @@
             padding: 0; 
         }
 
-        /* --- 1. Landing Page Sektion --- */
+        /* --- 1. Landing Page Sektion & GRID IMPLEMENTIERUNG --- */
         #nav-section {
             position: relative;
             width: 100vw;
@@ -47,13 +49,19 @@
             z-index: 10; 
             background-color: white; 
             /* EINHEITLICHES PADDING FÜR AUSSENRÄNDER (WICHTIG!) */
-            padding: var(--grid-padding);
+            padding: var(--outer-margin); /* 20px Außenabstand */
             box-sizing: border-box; 
             overflow-y: visible;
         }
         
-        /* --- TOP INFO BEREICH (Name, Email) --- */
+        /* --- TOP INFO BEREICH (Name, Email, Imprint) --- */
 
+        /* Container für Name/Email (links) und Imprint (rechts) */
+        #top-header-area {
+            /* Vertikaler Abstand zum nachfolgenden Element */
+            margin-bottom: var(--grid-gutter); /* 10px Reihenabstand */
+        }
+        
         /* Name/Email Interaktion */
         #name-link-container {
             cursor: pointer;
@@ -61,8 +69,6 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start; 
-            /* Abstand zur Galerie */
-            margin-bottom: var(--caption-height); 
         }
         
         /* E-Mail Wrapper: Kontrolliert die Höhe */
@@ -76,58 +82,12 @@
         
         /* JS-gesteuerter Expanded Zustand für E-Mail */
         #email-address-wrapper.is-expanded {
+            /* calc(1 * var(--caption-height)) ist die Höhe einer Zeile mit 105% line-height */
             height: var(--caption-height); 
             opacity: 1;
         }
-        
-        /* --- MAIN GALLERY SECTION (Enthält nun auch das Imprint) --- */
 
-        /* Container für die Vorschaubilder (Galerie der Serien + Imprint) */
-        #preview-image-nav {
-            display: flex;
-            flex-direction: column; 
-            /* EINHEITLICHER ABSTAND ZWISCHEN DEN ELEMENTEN */
-            gap: var(--grid-padding); 
-        }
-
-        /* Stil der einzelnen Vorschaubilder: Full Width, No Crop */
-        .preview-item-wrapper { 
-            width: 100%; 
-            height: auto; 
-            overflow: hidden; 
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        
-        /* Einheitlicher Abstand zwischen Info und Bild/Platzhalter auf der Landing Page */
-        .preview-info-block {
-             /* EINHEITLICHER ABSTAND ZWISCHEN TEXT INFO UND BILD/ELEMENT (innerhalb der Serie) */
-            margin-bottom: var(--grid-padding); 
-        }
-
-        /* Nur für Serien-Titel (Kursiv) */
-        .preview-info-block .is-series-title {
-            font-style: italic;
-        }
-
-        .preview-image {
-            width: 100%; 
-            height: auto; 
-            object-fit: contain; 
-            opacity: 1; 
-            transition: opacity 0.2s;
-        }
-        
-        /* --- IMPRINT SPEZIFISCHES CSS --- */
-        
-        /* Imprint Wrapper (erste Zeile) */
-        .imprint-title-wrapper {
-            /* KEIN margin-bottom, da der Text direkt darunter hängt (ähnlich wie Name/Email) */
-            margin-bottom: 0;
-            width: max-content;
-        }
-
-        /* Aufklappbarer Imprint Text Wrapper */
+        /* --- IMPRINT TEXT WRAPPER (Unterhalb des Headers) --- */
         #imprint-content-inline {
             width: 100%;
             /* Einzug: spiegelt die E-Mail-Einrückung */
@@ -146,8 +106,8 @@
         /* JS-gesteuerter Expanded Zustand für Imprint Text */
         #imprint-content-inline.is-expanded {
             /* Fügt den ABSTAND ZUR NÄCHSTEN SERIE hinzu */
-            margin-bottom: var(--grid-padding); 
-            /* Stellt die Höhe für den Inhalt her */
+            margin-bottom: var(--grid-gutter); /* 10px Reihenabstand zur Galerie */
+            /* Stellt die Höhe für den Inhalt her (Platzhalter-Höhe) */
             max-height: 20rem; 
             height: auto;
             opacity: 1;
@@ -156,22 +116,71 @@
         /* Absätze innerhalb des Imprint-Textes */
         #imprint-content-inline p {
             margin: 0; 
-            line-height: var(--caption-height);
+            line-height: var(--line-height-factor); /* 105% */
+        }
+        
+        /* --- MAIN GALLERY SECTION (Bilder) --- */
+
+        /* Container für die Vorschaubilder (Galerie der Serien) */
+        #preview-image-nav {
+            display: flex;
+            flex-direction: column; 
+            /* EINHEITLICHER ABSTAND ZWISCHEN DEN ELEMENTEN */
+            gap: var(--grid-gutter); /* 10px vertikaler Reihenabstand */
+        }
+
+        /* Stil der einzelnen Vorschaubilder: Full Width, No Crop */
+        .preview-item-wrapper { 
+            width: 100%; 
+            height: auto; 
+            overflow: hidden; 
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        /* Einheitlicher Abstand zwischen Info und Bild/Platzhalter auf der Landing Page */
+        .preview-info-block {
+             /* EINHEITLICHER ABSTAND ZWISCHEN TEXT INFO UND BILD/ELEMENT (innerhalb der Serie) */
+            margin-bottom: var(--grid-gutter); /* 10px */
+            /* Text-Zeilen-Format: 3 Zeilen, 105% line-height */
+            line-height: var(--line-height-factor);
+        }
+
+        /* Nur für Serien-Titel (Kursiv) */
+        .preview-info-block .is-series-title {
+            font-style: italic;
+        }
+
+        .preview-image {
+            width: 100%; 
+            height: auto; 
+            object-fit: contain; /* Bild wird nie beschnitten */
+            opacity: 1; 
+            transition: opacity 0.2s;
+            display: block; /* Entfernt möglichen Abstand unterhalb des Bildes */
+        }
+        
+        /* --- TYPOGRAFIE & INTERAKTION (HOVER EFFEKT) --- */
+        .interactable-text {
+            color: black;
+            transition: color 0.2s;
+            cursor: pointer;
+            text-decoration: none !important; 
+            display: block;
+        }
+        
+        /* NEU: Grau bei Hover */
+        .interactable-text:hover { 
+            color: gray !important; 
         }
 
         /* --- 2. MODAL-VIEWER (Vollbild-Overlay) --- */
         
         /* Basis-Modal-Klasse für alle Overlays (NUR Galerie) */
         .full-screen-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: white;
-            z-index: 20;
-            display: none; 
-            overflow: hidden; 
+            /* ... (wie zuvor) ... */
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: white; z-index: 20; display: none; overflow: hidden; 
         }
         .full-screen-modal.is-active {
             display: block; 
@@ -179,25 +188,17 @@
         
         /* Modal Header: Feste Position oben */
         .modal-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            /* HÖHE WIEDER AUF 2*GRID-PADDING GEÄNDERT */
+            position: fixed; top: 0; left: 0; width: 100%;
             height: var(--modal-header-height); 
-            box-sizing: border-box;
-            background-color: white;
-            z-index: 30; 
-            display: flex;
-            justify-content: space-between; 
-            align-items: flex-start; 
+            box-sizing: border-box; background-color: white; z-index: 30; 
+            display: flex; justify-content: space-between; align-items: flex-start; 
             /* EINHEITLICHES PADDING FÜR HEADER-INHALT (WICHTIG: ÜBERALL GLEICH) */
-            padding: var(--grid-padding); 
+            padding: var(--outer-margin); 
         }
 
-        /* Container für Titel und Details (Links) */
+        /* Container für Titel und Details (Links) - Muss nun 3 Zeilen unterstützen */
         .modal-info-left {
-            line-height: var(--caption-height);
+            line-height: var(--line-height-factor); /* 105% */
             display: flex;
             flex-direction: column; 
         }
@@ -209,7 +210,7 @@
         
         .close-modal-button {
             cursor: pointer;
-            line-height: var(--caption-height);
+            line-height: var(--line-height-factor); /* 105% */
             flex-shrink: 0; 
         }
         
@@ -224,38 +225,34 @@
         
         /* 1. GALLERY SECTION */
         #modal-gallery-content {
-             /* padding-top: 0; Der Abstand wird durch das padding-bottom des Headers erzeugt. */
-             padding-top: 0; 
              /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
-             padding-left: var(--grid-padding);
-             padding-right: var(--grid-padding);
-             padding-bottom: 0; 
+             padding-left: var(--outer-margin);
+             padding-right: var(--outer-margin);
         }
         
         .image-block {
              padding: 0; 
              /* EINHEITLICHER ABSTAND ZWISCHEN den Bildern (unten) */
-             margin-bottom: var(--grid-padding); 
+             margin-bottom: var(--grid-gutter); /* 10px Reihenabstand */
         }
         
         .modal-gallery-image {
             width: 100%; 
             height: auto;
-            object-fit: contain;
+            object-fit: contain; /* Bild wird nie beschnitten */
             display: block;
         }
         
-        /* Entfernt den Abstand NACH dem letzten Bild der Galerie, wenn der Textblock direkt folgt */
+        /* Entfernt den Abstand NACH dem letzten Bild der Galerie */
         #modal-gallery-content .image-block:last-child {
-            /* Dieser Abstand MUSS 0 sein, da der vertikale Abstand zum Textblock durch modal-text-wrapper hinzugefügt wird. */
             margin-bottom: 0; 
         }
 
         /* 2. TEXT SECTION (Für alle Texte) */
         .modal-text-wrapper {
-            /* Vertikales Padding: Oben (Abstand zur Galerie), Unten (Abstand zum Footer) */
-            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
-            padding: var(--grid-padding) var(--grid-padding) 0 var(--grid-padding); 
+             /* Vertikales Padding: Oben (Abstand zur Galerie), Unten (Abstand zum Footer) */
+             /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+             padding: var(--grid-gutter) var(--outer-margin) 0 var(--outer-margin); /* Oben 10px, Horizontal 20px, Unten 0 */
         }
         
         .modal-text-block {
@@ -265,6 +262,7 @@
         .modal-text-block p {
             /* Normale Zeilenhöhe zwischen Absätzen */
             margin: 0 0 var(--caption-height) 0;
+            line-height: var(--line-height-factor); /* 105% */
         }
         
         /* Entfernt den Abstand nach dem letzten Absatz im Textblock. */
@@ -274,37 +272,19 @@
         
         /* 3. FOOTER SECTION */
         .modal-footer {
-            /* Setzt den Abstand unten (zum Bildschirmrand) und oben (zum Textblock) */
-            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
-            padding: var(--grid-padding) var(--grid-padding) var(--grid-padding) var(--grid-padding);
-        }
-
-        /* --- TYPOGRAFIE & INTERAKTION --- */
-        .interactable-text {
-            color: black;
-            transition: color 0.2s;
-            cursor: pointer;
-            text-decoration: none !important; 
-            display: block;
+             /* Setzt den Abstand unten (zum Bildschirmrand) und oben (zum Textblock) */
+             /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+             padding: var(--grid-gutter) var(--outer-margin) var(--outer-margin) var(--outer-margin); /* Oben 10px, Horizontal & Unten 20px */
         }
         
-        /* KEIN BLAUER HOVER MEHR */
-        .interactable-text:hover { 
-            color: black !important; 
-        }
-        
-        /* --- MOBILE ANPASSUNGEN --- */
+        /* --- MOBILE ANPASSUNGEN (Reduziertes Padding auf 12px) --- */
         @media (max-width: 1024px) {
             :root {
                 /* Einheitliches, reduziertes Mobile Padding */
-                --grid-padding: 0.75rem; /* 12px */
-                /* Die Berechnung des Headers muss nur angepasst werden */
-                --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--grid-padding)); 
-            }
-            
-            #nav-section {
-                width: 100%;
-                padding-bottom: var(--grid-padding); 
+                --outer-margin: 0.75rem; /* 12px */
+                /* Gutter bleibt 10px */
+                --grid-gutter: 0.625rem; /* 10px */
+                --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--outer-margin)); 
             }
         }
     </style>
@@ -326,9 +306,10 @@
     
     <!-- 1. Landing Page: NAVIGATION (FULL-WIDTH LANDING PAGE) --><nav id="nav-section">
         
-        <!-- Name und Email --><div id="top-info-area">
+        <!-- TOP AREA: Name/Email (Links) und Imprint (Rechts) auf einer Zeile -->
+        <div id="top-header-area" class="flex justify-between items-start">
             
-            <!-- 1. Name und E-Mail Container (Click-Target) -->
+            <!-- Linke Seite: Name und Email (Click-Target) -->
             <div id="name-link-container">
                 <!-- Name -->
                 <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
@@ -338,10 +319,20 @@
                     <div id="email-address" class="mb-0">aishaaltenhofen@gmail.com</div>
                 </div>
             </div>
+
+            <!-- Rechte Seite: Imprint Link (NEU) -->
+            <div id="imprint-title-area" class="imprint-toggle-link cursor-pointer">
+                <div id="imprint-title-link" class="interactable-text">Imprint</div>
+            </div>
             
         </div>
         
-        <!-- Vorschaubilder Navigation (Serien + Imprint) -->
+        <!-- NEU: Aufklappbarer Imprint-Text-Container, der unter dem Name/Imprint-Header-Block erscheint -->
+        <div id="imprint-content-inline">
+            <!-- Text wird per JS eingefügt -->
+        </div>
+        
+        <!-- Vorschaubilder Navigation (NUR Serien) -->
         <div id="preview-image-nav">
              <!-- Elemente werden hier durch JS eingefügt -->
         </div>
@@ -351,11 +342,11 @@
     <!-- 2. MODAL-VIEWER FÜR GALERIE-DETAILS --><div id="show-modal" class="full-screen-modal">
         
         <!-- Fester Header --><div class="modal-header">
-            <!-- Titel, Ort, Datum (Links) in zwei Zeilen -->
+            <!-- Titel, Ort, Datum (Links) in 3 Zeilen -->
             <div id="modal-info-left" class="modal-info-left">
                 <!-- 1. Zeile: Titel (kursiv) -->
                 <div id="modal-title" class="modal-title-series"></div>
-                <!-- 2. Zeile: Details (wird als kombinierter String im JS gefüllt) -->
+                <!-- 2. & 3. Zeile: Details (wird als kombinierter String im JS gefüllt) -->
                 <div id="modal-details-block"></div>
             </div>
             
@@ -381,13 +372,14 @@
     </div>
 
     <script>
-        // --- DATA SETUP ---
+        // --- DATA SETUP (Angepasst an das 3-Zeilen-Format: title, dates, location) ---
         const GITHUB_BASE_URL = "https://raw.githubusercontent.com/aishaaltenhofen/AA/main/images/";
         
         const seriesData = {
             carrier: {
                 title: "The Carrier",
-                info: ["University of the Arts", "Berlin, DE", "16 July 2025 – 22 July 2025"], 
+                dates: "16 July 2025 – 22 July 2025",
+                location: "University of the Arts, Berlin, DE",
                 description: `The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus. Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück. Ausstellungsdokumentation: Julian Blum.`,
                 images: [
                     { id: "img-carrier-01", src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", caption: "" }, 
@@ -405,7 +397,8 @@
             },
             aabb: {
                 title: "AABB",
-                info: ["Dorothea Konwiarz Stiftung", "Duo Exhibition with Bonnie Barth", "Berlin, DE", "18 December 2024 – 28 March 2025"], 
+                dates: "18 December 2024 – 28 March 2025",
+                location: "Dorothea Konwiarz Stiftung, Duo Exhibition with Bonnie Barth, Berlin, DE",
                 description: `[Dies ist der Platzhalter für den Text der Serie AABB. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.]`,
                 images: [
                     // Platzhalterbilder
@@ -415,7 +408,8 @@
             },
             exposure: {
                 title: "First Exposure",
-                info: ["Austin Space", "Munich, DE", "20 July 2024 – 25 August 2024"], 
+                dates: "20 July 2024 – 25 August 2024",
+                location: "Austin Space, Munich, DE",
                 description: `Die Ausstellung fand im Austin Space statt. Presse: Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space (Link: https://www.gallerytalk.net/aisha-altenhofen-austin-space/) Ausstellungsdokumentation: Julian Blum.`,
                 images: [
                     { id: "img-exp-01", src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", caption: "" },
@@ -430,7 +424,8 @@
             },
             aftertext: {
                 title: "Aftertext", 
-                info: ["Placeholder Gallery", "City Center, Munich, DE", "01 January – 31 January 2023"],
+                dates: "01 January – 31 January 2023",
+                location: "Placeholder Gallery, City Center, Munich, DE",
                 description: `[Dies ist der Platzhalter für den Text der Serie Aftertext. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.]`,
                 images: [
                     { id: "img-at-01", src: "https://placehold.co/1500x800/c7d2fe/1e3a8a?text=Aftertext+View+1", caption: "" },
@@ -440,7 +435,8 @@
             },
             conditionedAir: {
                 title: "Conditioned Air", 
-                info: ["The Studio Gallery", "Berlin, DE", "15 May – 15 June 2022"],
+                dates: "15 May – 15 June 2022",
+                location: "The Studio Gallery, Berlin, DE",
                 description: `[Dies ist der Platzhalter für den Text der Serie Conditioned Air. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.]`,
                 images: [
                     { id: "img-ca-01", src: "https://placehold.co/1500x800/fecaca/991b1b?text=Conditioned+Air+View+A", caption: "" },
@@ -448,23 +444,29 @@
                     { id: "img-ca-03", src: "https://placehold.co/900x1200/f87171/991b1b?text=Duet+X", caption: "" },
                 ]
             },
+            // Imprint-Daten beibehalten, aber nicht in der Hauptnavigation rendern
             imprint: { 
                 title: "Imprint",
-                info: [],
+                dates: "Impressum und Datenschutzerklärung",
+                location: "",
                 description: `
                     This website is independently operated by Aisha Altenhofen. For contact, please use the email address aishaaltenhofen@gmail.com. The responsible party is Aisha Altenhofen, located at Sonnenallee 159, Berlin, 12059. All photographic works and textual content presented here are protected by copyright. Unauthorized use of this material is prohibited. The rights for all images and texts remain with the artist, unless explicitly noted otherwise.
                 `,
-                images: [] // Keine Bilder für Imprint
+                images: [] 
             }
         };
 
-        // Imprint ist wieder Teil der Hauptnavigation
-        const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir', 'imprint']; 
+        // Imprint wird aus der Reihenfolge entfernt, da es nun im Header ist
+        const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir']; 
         
         // --- ELEMENTS ---
         const nameLinkContainer = document.getElementById('name-link-container');
         const emailAddressWrapper = document.getElementById('email-address-wrapper');
         const previewImageNav = document.getElementById('preview-image-nav');
+        
+        // NEUE Imprint Elemente
+        const imprintTitleArea = document.getElementById('imprint-title-area');
+        const imprintContentInline = document.getElementById('imprint-content-inline');
         
         // GALERIE MODAL Elemente
         const showModal = document.getElementById('show-modal');
@@ -482,70 +484,44 @@
 
         // --- FUNCTIONS ---
         
-        // Füllt die Landing Page mit den Serien-Vorschaubildern und dem Imprint-Link
+        // Füllt die Landing Page mit den Serien-Vorschaubildern
         function renderPreviewImages() {
             let html = '';
             seriesOrder.forEach(seriesKey => {
                 const data = seriesData[seriesKey];
                 if (!data) return;
 
-                // Für reguläre Serien (mit Bild)
-                if (seriesKey !== 'imprint') {
-                    const firstImage = data.images[0];
-                    html += `
-                        <div class="preview-item-wrapper gallery-item" data-series="${seriesKey}">
-                             <!-- Titel und Details über dem Bild -->
-                             <div class="preview-info-block">
-                                 <!-- Serie-Titel ist kursiv -->
-                                 <div class="is-series-title">${data.title}</div>
-                                 <div>${data.info.join(', ')}</div> 
-                             </div>
-                            <img src="${firstImage.src}" 
-                                 alt="${data.title} Preview" 
-                                 class="preview-image"
-                                 onerror="this.onerror=null;this.src='https://placehold.co/1500x800/f3f4f6/000000?text=Image+Load+Error';"
-                                 title="${data.title}"
-                            >
+                const firstImage = data.images[0];
+                html += `
+                    <div class="preview-item-wrapper gallery-item" data-series="${seriesKey}">
+                        
+                        <!-- Titel und Details in 3 Zeilen (Reihenabstand 10px zwischen Blöcken) -->
+                        <div class="preview-info-block">
+                            <!-- Zeile 1: Titel (kursiv) -->
+                            <div class="is-series-title">${data.title}</div>
+                            <!-- Zeile 2: Daten -->
+                            <div>${data.dates}</div>
+                            <!-- Zeile 3: Ort -->
+                            <div>${data.location}</div>
                         </div>
-                    `;
-                } else {
-                    // Für den Imprint-Eintrag (Text-Link + Toggle-Content)
-                    const cleanText = data.description.replace(/\s+/g, ' ').trim();
-                    html += `
-                        <!-- Wrapper als Click-Target für das Impressum -->
-                        <!-- Der Imprint-Link braucht KEIN gap nach unten, da der aufklappbare Text direkt folgt -->
-                        <div class="preview-item-wrapper imprint-toggle-link" data-series="${seriesKey}">
-                            
-                            <!-- 1. Zeile: Imprint Titel (NICHT kursiv) - Spiegelt #name-link-container -->
-                            <div class="imprint-title-wrapper interactable-text" id="imprint-title-link">
-                                <div class="imprint-title">${data.title}</div>
-                            </div>
-
-                            <!-- 2. Zeile: Aufklappbarer Text, eingerückt und mit Lücke zur nächsten Serie -->
-                            <div id="imprint-content-inline">
-                                <p>${cleanText}</p>
-                            </div>
-                        </div>
-                    `;
-                }
+                        
+                        <img src="${firstImage.src}" 
+                            alt="${data.title} Preview" 
+                            class="preview-image"
+                            onerror="this.onerror=null;this.src='https://placehold.co/1500x800/f3f4f6/000000?text=Image+Load+Error';"
+                            title="${data.title}"
+                        >
+                    </div>
+                `;
             });
             previewImageNav.innerHTML = html;
             
-            // Event Listener für alle Einträge hinzufügen (Galerie und Imprint)
+            // Event Listener für alle Galerie-Einträge hinzufügen
             document.querySelectorAll('.preview-item-wrapper').forEach(wrapper => {
                 wrapper.addEventListener('click', (event) => {
                     const seriesKey = wrapper.getAttribute('data-series');
-                    
-                    if (seriesKey === 'imprint') {
-                        // Toggle Imprint Content (Inline auf der Landing Page)
-                        const imprintContent = wrapper.querySelector('#imprint-content-inline');
-                        if (imprintContent) {
-                            imprintContent.classList.toggle('is-expanded');
-                        }
-                    } else {
-                        // Open Gallery Modal
-                        openShowModal(seriesKey);
-                    }
+                    // Open Gallery Modal
+                    openShowModal(seriesKey);
                 });
             });
         }
@@ -556,10 +532,13 @@
             const data = seriesData[seriesKey];
             if (!data) return;
 
-            // 1. Header füllen
+            // 1. Header füllen (3 Zeilen)
             // TITEL IMMER KURSIV
-            modalTitle.innerHTML = `<i>${data.title}</i>`;
-            modalDetailsBlock.innerHTML = data.info.join(', ');
+            modalTitle.innerHTML = data.title;
+            modalDetailsBlock.innerHTML = `
+                <div>${data.dates}</div>
+                <div>${data.location}</div>
+            `;
 
             // 2. Scrollbaren Inhalt füllen
             
@@ -574,9 +553,9 @@
                 galleryHtml += `
                     <div class="image-block">
                         <img src="${imgData.src}" 
-                             alt="${data.title}" 
-                             class="modal-gallery-image"
-                             onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';"
+                            alt="${data.title}" 
+                            class="modal-gallery-image"
+                            onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';"
                         >
                     </div>
                 `;
@@ -584,10 +563,19 @@
             
             modalGalleryContent.innerHTML = galleryHtml;
 
-            
             // 3. Modal anzeigen und nach oben scrollen
             showModal.classList.add('is-active');
             modalContentScroll.scrollTop = 0; 
+        }
+
+        // Füllt den Imprint-Text in den Inline-Container
+        function setupImprintContent() {
+            const imprintData = seriesData['imprint'];
+            const cleanImprintText = imprintData.description.split('\n')
+                .filter(p => p.trim() !== '')
+                .map(p => `<p>${p.trim()}</p>`).join('');
+            
+            imprintContentInline.innerHTML = cleanImprintText;
         }
 
         
@@ -597,6 +585,16 @@
         nameLinkContainer.addEventListener('click', (event) => {
             event.preventDefault(); 
             emailAddressWrapper.classList.toggle('is-expanded');
+            // Schließen Sie den Imprint-Text, wenn die E-Mail geöffnet wird (optional)
+            imprintContentInline.classList.remove('is-expanded');
+        });
+
+        // 2. Imprint Toggle (NEU: aus dem Header)
+        imprintTitleArea.addEventListener('click', (event) => {
+            event.preventDefault();
+            imprintContentInline.classList.toggle('is-expanded');
+            // Schließen Sie die E-Mail, wenn der Imprint geöffnet wird (optional)
+            emailAddressWrapper.classList.remove('is-expanded');
         });
         
         // Close Button für das Galerie-Modal
@@ -606,7 +604,10 @@
         });
         
         // Initialisierung
-        window.addEventListener('load', renderPreviewImages); 
+        window.addEventListener('load', () => {
+            setupImprintContent();
+            renderPreviewImages();
+        }); 
         
     </script>
 </body>
