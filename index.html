@@ -1,9 +1,9 @@
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aisha Altenhofen</title>
+    <title>Aisha Altenhofen Portfolio | Minimal Design V64</title>
     
     <!-- Tailwind CSS wird für die Struktur verwendet -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -608,38 +608,29 @@
         // Imprint ist nicht mehr in der Galerie, nur oben
         const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir'];
         
-        // --- ELEMENTS ---
-        const nameLinkContainer = document.getElementById('name-link-container');
-        const emailAddressWrapper = document.getElementById('email-address-wrapper');
-        const previewImageNav = document.getElementById('preview-image-nav');
-        
-        // GALERIE MODAL Elemente
-        const showModal = document.getElementById('show-modal');
-        const closeModalButton = document.getElementById('close-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalDate = document.getElementById('modal-date');
-        const modalLocation = document.getElementById('modal-location');
-        const modalGalleryContent = document.getElementById('modal-gallery-content');
-        const modalText = document.getElementById('modal-text');
-        const modalContentScroll = document.getElementById('modal-content-scroll');
-        
-        // Imprint Elements
-        const imprintLinkTop = document.getElementById('imprint-link-top');
-        const imprintContentInline = document.getElementById('imprint-content-inline');
+        // --- GLOBAL VARIABLES ---
+        let nameLinkContainer, emailAddressWrapper, previewImageNav;
+        let showModal, closeModalButton, modalTitle, modalDate, modalLocation;
+        let modalGalleryContent, modalText, modalContentScroll;
+        let imprintLinkTop, imprintContentInline;
         
         // Funktion zum Schließen aller Modals
         function closeAllModals() {
-            showModal.classList.remove('is-active');
+            if (showModal) {
+                showModal.classList.remove('is-active');
+            }
         }
         
         // --- FUNCTIONS ---
         // Füllt die Landing Page mit den Serien-Vorschaubildern und dem Imprint-Link
         function renderPreviewImages() {
+            if (!previewImageNav) return;
+            
             let html = '';
             
             seriesOrder.forEach(seriesKey => {
                 const data = seriesData[seriesKey];
-                if (!data) return;
+                if (!data || !data.images || data.images.length === 0) return;
                 
                 // Für reguläre Serien (mit Bild) - 3 Zeilen Format
                 const firstImage = data.images[0];
@@ -665,40 +656,50 @@
             document.querySelectorAll('.preview-item-wrapper').forEach(wrapper => {
                 wrapper.addEventListener('click', (event) => {
                     const seriesKey = wrapper.getAttribute('data-series');
-                    openShowModal(seriesKey);
+                    if (seriesKey) {
+                        openShowModal(seriesKey);
+                    }
                 });
             });
         }
         
         // Öffnet das Modal für Galerie-Details
         function openShowModal(seriesKey) {
+            if (!showModal || !modalTitle || !modalDate || !modalLocation || !modalText || !modalGalleryContent || !modalContentScroll) return;
+            
             closeAllModals(); // Sicherstellen, dass andere Modals geschlossen sind
             
             const data = seriesData[seriesKey];
             if (!data) return;
             
             // 1. Header füllen - 3 Zeilen Format
-            modalTitle.innerHTML = data.title; // Wird durch CSS kursiv gemacht
-            modalDate.innerHTML = data.date;
-            modalLocation.innerHTML = data.location;
+            modalTitle.innerHTML = data.title || ''; // Wird durch CSS kursiv gemacht
+            modalDate.innerHTML = data.date || '';
+            modalLocation.innerHTML = data.location || '';
             
             // 2. Scrollbaren Inhalt füllen
             // Text füllen (Absätze aus Zeilenumbrüchen erstellen)
-            modalText.innerHTML = data.description
-                .split('\n')
-                .filter(p => p.trim() !== '') // Leere Zeilen entfernen
-                .map(p => `<p>${p.trim()}</p>`)
-                .join('');
+            if (data.description) {
+                modalText.innerHTML = data.description
+                    .split('\n')
+                    .filter(p => p.trim() !== '') // Leere Zeilen entfernen
+                    .map(p => `<p>${p.trim()}</p>`)
+                    .join('');
+            } else {
+                modalText.innerHTML = '';
+            }
             
             // Galerie füllen
             let galleryHtml = '';
-            data.images.forEach(imgData => {
-                galleryHtml += `
-                    <div class="image-block">
-                        <img src="${imgData.src}" alt="${data.title}" class="modal-gallery-image" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';">
-                    </div>
-                `;
-            });
+            if (data.images && data.images.length > 0) {
+                data.images.forEach(imgData => {
+                    galleryHtml += `
+                        <div class="image-block">
+                            <img src="${imgData.src}" alt="${data.title || 'Image'}" class="modal-gallery-image" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';">
+                        </div>
+                    `;
+                });
+            }
             modalGalleryContent.innerHTML = galleryHtml;
             
             // 3. Modal anzeigen und nach oben scrollen
@@ -713,37 +714,70 @@
             }
         }
         
-        // --- EVENT LISTENERS & INITIALIZATION ---
-        // 1. E-Mail Toggle
-        nameLinkContainer.addEventListener('click', (event) => {
-            event.preventDefault();
-            emailAddressWrapper.classList.toggle('is-expanded');
-        });
-        
-        // 2. Imprint Toggle (oben rechts)
-        if (imprintLinkTop) {
-            imprintLinkTop.addEventListener('click', (event) => {
-                event.preventDefault();
-                toggleImprint();
-            });
-        }
-        
-        // 3. Close Button für das Galerie-Modal
-        closeModalButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            closeAllModals();
-        });
-        
-        // Initialisierung
-        window.addEventListener('load', () => {
+        // --- INITIALIZATION ---
+        function initialize() {
+            // Get all DOM elements
+            nameLinkContainer = document.getElementById('name-link-container');
+            emailAddressWrapper = document.getElementById('email-address-wrapper');
+            previewImageNav = document.getElementById('preview-image-nav');
+            
+            // GALERIE MODAL Elemente
+            showModal = document.getElementById('show-modal');
+            closeModalButton = document.getElementById('close-modal');
+            modalTitle = document.getElementById('modal-title');
+            modalDate = document.getElementById('modal-date');
+            modalLocation = document.getElementById('modal-location');
+            modalGalleryContent = document.getElementById('modal-gallery-content');
+            modalText = document.getElementById('modal-text');
+            modalContentScroll = document.getElementById('modal-content-scroll');
+            
+            // Imprint Elements
+            imprintLinkTop = document.getElementById('imprint-link-top');
+            imprintContentInline = document.getElementById('imprint-content-inline');
+            
+            // --- EVENT LISTENERS ---
+            // 1. E-Mail Toggle
+            if (nameLinkContainer && emailAddressWrapper) {
+                nameLinkContainer.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    emailAddressWrapper.classList.toggle('is-expanded');
+                });
+            }
+            
+            // 2. Imprint Toggle (oben rechts)
+            if (imprintLinkTop) {
+                imprintLinkTop.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    toggleImprint();
+                });
+            }
+            
+            // 3. Close Button für das Galerie-Modal
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    closeAllModals();
+                });
+            }
+            
+            // Render preview images
             renderPreviewImages();
+            
             // Imprint Content Element füllen
             const imprintData = seriesData.imprint;
             if (imprintData && imprintContentInline) {
                 const cleanText = imprintData.description.replace(/\s+/g, ' ').trim();
                 imprintContentInline.innerHTML = `<p>${cleanText}</p>`;
             }
-        });
+        }
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initialize);
+        } else {
+            // DOM is already ready
+            initialize();
+        }
     </script>
 </body>
 </html>
