@@ -1,97 +1,97 @@
-<!DOCTYPE html>
+            <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aisha Altenhofen Portfolio | Minimal Design V64</title>
-    <!-- Tailwind CSS wird für die Struktur verwendet --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind CSS wird für die Struktur verwendet -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        /*
-        DESIGN PRINCIPLES: Times New Roman, EINE Schriftgröße, KEIN Fett, minimaler Abstand.
-        Layout: Full-Width Scroll-Landing Page, Vollbild-Modal rechts.
-        */
-        /* --- DESIGN VARIABLEN (ANGEPASST AN RASSTERVORGABEN) --- */
+        /* DESIGN PRINCIPLES: Times New Roman, EINE Schriftgröße, KEIN Fett, minimaler Abstand. Layout: Full-Width Scroll-Landing Page, Vollbild-Modal rechts. */
+        
+        /* --- DESIGN VARIABLEN --- */
         :root {
-            /* UNIVERSAL SPACING: 20px outer margin, 10px gutter */
-            --outer-margin: 1.25rem; /* 20px */
+            /* Grid System */
+            --grid-margin: 1.25rem; /* 20px */
             --grid-gutter: 0.625rem; /* 10px */
-
-            /* Grid: variable columns (desktop default 5) */
-            --columns: 5;
-
-            /* Row sizing */
-            --row-height: 90px; /* Höhe einer Grid-Row */
-
+            --grid-columns: 5;
+            --row-top-margin: 1.25rem; /* 20px */
+            --row-spacing: 0.625rem; /* 10px */
+            --row-height: 5.625rem; /* 90px */
+            
+            /* Einheitlicher Außenabstand für ALLE Ränder und Abstände zwischen Elementen */
+            --grid-padding: var(--grid-margin);
+            
             /* Standardisierte Zeilenhöhe und Schriftgröße */
+            --caption-height: 1.5rem; /* ~24px */
             --main-font-size: 0.9rem;
-            /* Zeilenhöhe immer 105% */
-            --line-height-factor: 1.05;
-            --caption-height: calc(var(--main-font-size) * var(--line-height-factor));
-
-            /* Höhe des festen Modal-Headers: (2 Zeilen + 2 * --outer-margin) */
-            --modal-header-height: calc(2 * var(--caption-height) + 2 * var(--outer-margin));
+            --line-height-ratio: 1.05; /* 105% */
+            
+            /* Höhe des festen Modal-Headers: (3 Zeilen + 2 * --grid-padding)
+               Hier wird der Platz für das obere und untere Padding des Headers reserviert. */
+            --modal-header-height: calc(3 * var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
         }
-
-        html, body {
-            height: 100%;
-        }
-
+        
         body {
             background-color: white;
             color: black;
             font-family: 'Times New Roman', Times, serif;
             font-size: var(--main-font-size);
-            line-height: var(--line-height-factor); /* 105% */
+            line-height: calc(var(--caption-height) * var(--line-height-ratio)); /* 105% */
             width: 100vw;
+            /* Scrollbar nur vertikal zulassen */
             overflow-x: hidden;
             overflow-y: auto;
             margin: 0;
             padding: 0;
         }
-
-        /* --- 0. Layout-Grid für die gesamte Seite --- */
-        /* nav-section benutzt ein Raster mit variabler Spaltenanzahl (responsive) */
+        
+        /* --- 1. Landing Page Sektion --- */
         #nav-section {
-            display: grid;
-            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
-            grid-auto-rows: var(--row-height);
-            gap: var(--grid-gutter);
-
+            position: relative;
             width: 100vw;
             min-height: 100vh;
             z-index: 10;
             background-color: white;
-            padding: var(--outer-margin);
+            /* EINHEITLICHES PADDING FÜR AUSSENRÄNDER (WICHTIG!) */
+            padding: var(--grid-padding);
             box-sizing: border-box;
-            align-items: start; /* Startet die Items oben in ihren Rows */
+            overflow-y: visible;
+            /* Grid System */
+            display: grid;
+            grid-template-columns: repeat(var(--grid-columns), 1fr);
+            gap: var(--grid-gutter);
         }
-
+        
         /* --- TOP INFO BEREICH (Name, Email, Imprint) --- */
-        /* Dieser Bereich nimmt eine volle Breite (alle Spalten) */
-        #top-header-area {
+        #top-info-area {
             grid-column: 1 / -1;
             display: flex;
+            justify-content: space-between;
             align-items: flex-start;
-            justify-content: space-between; /* Name links, Imprint so weit rechts wie möglich */
-            height: auto;
-            margin: 0;
-            padding: 0;
+            margin-top: var(--row-top-margin);
+            margin-bottom: var(--row-spacing);
         }
-
-        /* Name/Email Container (links) */
+        
+        /* Name/Email Interaktion */
         #name-link-container {
             cursor: pointer;
+            width: max-content;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
-
-        /* Name als Text, aber semantisch beibehalten (kein h1-Änderung angefragt) */
-        #name-link {
-            margin: 0 0 calc(var(--grid-gutter)); 0; /* kleiner Abstand unter dem Namen (Raster-gebunden) */
-            line-height: var(--line-height-factor);
+        
+        /* Whitespace unter dem Namen (grid-aligned) */
+        #name-link-container::after {
+            content: '';
+            display: block;
+            height: var(--row-spacing);
+            width: 100%;
         }
-
+        
         /* E-Mail Wrapper: Kontrolliert die Höhe */
         #email-address-wrapper {
             height: 0;
@@ -100,23 +100,87 @@
             transition: height 0.3s ease-out, opacity 0.3s ease-out;
             padding-left: 1rem; /* Einzug */
         }
-
+        
+        /* JS-gesteuerter Expanded Zustand für E-Mail */
         #email-address-wrapper.is-expanded {
             height: var(--caption-height);
             opacity: 1;
         }
-
-        /* Imprint am rechten Rand so weit raus wie möglich (gleiches Grid-Edge) */
-        #imprint-title-area {
-            margin-left: auto; /* drückt es so weit rechts wie möglich */
-            line-height: var(--line-height-factor);
+        
+        /* --- MAIN GALLERY SECTION (Enthält nun auch das Imprint) --- */
+        /* Container für die Vorschaubilder (Galerie der Serien + Imprint) */
+        #preview-image-nav {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            /* EINHEITLICHER ABSTAND ZWISCHEN DEN ELEMENTEN */
+            gap: var(--row-spacing);
         }
-
-        /* Inline Imprint-Container (versteckt/aufklappbar) */
+        
+        /* Stil der einzelnen Vorschaubilder: Full Width, No Crop */
+        .preview-item-wrapper {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        /* Einheitlicher Abstand zwischen Info und Bild/Platzhalter auf der Landing Page */
+        .preview-info-block {
+            /* EINHEITLICHER ABSTAND ZWISCHEN TEXT INFO UND BILD/ELEMENT (innerhalb der Serie) */
+            margin-bottom: calc(var(--caption-height) * var(--line-height-ratio)); /* Eine Zeile Abstand */
+        }
+        
+        /* Exhibition Info Styling - 3 Zeilen Format */
+        .exhibition-title {
+            font-style: italic;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        .exhibition-date {
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        .exhibition-location {
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        /* Nur für Serien-Titel (Kursiv) */
+        .preview-info-block .is-series-title {
+            font-style: italic;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+        
+        /* --- IMPRINT SPEZIFISCHES CSS --- */
+        /* Imprint auf derselben Zeile wie Name, rechts ausgerichtet */
+        #imprint-link-top {
+            cursor: pointer;
+            text-align: right;
+            align-self: flex-start;
+        }
+        
+        /* Imprint Wrapper (erste Zeile) */
+        .imprint-title-wrapper {
+            /* KEIN margin-bottom, da der Text direkt darunter hängt (ähnlich wie Name/Email) */
+            margin-bottom: 0;
+            width: max-content;
+        }
+        
+        /* Aufklappbarer Imprint Text Wrapper */
         #imprint-content-inline {
             grid-column: 1 / -1;
             width: 100%;
+            /* Einzug: spiegelt die E-Mail-Einrückung */
             padding-left: 1rem;
+            /* Startzustand: Versteckt */
             height: 0;
             max-height: 0;
             overflow: hidden;
@@ -125,61 +189,162 @@
             box-sizing: border-box;
             word-break: break-word;
             white-space: normal;
+            margin-top: 0;
         }
-
+        
+        /* JS-gesteuerter Expanded Zustand für Imprint Text */
         #imprint-content-inline.is-expanded {
-            margin-bottom: var(--grid-gutter);
+            /* Fügt den ABSTAND ZUR NÄCHSTEN SERIE hinzu */
+            margin-bottom: var(--row-spacing);
+            margin-top: var(--row-spacing);
+            /* Stellt die Höhe für den Inhalt her */
             max-height: 20rem;
             height: auto;
             opacity: 1;
         }
-
-        #imprint-content-inline p { margin: 0; line-height: var(--line-height-factor); }
-
-        /* --- PREVIEW GALLERY: Grid mit variabler Spaltenanzahl --- */
-        #preview-image-nav {
-            grid-column: 1 / -1; /* nimmt die volle Breite */
-            display: grid;
-            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
-            gap: var(--grid-gutter);
-            align-items: start;
+        
+        /* Absätze innerhalb des Imprint-Textes */
+        #imprint-content-inline p {
+            margin: 0;
+            line-height: var(--caption-height);
         }
-
-        /* Vorschau-Items (Bild + dreizeilige Info) */
-        .preview-item-wrapper {
-            width: 100%;
-            height: auto;
+        
+        /* --- 2. MODAL-VIEWER (Vollbild-Overlay) --- */
+        /* Basis-Modal-Klasse für alle Overlays (NUR Galerie) */
+        .full-screen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            z-index: 20;
+            display: none;
             overflow: hidden;
-            cursor: pointer;
-            transition: opacity 0.2s;
+        }
+        
+        .full-screen-modal.is-active {
+            display: block;
+        }
+        
+        /* Modal Header: Feste Position oben */
+        .modal-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            /* HÖHE WIEDER AUF 2*GRID-PADDING GEÄNDERT */
+            height: var(--modal-header-height);
+            box-sizing: border-box;
+            background-color: white;
+            z-index: 30;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            /* EINHEITLICHES PADDING FÜR HEADER-INHALT (WICHTIG: ÜBERALL GLEICH) */
+            padding: var(--grid-padding);
+        }
+        
+        /* Container für Titel und Details (Links) */
+        .modal-info-left {
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
             display: flex;
             flex-direction: column;
+            gap: 0;
         }
-
-        .preview-info-block {
-            /* Abstand zwischen Info und Bild: genau eine Zeile (caption-height) */
-            margin-bottom: var(--caption-height);
-            line-height: var(--line-height-factor);
-            display: block;
+        
+        /* Modal Exhibition Info - 3 Zeilen Format */
+        .modal-exhibition-title {
+            font-style: italic;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
-
-        /* Dreizeiliges Format: Titel kursiv, Daten, Ort */
-        .preview-info-block .is-series-title { font-style: italic; }
-
-        /* Die ausstellungsinfos sind klickbar (werden grau bei hover) */
-        .preview-info-block .interactable-text { text-decoration: none !important; display: block; color: black; }
-        .preview-info-block .interactable-text:hover { color: gray !important; }
-
-        .preview-image {
+        
+        .modal-exhibition-date {
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        .modal-exhibition-location {
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        /* TITEL (Serien) IMMER KURSIV */
+        .modal-title-series {
+            font-style: italic;
+        }
+        
+        .close-modal-button {
+            cursor: pointer;
+            line-height: var(--caption-height);
+            flex-shrink: 0;
+        }
+        
+        /* Scrollbarer Modal Content */
+        .modal-content-scroll {
+            margin-top: var(--modal-header-height);
+            height: calc(100vh - var(--modal-header-height));
+            overflow-y: auto;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* 1. GALLERY SECTION */
+        #modal-gallery-content {
+            /* padding-top: 0; Der Abstand wird durch das padding-bottom des Headers erzeugt. */
+            padding-top: 0;
+            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+            padding-left: var(--grid-padding);
+            padding-right: var(--grid-padding);
+            padding-bottom: 0;
+        }
+        
+        .image-block {
+            padding: 0;
+            /* EINHEITLICHER ABSTAND ZWISCHEN den Bildern (unten) */
+            margin-bottom: var(--grid-padding);
+        }
+        
+        .modal-gallery-image {
             width: 100%;
             height: auto;
-            object-fit: contain; /* Bild wird nie beschnitten */
-            opacity: 1;
-            transition: opacity 0.2s;
+            object-fit: contain;
             display: block;
         }
-
-        /* Generelle klickbare Texte (Hover wird grau) */
+        
+        /* Entfernt den Abstand NACH dem letzten Bild der Galerie, wenn der Textblock direkt folgt */
+        #modal-gallery-content .image-block:last-child {
+            /* Dieser Abstand MUSS 0 sein, da der vertikale Abstand zum Textblock durch modal-text-wrapper hinzugefügt wird. */
+            margin-bottom: 0;
+        }
+        
+        /* 2. TEXT SECTION (Für alle Texte) */
+        .modal-text-wrapper {
+            /* Vertikales Padding: Oben (Abstand zur Galerie), Unten (Abstand zum Footer) */
+            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+            padding: var(--grid-padding) var(--grid-padding) 0 var(--grid-padding);
+        }
+        
+        .modal-text-block {
+            max-width: 700px;
+        }
+        
+        .modal-text-block p {
+            /* Normale Zeilenhöhe zwischen Absätzen */
+            margin: 0 0 var(--caption-height) 0;
+        }
+        
+        /* Entfernt den Abstand nach dem letzten Absatz im Textblock. */
+        .modal-text-block p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* 3. FOOTER SECTION */
+        .modal-footer {
+            /* Setzt den Abstand unten (zum Bildschirmrand) und oben (zum Textblock) */
+            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
+            padding: var(--grid-padding) var(--grid-padding) var(--grid-padding) var(--grid-padding);
+        }
+        
+        /* --- TYPOGRAFIE & INTERAKTION --- */
         .interactable-text {
             color: black;
             transition: color 0.2s;
@@ -187,35 +352,398 @@
             text-decoration: none !important;
             display: block;
         }
-        .interactable-text:hover { color: gray !important; }
-
-        /* --- MODAL --- */
-        .full-screen-modal {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: white; z-index: 20; display: none; overflow: hidden;
+        
+        /* GRAUER HOVER FÜR ALLE KLICKBAREN TEXTE */
+        .interactable-text:hover,
+        .preview-info-block:hover,
+        .exhibition-title:hover,
+        .exhibition-date:hover,
+        .exhibition-location:hover {
+            color: #808080 !important; /* Grau */
         }
-        .full-screen-modal.is-active { display: block; }
-
-        .modal-header {
-            position: fixed; top: 0; left: 0; width: 100%;
-            height: var(--modal-header-height);
-            box-sizing: border-box; background-color: white; z-index: 30;
-            display: flex; justify-content: space-between; align-items: flex-start;
-            padding: var(--outer-margin);
+        
+        /* KEIN HOVER FÜR TEXTE IN MODAL NACH BILDERN */
+        .modal-text-block p,
+        .modal-text-block {
+            color: black !important;
         }
-
-        .modal-info-left { line-height: var(--line-height-factor); display: flex; flex-direction: column; }
-        .modal-title-series { font-style: italic; }
-
-        .close-modal-button { cursor: pointer; line-height: var(--line-height-factor); flex-shrink: 0; }
-
-        .modal-content-scroll { margin-top: var(--modal-header-height); height: calc(100vh - var(--modal-header-height)); overflow-y: auto; padding: 0; box-sizing: border-box; }
-
-        #modal-gallery-content { padding-left: var(--outer-margin); padding-right: var(--outer-margin); }
-        .image-block { padding: 0; margin-bottom: var(--grid-gutter); }
-        .modal-gallery-image { width: 100%; height: auto; object-fit: contain; display: block; }
-        #modal-gallery-content .image-block:last-child { margin-bottom: 0; }
-
-        .modal-text-wrapper { padding: var(--grid-gutter) var(--outer-margin) 0 var(--outer-margin); }
-        .modal-text-block { max-width: 700px; }
-        .modal-text-block p { margin: 0 0 var(--caption-height) 0; line-hei
+        
+        .modal-text-block p:hover {
+            color: black !important;
+        }
+        
+        /* --- MOBILE ANPASSUNGEN --- */
+        @media (max-width: 1024px) {
+            :root {
+                /* Einheitliches, reduziertes Mobile Padding */
+                --grid-padding: 0.75rem; /* 12px */
+                --grid-margin: 0.75rem; /* 12px */
+                --grid-gutter: 0.5rem; /* 8px */
+                --grid-columns: 3; /* Weniger Spalten auf Mobile */
+                /* Die Berechnung des Headers muss nur angepasst werden */
+                --modal-header-height: calc(3 * var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            }
+            
+            #nav-section {
+                width: 100%;
+                padding-bottom: var(--grid-padding);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --grid-columns: 2; /* Noch weniger Spalten auf sehr kleinen Bildschirmen */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            :root {
+                --grid-columns: 1; /* Eine Spalte auf sehr kleinen Bildschirmen */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tailwind Config: Nur zur Sicherstellung der Schriftart -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Times New Roman"', 'Times', 'serif'],
+                        serif: ['"Times New Roman"', 'Times', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 1. Landing Page: NAVIGATION (FULL-WIDTH LANDING PAGE) -->
+    <nav id="nav-section">
+        <!-- Name, Email und Imprint -->
+        <div id="top-info-area">
+            <!-- 1. Name und E-Mail Container (Click-Target) -->
+            <div id="name-link-container">
+                <!-- Name -->
+                <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
+                
+                <!-- E-Mail Wrapper: Wird per Klick getoggelt -->
+                <div id="email-address-wrapper">
+                    <div id="email-address" class="mb-0">aishaaltenhofen@gmail.com</div>
+                </div>
+            </div>
+            
+            <!-- Imprint Link (rechts ausgerichtet) -->
+            <div id="imprint-link-top" class="interactable-text">Imprint</div>
+        </div>
+        
+        <!-- Imprint Content (wird per JS getoggelt) -->
+        <div id="imprint-content-inline" style="grid-column: 1 / -1;">
+            <!-- Wird per JS gefüllt -->
+        </div>
+        
+        <!-- Vorschaubilder Navigation (Serien + Imprint) -->
+        <div id="preview-image-nav">
+            <!-- Elemente werden hier durch JS eingefügt -->
+        </div>
+    </nav>
+    
+    <!-- 2. MODAL-VIEWER FÜR GALERIE-DETAILS -->
+    <div id="show-modal" class="full-screen-modal">
+        <!-- Fester Header -->
+        <div class="modal-header">
+            <!-- Titel, Datum, Ort (Links) in drei Zeilen -->
+            <div id="modal-info-left" class="modal-info-left">
+                <!-- 1. Zeile: Titel (kursiv) -->
+                <div id="modal-title" class="modal-exhibition-title"></div>
+                
+                <!-- 2. Zeile: Datum -->
+                <div id="modal-date" class="modal-exhibition-date"></div>
+                
+                <!-- 3. Zeile: Ort -->
+                <div id="modal-location" class="modal-exhibition-location"></div>
+            </div>
+            
+            <!-- Close Button (Rechts) -->
+            <div id="close-modal" class="close-modal-button interactable-text">Close</div>
+        </div>
+        
+        <!-- Scrollbarer Inhalt -->
+        <div id="modal-content-scroll" class="modal-content-scroll">
+            <!-- 1. Galerie -->
+            <div id="modal-gallery-content"></div>
+            
+            <!-- 2. Text -->
+            <div id="modal-text-wrapper" class="modal-text-wrapper">
+                <div id="modal-text" class="modal-text-block"></div>
+            </div>
+            
+            <!-- 3. Footer -->
+            <div id="modal-footer" class="modal-footer"></div>
+        </div>
+    </div>
+    
+    <script>
+        // --- DATA SETUP ---
+        const GITHUB_BASE_URL = "https://raw.githubusercontent.com/aishaaltenhofen/AA/main/images/";
+        
+        // Helper function to format dates: "16 July 2025 – 22 July 2025" -> "July 16, 2025 – July 22, 2025"
+        function formatDate(dateString) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            
+            // Parse formats like "16 July 2025 – 22 July 2025" or "15 May – 15 June 2022"
+            const parts = dateString.split(' – ');
+            if (parts.length !== 2) return dateString; // Return original if can't parse
+            
+            function parseDatePart(part) {
+                part = part.trim();
+                // Match "DD Month YYYY" or "DD Month"
+                const match = part.match(/(\d+)\s+(\w+)(?:\s+(\d{4}))?/);
+                if (!match) return part;
+                
+                const day = match[1];
+                const monthName = match[2];
+                const year = match[3] || '';
+                
+                const monthIndex = monthNames.findIndex(m => m.toLowerCase() === monthName.toLowerCase());
+                if (monthIndex === -1) return part;
+                
+                const month = monthNames[monthIndex];
+                return year ? `${month} ${day}, ${year}` : `${month} ${day}`;
+            }
+            
+            const start = parseDatePart(parts[0]);
+            const end = parseDatePart(parts[1]);
+            
+            // If end doesn't have year, try to get it from start
+            if (!end.match(/\d{4}/) && start.match(/\d{4}/)) {
+                const yearMatch = start.match(/(\d{4})/);
+                if (yearMatch) {
+                    return `${start} – ${end}, ${yearMatch[1]}`;
+                }
+            }
+            
+            return `${start} – ${end}`;
+        }
+        
+        const seriesData = {
+            carrier: {
+                title: "The Carrier",
+                date: "July 16, 2025 – July 22, 2025",
+                location: "University of the Arts, Berlin, DE",
+                description: `The Carrier ist eine Serie von elf Fotografien, die in der Villa Necchi Campiglio in Mailand aufgenommen wurden. Zehn wurden durch die geschwungene Glasfassade der Villa aufgenommen, während ich mich zwischen Innen- und Außenbereich bewegte. Eine weitere Aufnahme entstand durch einen Servierwagen im Haus. Die Villa wurde zwischen 1932 und 1935 für die Industriellenfamilie Necchi-Campiglio erbaut. Während des faschistischen Regimes wurde sie beschlagnahmt und als eines der lokalen Hauptquartiere Mussolinis genutzt. Nach dem Krieg kehrte die Familie in das Haus zurück. Ausstellungsdokumentation: Julian Blum.`,
+                images: [
+                    { id: "img-carrier-01", src: GITHUB_BASE_URL + "Graduation 2025 - 01.jpg", caption: "" },
+                    { id: "img-carrier-02", src: GITHUB_BASE_URL + "Graduation 2025 - 02.jpg", caption: "" },
+                    { id: "img-carrier-03", src: GITHUB_BASE_URL + "Graduation 2025 - 03.jpg", caption: "" },
+                    { id: "img-carrier-04", src: GITHUB_BASE_URL + "Graduation 2025 - 04.jpg", caption: "" },
+                    { id: "img-carrier-05", src: GITHUB_BASE_URL + "Graduation 2025 - 05.jpg", caption: "" },
+                    { id: "img-carrier-06", src: GITHUB_BASE_URL + "Graduation 2025 - 06.jpg", caption: "" },
+                    { id: "img-carrier-07", src: GITHUB_BASE_URL + "Graduation 2025 - 07.jpg", caption: "" },
+                    { id: "img-carrier-08", src: GITHUB_BASE_URL + "Graduation 2025 - 08.jpg", caption: "" },
+                    { id: "img-carrier-09", src: GITHUB_BASE_URL + "2025- Repro-01.jpg", caption: "" },
+                    { id: "img-carrier-10", src: GITHUB_BASE_URL + "2025-Repro-02.jpg", caption: "" },
+                    { id: "img-carrier-11", src: GITHUB_BASE_URL + "2025-Repro-03.jpg", caption: "" },
+                ]
+            },
+            aabb: {
+                title: "AABB",
+                date: "December 18, 2024 – March 28, 2025",
+                location: "Dorothea Konwiarz Stiftung, Duo Exhibition with Bonnie Barth, Berlin, DE",
+                description: `Dies ist der Platzhalter für den Text der Serie AABB. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.`,
+                images: [
+                    // Platzhalterbilder
+                    { id: "img-aabb-01", src: "https://placehold.co/1500x800/a3a3a3/000000?text=AABB+Image+01", caption: "" },
+                    { id: "img-aabb-02", src: "https://placehold.co/800x1200/949494/000000?text=AABB+Image+02", caption: "" }
+                ]
+            },
+            exposure: {
+                title: "First Exposure",
+                date: "July 20, 2024 – August 25, 2024",
+                location: "Austin Space, Munich, DE",
+                description: `Die Ausstellung fand im Austin Space statt. Presse: Quirin Brunnmeier: Kontakt und Auseinandersetzung, Aisha Altenhofen im Austin Space (Link: https://www.gallerytalk.net/aisha-altenhofen-austin-space/) Ausstellungsdokumentation: Julian Blum.`,
+                images: [
+                    { id: "img-exp-01", src: GITHUB_BASE_URL + "2024-FE-01-install.jpg", caption: "" },
+                    { id: "img-exp-02", src: GITHUB_BASE_URL + "2024-FE-02-install.jpg", caption: "" },
+                    { id: "img-exp-03", src: GITHUB_BASE_URL + "2024-FE-03-install.jpg", caption: "" },
+                    { id: "img-exp-04", src: GITHUB_BASE_URL + "2024-FE-04-install.jpg", caption: "" },
+                    { id: "img-exp-05", src: GITHUB_BASE_URL + "2024-FE-05-install.jpg", caption: "" },
+                    { id: "img-exp-06", src: GITHUB_BASE_URL + "2024-FE-07-repro.jpg", caption: "" },
+                    { id: "img-exp-07", src: GITHUB_BASE_URL + "2024-FE-08-repro.jpg", caption: "" },
+                    { id: "img-exp-08", src: GITHUB_BASE_URL + "2024-FE-09-repro.jpg", caption: "" },
+                ]
+            },
+            aftertext: {
+                title: "Aftertext",
+                date: "January 1, 2023 – January 31, 2023",
+                location: "Placeholder Gallery, City Center, Munich, DE",
+                description: `Dies ist der Platzhalter für den Text der Serie Aftertext. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.`,
+                images: [
+                    { id: "img-at-01", src: "https://placehold.co/1500x800/c7d2fe/1e3a8a?text=Aftertext+View+1", caption: "" },
+                    { id: "img-at-02", src: "https://placehold.co/900x1200/93c5fd/1e3a8a?text=Aftertext+View+2", caption: "" },
+                    { id: "img-at-03", src: "https://placehold.co/900x600/60a5fa/1e3a8a?text=Aftertext+Repro+A", caption: "" },
+                ]
+            },
+            conditionedAir: {
+                title: "Conditioned Air",
+                date: "May 15, 2022 – June 15, 2022",
+                location: "The Studio Gallery, Berlin, DE",
+                description: `Dies ist der Platzhalter für den Text der Serie Conditioned Air. Bitte ersetzen Sie diesen durch Ihre tatsächlichen Ausstellungsdetails oder Künstler-Statement. Ausstellungsdokumentation: Julian Blum.`,
+                images: [
+                    { id: "img-ca-01", src: "https://placehold.co/1500x800/fecaca/991b1b?text=Conditioned+Air+View+A", caption: "" },
+                    { id: "img-ca-02", src: "https://placehold.co/900x600/fca5a5/991b1b?text=Conditioned+Air+View+B", caption: "" },
+                    { id: "img-ca-03", src: "https://placehold.co/900x1200/f87171/991b1b?text=Duet+X", caption: "" },
+                ]
+            },
+            imprint: {
+                title: "Imprint",
+                date: "",
+                location: "",
+                description: `This website is independently operated by Aisha Altenhofen. For contact, please use the email address aishaaltenhofen@gmail.com. The responsible party is Aisha Altenhofen, located at Sonnenallee 159, Berlin, 12059. All photographic works and textual content presented here are protected by copyright. Unauthorized use of this material is prohibited. The rights for all images and texts remain with the artist, unless explicitly noted otherwise.`,
+                images: [] // Keine Bilder für Imprint
+            }
+        };
+        
+        // Imprint ist nicht mehr in der Galerie, nur oben
+        const seriesOrder = ['carrier', 'aabb', 'exposure', 'aftertext', 'conditionedAir'];
+        
+        // --- ELEMENTS ---
+        const nameLinkContainer = document.getElementById('name-link-container');
+        const emailAddressWrapper = document.getElementById('email-address-wrapper');
+        const previewImageNav = document.getElementById('preview-image-nav');
+        
+        // GALERIE MODAL Elemente
+        const showModal = document.getElementById('show-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDate = document.getElementById('modal-date');
+        const modalLocation = document.getElementById('modal-location');
+        const modalGalleryContent = document.getElementById('modal-gallery-content');
+        const modalText = document.getElementById('modal-text');
+        const modalContentScroll = document.getElementById('modal-content-scroll');
+        
+        // Imprint Elements
+        const imprintLinkTop = document.getElementById('imprint-link-top');
+        const imprintContentInline = document.getElementById('imprint-content-inline');
+        
+        // Funktion zum Schließen aller Modals
+        function closeAllModals() {
+            showModal.classList.remove('is-active');
+        }
+        
+        // --- FUNCTIONS ---
+        // Füllt die Landing Page mit den Serien-Vorschaubildern und dem Imprint-Link
+        function renderPreviewImages() {
+            let html = '';
+            
+            seriesOrder.forEach(seriesKey => {
+                const data = seriesData[seriesKey];
+                if (!data) return;
+                
+                // Für reguläre Serien (mit Bild) - 3 Zeilen Format
+                const firstImage = data.images[0];
+                html += `
+                    <div class="preview-item-wrapper gallery-item" data-series="${seriesKey}">
+                        <!-- Titel, Datum und Ort über dem Bild -->
+                        <div class="preview-info-block">
+                            <!-- Zeile 1: Titel (kursiv) -->
+                            <div class="exhibition-title">${data.title}</div>
+                            <!-- Zeile 2: Datum -->
+                            <div class="exhibition-date">${data.date}</div>
+                            <!-- Zeile 3: Ort -->
+                            <div class="exhibition-location">${data.location}</div>
+                        </div>
+                        <img src="${firstImage.src}" alt="${data.title} Preview" class="preview-image" onerror="this.onerror=null;this.src='https://placehold.co/1500x800/f3f4f6/000000?text=Image+Load+Error';" title="${data.title}">
+                    </div>
+                `;
+            });
+            
+            previewImageNav.innerHTML = html;
+            
+            // Event Listener für alle Galerie-Einträge hinzufügen
+            document.querySelectorAll('.preview-item-wrapper').forEach(wrapper => {
+                wrapper.addEventListener('click', (event) => {
+                    const seriesKey = wrapper.getAttribute('data-series');
+                    openShowModal(seriesKey);
+                });
+            });
+        }
+        
+        // Öffnet das Modal für Galerie-Details
+        function openShowModal(seriesKey) {
+            closeAllModals(); // Sicherstellen, dass andere Modals geschlossen sind
+            
+            const data = seriesData[seriesKey];
+            if (!data) return;
+            
+            // 1. Header füllen - 3 Zeilen Format
+            modalTitle.innerHTML = data.title; // Wird durch CSS kursiv gemacht
+            modalDate.innerHTML = data.date;
+            modalLocation.innerHTML = data.location;
+            
+            // 2. Scrollbaren Inhalt füllen
+            // Text füllen (Absätze aus Zeilenumbrüchen erstellen)
+            modalText.innerHTML = data.description
+                .split('\n')
+                .filter(p => p.trim() !== '') // Leere Zeilen entfernen
+                .map(p => `<p>${p.trim()}</p>`)
+                .join('');
+            
+            // Galerie füllen
+            let galleryHtml = '';
+            data.images.forEach(imgData => {
+                galleryHtml += `
+                    <div class="image-block">
+                        <img src="${imgData.src}" alt="${data.title}" class="modal-gallery-image" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';">
+                    </div>
+                `;
+            });
+            modalGalleryContent.innerHTML = galleryHtml;
+            
+            // 3. Modal anzeigen und nach oben scrollen
+            showModal.classList.add('is-active');
+            modalContentScroll.scrollTop = 0;
+        }
+        
+        // Toggle Imprint Content (Inline auf der Landing Page)
+        function toggleImprint() {
+            if (imprintContentInline) {
+                imprintContentInline.classList.toggle('is-expanded');
+            }
+        }
+        
+        // --- EVENT LISTENERS & INITIALIZATION ---
+        // 1. E-Mail Toggle
+        nameLinkContainer.addEventListener('click', (event) => {
+            event.preventDefault();
+            emailAddressWrapper.classList.toggle('is-expanded');
+        });
+        
+        // 2. Imprint Toggle (oben rechts)
+        if (imprintLinkTop) {
+            imprintLinkTop.addEventListener('click', (event) => {
+                event.preventDefault();
+                toggleImprint();
+            });
+        }
+        
+        // 3. Close Button für das Galerie-Modal
+        closeModalButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            closeAllModals();
+        });
+        
+        // Initialisierung
+        window.addEventListener('load', () => {
+            renderPreviewImages();
+            // Imprint Content Element füllen
+            const imprintData = seriesData.imprint;
+            if (imprintData && imprintContentInline) {
+                const cleanText = imprintData.description.replace(/\s+/g, ' ').trim();
+                imprintContentInline.innerHTML = `<p>${cleanText}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
