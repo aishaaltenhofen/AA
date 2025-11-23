@@ -27,7 +27,7 @@
             /* Standardisierte Zeilenhöhe und Schriftgröße */
             --caption-height: 1.5rem; /* ~24px */
             --main-font-size: 0.9rem;
-            --line-height-ratio: 1.05; /* 105% */
+            --line-height-ratio: 0.525; /* 52.5% - halbiert */
             
             /* Höhe des festen Modal-Headers: (3 Zeilen + 2 * --grid-padding)
                Hier wird der Platz für das obere und untere Padding des Headers reserviert. */
@@ -65,30 +65,40 @@
             gap: var(--grid-gutter);
         }
         
-        /* --- TOP INFO BEREICH (Name, Email) --- */
-        #top-info-area {
-            grid-column: 1 / -1;
+        /* --- FIXED HEADER (Aisha Altenhofen - immer sichtbar) --- */
+        #fixed-name-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            background-color: white;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-top: var(--row-top-margin);
-            margin-bottom: var(--row-spacing);
-            min-height: 20rem; /* Genug Platz für ausklappbaren Text */
+            align-items: center;
+            padding: var(--grid-padding);
+            box-sizing: border-box;
         }
         
-        /* Name/Text Interaktion */
+        /* Name/Text Interaktion (fixiert) */
         #name-link-container {
             cursor: pointer;
             width: max-content;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+            padding-left: calc(2 * var(--grid-padding)); /* Einrücken */
+            margin-top: calc(-1 * var(--caption-height) * var(--line-height-ratio)); /* Eine Zeile höher */
         }
         
-        /* Expandable Text Wrapper unter dem Namen */
+        /* Expandable Text Wrapper unter dem Namen (immer verfügbar) */
         #expandable-text-wrapper {
-            width: 100%;
-            max-width: 50vw; /* Max 50% Bildschirmbreite */
+            position: fixed;
+            top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            left: calc(2 * var(--grid-padding)); /* Einrücken */
+            width: auto;
+            max-width: 50vw;
             padding-left: 0;
             /* Startzustand: Versteckt */
             height: 0;
@@ -99,7 +109,8 @@
             box-sizing: border-box;
             word-break: break-word;
             white-space: normal;
-            margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+            background-color: white;
+            z-index: 99;
         }
         
         /* JS-gesteuerter Expanded Zustand für Text */
@@ -107,13 +118,25 @@
             max-height: 30rem;
             height: auto;
             opacity: 1;
-            margin-bottom: calc(6 * var(--caption-height) * var(--line-height-ratio)); /* 6 Zeilen Abstand */
         }
         
-        /* Email Address (rechts oben) */
+        /* Email Address (rechts oben, fixiert) */
         #email-address-top {
             text-align: right;
-            align-self: flex-start;
+            align-self: center;
+            padding-right: var(--grid-padding);
+        }
+        
+        /* Spacer für fixierten Header */
+        #header-spacer {
+            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            width: 100%;
+        }
+        
+        /* --- TOP INFO BEREICH (nur für Spacer) --- */
+        #top-info-area {
+            grid-column: 1 / -1;
+            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
         }
         
         /* --- MAIN GALLERY SECTION (Enthält nun auch das Imprint) --- */
@@ -135,10 +158,26 @@
             transition: opacity 0.2s;
         }
         
-        /* Einheitlicher Abstand zwischen Info und Bild/Platzhalter auf der Landing Page */
+        /* Preview Item: Bild und Info nebeneinander */
+        .preview-item-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: calc(2 * var(--grid-padding)); /* Abstand Bild-Info = doppelter linker Rand */
+            margin-bottom: calc(2 * var(--grid-padding)); /* Abstand zwischen Bildern = doppelter linker Rand */
+        }
+        
+        .preview-image-container {
+            width: 50%;
+            max-width: 50vw;
+            flex-shrink: 0;
+        }
+        
         .preview-info-block {
-            /* EINHEITLICHER ABSTAND ZWISCHEN TEXT INFO UND BILD/ELEMENT (innerhalb der Serie) */
-            margin-bottom: calc(var(--caption-height) * var(--line-height-ratio)); /* Eine Zeile Abstand */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 1;
         }
         
         /* Exhibition Info Styling - 3 Zeilen Format */
@@ -161,8 +200,7 @@
         }
         
         .preview-image {
-            width: 50%;
-            max-width: 50vw;
+            width: 100%;
             height: auto;
             object-fit: contain;
             opacity: 1;
@@ -172,7 +210,10 @@
         
         /* Responsive: Wenn Bild nicht mehr passt, wird es kleiner */
         @media (max-width: 1024px) {
-            .preview-image {
+            .preview-item-wrapper {
+                flex-direction: column;
+            }
+            .preview-image-container {
                 width: 100%;
                 max-width: 100%;
             }
@@ -184,6 +225,8 @@
             grid-column: 1 / -1;
             margin-top: var(--row-spacing);
             width: max-content;
+            padding-left: calc(2 * var(--grid-padding)); /* Einrücken */
+            margin-top: calc(var(--row-spacing) - 1 * var(--caption-height) * var(--line-height-ratio)); /* Eine Zeile höher */
         }
         
         #imprint-link-bottom {
@@ -240,22 +283,60 @@
             display: block;
         }
         
-        /* Modal Header: Feste Position oben */
+        /* Modal Header: Feste Position oben - Aisha Altenhofen fixiert */
         .modal-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            /* HÖHE WIEDER AUF 2*GRID-PADDING GEÄNDERT */
-            height: var(--modal-header-height);
+            height: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
             box-sizing: border-box;
             background-color: white;
             z-index: 30;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            /* EINHEITLICHES PADDING FÜR HEADER-INHALT (WICHTIG: ÜBERALL GLEICH) */
+            align-items: center;
             padding: var(--grid-padding);
+        }
+        
+        /* Modal Content Area: Bilder und Info auf derselben Zeile wie Close */
+        .modal-content-area {
+            position: fixed;
+            top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--caption-height) * var(--line-height-ratio) - 2 * var(--grid-padding));
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Gallery Section in Modal */
+        .modal-gallery-section {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            padding-left: calc(2 * var(--grid-padding)); /* Doppelter linker Rand */
+            padding-right: calc(2 * var(--grid-padding)); /* Abstand Bild-Info */
+            padding-top: 0;
+            padding-bottom: var(--grid-padding);
+        }
+        
+        /* Exhibition Info neben Bildern in Modal */
+        .modal-exhibition-info-side {
+            width: auto;
+            min-width: 300px;
+            padding: 0 var(--grid-padding);
+            padding-top: 0;
+            padding-left: calc(2 * var(--grid-padding)); /* Abstand Bild-Info = doppelter linker Rand */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
         }
         
         /* Container für Titel und Details (Links) */
@@ -291,32 +372,27 @@
             flex-shrink: 0;
         }
         
-        /* Scrollbarer Modal Content */
+        /* Scrollbarer Modal Content - entfernt, da wir jetzt modal-content-area verwenden */
         .modal-content-scroll {
-            margin-top: var(--modal-header-height);
-            height: calc(100vh - var(--modal-header-height));
-            overflow-y: auto;
-            padding: 0;
-            box-sizing: border-box;
+            display: none;
         }
         
         /* 1. GALLERY SECTION */
         #modal-gallery-content {
-            /* padding-top: 0; Der Abstand wird durch das padding-bottom des Headers erzeugt. */
-            padding-top: 0;
-            /* Horizontales Padding zur Ausrichtung an der Kante (WICHTIG: EINHEITLICH) */
-            padding-left: var(--grid-padding);
-            padding-right: var(--grid-padding);
-            padding-bottom: 0;
+            padding: 0;
         }
         
         .image-block {
             padding: 0;
-            margin-bottom: 0;
+            margin-bottom: calc(2 * var(--grid-padding)); /* Abstand zwischen Bildern = doppelter linker Rand */
             width: 50%;
             max-width: 50vw;
             display: flex;
             flex-direction: column;
+        }
+        
+        .image-block:last-child {
+            margin-bottom: 0;
         }
         
         .modal-gallery-image {
@@ -342,9 +418,9 @@
             line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
-        /* Abstand nach Caption: 2 leere Zeilen + konsistentes Padding */
+        /* Abstand nach Caption: 2 leere Zeilen */
         .image-caption-wrapper {
-            margin-bottom: calc(2 * var(--caption-height) * var(--line-height-ratio) + var(--grid-padding));
+            margin-bottom: calc(2 * var(--caption-height) * var(--line-height-ratio));
         }
         
         /* Responsive: Wenn Bild nicht mehr passt, wird es kleiner */
@@ -361,11 +437,9 @@
             margin-bottom: 0;
         }
         
-        /* 2. TEXT SECTION (Für alle Texte) */
+        /* 2. TEXT SECTION (Für alle Texte) - nach Bildern */
         .modal-text-wrapper {
-            /* Vertikales Padding: Oben (Abstand zur Galerie) */
-            /* Horizontales Padding: Links = 2x Top, Rechts normal */
-            padding: var(--grid-padding) var(--grid-padding) 0 calc(2 * var(--grid-padding));
+            padding: var(--grid-padding) calc(2 * var(--grid-padding)) 0 calc(2 * var(--grid-padding));
         }
         
         .modal-text-block {
@@ -390,6 +464,27 @@
         /* Exhibition Documentation */
         .exhibition-documentation {
             margin-top: calc(var(--caption-height) * var(--line-height-ratio));
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        /* Next Exhibition Link */
+        .next-exhibition-link {
+            margin-top: calc(2 * var(--grid-padding));
+            padding: var(--grid-padding) calc(2 * var(--grid-padding));
+            cursor: pointer;
+        }
+        
+        .next-exhibition-link:hover {
+            color: #808080;
+        }
+        
+        .next-exhibition-title {
+            font-style: italic;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
+        }
+        
+        .next-exhibition-date,
+        .next-exhibition-location {
             line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
@@ -474,24 +569,30 @@
         }
     </script>
     
+    <!-- Fixed Header: Aisha Altenhofen (immer sichtbar) -->
+    <div id="fixed-name-header">
+        <!-- Name und Expandable Text Container (Click-Target) -->
+        <div id="name-link-container">
+            <!-- Name -->
+            <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
+        </div>
+        
+        <!-- Email Address (rechts ausgerichtet) -->
+        <div id="email-address-top">aishaaltenhofen@gmail.com</div>
+    </div>
+    
+    <!-- Expandable Text Wrapper (fixiert, unter Name) -->
+    <div id="expandable-text-wrapper">
+        <div id="expandable-text-content"></div>
+    </div>
+    
     <!-- 1. Landing Page: NAVIGATION (FULL-WIDTH LANDING PAGE) -->
     <nav id="nav-section">
-        <!-- Name und Email -->
-        <div id="top-info-area">
-            <!-- 1. Name und Expandable Text Container (Click-Target) -->
-            <div id="name-link-container">
-                <!-- Name -->
-                <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
-                
-                <!-- Expandable Text Wrapper: Wird per Klick getoggelt -->
-                <div id="expandable-text-wrapper">
-                    <div id="expandable-text-content"></div>
-                </div>
-            </div>
-            
-            <!-- Email Address (rechts ausgerichtet) -->
-            <div id="email-address-top">aishaaltenhofen@gmail.com</div>
-        </div>
+        <!-- Spacer für fixierten Header -->
+        <div id="header-spacer"></div>
+        
+        <!-- Top Info Area (nur Spacer) -->
+        <div id="top-info-area"></div>
         
         <!-- Vorschaubilder Navigation (Serien) -->
         <div id="preview-image-nav">
@@ -510,36 +611,37 @@
     
     <!-- 2. MODAL-VIEWER FÜR GALERIE-DETAILS -->
     <div id="show-modal" class="full-screen-modal">
-        <!-- Fester Header -->
+        <!-- Fester Header: Aisha Altenhofen (wie auf Startseite) -->
         <div class="modal-header">
-            <!-- Titel, Datum, Ort (Links) in drei Zeilen -->
-            <div id="modal-info-left" class="modal-info-left">
-                <!-- 1. Zeile: Titel (kursiv) -->
-                <div id="modal-title" class="modal-exhibition-title"></div>
-                
-                <!-- 2. Zeile: Datum -->
-                <div id="modal-date" class="modal-exhibition-date"></div>
-                
-                <!-- 3. Zeile: Ort -->
-                <div id="modal-location" class="modal-exhibition-location"></div>
+            <div id="modal-name-container">
+                <div class="interactable-text">Aisha Altenhofen</div>
             </div>
             
             <!-- Close Button (Rechts) -->
             <div id="close-modal" class="close-modal-button interactable-text">Close</div>
         </div>
         
-        <!-- Scrollbarer Inhalt -->
-        <div id="modal-content-scroll" class="modal-content-scroll">
-            <!-- 1. Galerie -->
-            <div id="modal-gallery-content"></div>
-            
-            <!-- 2. Text -->
-            <div id="modal-text-wrapper" class="modal-text-wrapper">
-                <div id="modal-text" class="modal-text-block"></div>
+        <!-- Content Area: Bilder und Info auf derselben Zeile -->
+        <div class="modal-content-area">
+            <!-- Galerie Section (scrollbar) -->
+            <div class="modal-gallery-section">
+                <div id="modal-gallery-content"></div>
+                
+                <!-- Text nach Bildern -->
+                <div id="modal-text-wrapper" class="modal-text-wrapper">
+                    <div id="modal-text" class="modal-text-block"></div>
+                </div>
+                
+                <!-- Next Exhibition Link -->
+                <div id="next-exhibition-wrapper"></div>
             </div>
             
-            <!-- 3. Footer -->
-            <div id="modal-footer" class="modal-footer"></div>
+            <!-- Exhibition Info (rechts neben Bildern) -->
+            <div class="modal-exhibition-info-side">
+                <div id="modal-title" class="modal-exhibition-title"></div>
+                <div id="modal-date" class="modal-exhibition-date"></div>
+                <div id="modal-location" class="modal-exhibition-location"></div>
+            </div>
         </div>
     </div>
     
@@ -670,7 +772,7 @@
         // --- GLOBAL VARIABLES ---
         let nameLinkContainer, expandableTextWrapper, previewImageNav;
         let showModal, closeModalButton, modalTitle, modalDate, modalLocation;
-        let modalGalleryContent, modalText, modalContentScroll;
+        let modalGalleryContent, modalText;
         let imprintLinkBottom, imprintContentInline;
         let currentSeriesIndex = 0;
         
@@ -695,11 +797,15 @@
                 const data = seriesData[seriesKey];
                 if (!data || !data.images || data.images.length === 0) return;
                 
-                // Für reguläre Serien (mit Bild) - 3 Zeilen Format
+                // Für reguläre Serien (mit Bild) - Bild und Info nebeneinander
                 const firstImage = data.images[0];
                 html += `
                     <div class="preview-item-wrapper gallery-item" data-series="${seriesKey}">
-                        <!-- Titel, Datum und Ort über dem Bild -->
+                        <!-- Bild links -->
+                        <div class="preview-image-container">
+                            <img src="${firstImage.src}" alt="${data.title} Preview" class="preview-image" onerror="this.onerror=null;this.src='https://placehold.co/1500x800/f3f4f6/000000?text=Image+Load+Error';" title="${data.title}">
+                        </div>
+                        <!-- Info rechts -->
                         <div class="preview-info-block">
                             <!-- Zeile 1: Titel (kursiv) -->
                             <div class="exhibition-title">${data.title}</div>
@@ -708,7 +814,6 @@
                             <!-- Zeile 3: Ort -->
                             <div class="exhibition-location">${data.location}</div>
                         </div>
-                        <img src="${firstImage.src}" alt="${data.title} Preview" class="preview-image" onerror="this.onerror=null;this.src='https://placehold.co/1500x800/f3f4f6/000000?text=Image+Load+Error';" title="${data.title}">
                     </div>
                 `;
             });
@@ -728,7 +833,7 @@
         
         // Öffnet das Modal für Galerie-Details
         function openShowModal(seriesKey) {
-            if (!showModal || !modalTitle || !modalDate || !modalLocation || !modalText || !modalGalleryContent || !modalContentScroll) return;
+            if (!showModal || !modalTitle || !modalDate || !modalLocation || !modalText || !modalGalleryContent) return;
             
             closeAllModals(); // Sicherstellen, dass andere Modals geschlossen sind
             
@@ -738,31 +843,28 @@
             // Update current series index
             currentSeriesIndex = seriesOrder.indexOf(seriesKey);
             
-            // 1. Header füllen - 3 Zeilen Format
+            // 1. Exhibition Info rechts füllen - 3 Zeilen Format
             modalTitle.innerHTML = data.title || ''; // Wird durch CSS kursiv gemacht
             modalDate.innerHTML = data.date || '';
             modalLocation.innerHTML = data.location || '';
             
-            // 2. Scrollbaren Inhalt füllen
-            // Galerie füllen mit Captions
+            // 2. Galerie füllen mit Captions
             let galleryHtml = '';
             if (data.images && data.images.length > 0) {
                 data.images.forEach((imgData, index) => {
                     const hasCaption = imgData.title || imgData.material || imgData.dimensions;
-                    const isLast = index === data.images.length - 1;
-                    const lastStyle = isLast ? 'style="margin-bottom: 0;"' : '';
                     galleryHtml += `
                         <div class="image-block">
                             <img src="${imgData.src}" alt="${data.title || 'Image'}" class="modal-gallery-image" onerror="this.onerror=null;this.src='https://placehold.co/900x600/f3f4f6/000000?text=Image+Load+Error';">
                             ${hasCaption ? `
-                                <div class="image-caption-wrapper" ${lastStyle}>
+                                <div class="image-caption-wrapper">
                                     <div class="image-caption">
                                         ${imgData.title ? `<div class="image-caption-title">${imgData.title}</div>` : ''}
                                         ${imgData.material ? `<div class="image-caption-material">${imgData.material}</div>` : ''}
                                         ${imgData.dimensions ? `<div class="image-caption-dimensions">${imgData.dimensions}</div>` : ''}
                                     </div>
                                 </div>
-                            ` : `<div class="image-caption-wrapper" style="margin-top: var(--grid-padding);" ${lastStyle}></div>`}
+                            ` : `<div class="image-caption-wrapper" style="margin-top: var(--grid-padding);"></div>`}
                         </div>
                     `;
                 });
@@ -782,43 +884,39 @@
                 modalText.innerHTML = `<div class="exhibition-documentation">Exhibition Documentation: Julian Blum</div>`;
             }
             
-            // 3. Modal anzeigen und nach oben scrollen
-            showModal.classList.add('is-active');
-            modalContentScroll.scrollTop = 0;
-            
-            // Auto-advance: Scroll to bottom detection
-            setupAutoAdvance();
-        }
-        
-        // Auto-advance to next exhibition when scrolling to bottom
-        function setupAutoAdvance() {
-            if (!modalContentScroll) return;
-            
-            const checkScroll = () => {
-                const scrollTop = modalContentScroll.scrollTop;
-                const scrollHeight = modalContentScroll.scrollHeight;
-                const clientHeight = modalContentScroll.clientHeight;
+            // 3. Next Exhibition Link am Ende
+            const nextIndex = (currentSeriesIndex + 1) % seriesOrder.length;
+            const nextSeriesKey = seriesOrder[nextIndex];
+            const nextData = seriesData[nextSeriesKey];
+            const nextExhibitionWrapper = document.getElementById('next-exhibition-wrapper');
+            if (nextExhibitionWrapper && nextData) {
+                nextExhibitionWrapper.innerHTML = `
+                    <div class="next-exhibition-link" data-next-series="${nextSeriesKey}">
+                        <div>Next:</div>
+                        <div style="height: calc(var(--caption-height) * var(--line-height-ratio));"></div>
+                        <div class="next-exhibition-title">${nextData.title}</div>
+                        <div class="next-exhibition-date">${nextData.date}</div>
+                        <div class="next-exhibition-location">${nextData.location}</div>
+                    </div>
+                `;
                 
-                // If scrolled to bottom (within 50px)
-                if (scrollHeight - scrollTop - clientHeight < 50) {
-                    // Remove listener to prevent multiple triggers
-                    modalContentScroll.removeEventListener('scroll', checkScroll);
-                    
-                    // Advance to next exhibition
-                    setTimeout(() => {
-                        advanceToNextExhibition();
-                    }, 500);
+                // Event Listener für Next Link
+                const nextLink = nextExhibitionWrapper.querySelector('.next-exhibition-link');
+                if (nextLink) {
+                    nextLink.addEventListener('click', () => {
+                        openShowModal(nextSeriesKey);
+                    });
                 }
-            };
+            }
             
-            modalContentScroll.addEventListener('scroll', checkScroll);
-        }
-        
-        // Advance to next exhibition
-        function advanceToNextExhibition() {
-            currentSeriesIndex = (currentSeriesIndex + 1) % seriesOrder.length;
-            const nextSeriesKey = seriesOrder[currentSeriesIndex];
-            openShowModal(nextSeriesKey);
+            // 4. Modal anzeigen
+            showModal.classList.add('is-active');
+            
+            // Scroll to top
+            const gallerySection = document.querySelector('.modal-gallery-section');
+            if (gallerySection) {
+                gallerySection.scrollTop = 0;
+            }
         }
         
         // Toggle Expandable Text under name
@@ -850,7 +948,6 @@
             modalLocation = document.getElementById('modal-location');
             modalGalleryContent = document.getElementById('modal-gallery-content');
             modalText = document.getElementById('modal-text');
-            modalContentScroll = document.getElementById('modal-content-scroll');
             
             // Imprint Elements (at bottom)
             imprintLinkBottom = document.getElementById('imprint-link-bottom');
