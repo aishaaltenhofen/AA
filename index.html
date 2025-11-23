@@ -27,7 +27,7 @@
             /* Standardisierte Zeilenhöhe und Schriftgröße */
             --caption-height: 1.5rem; /* ~24px */
             --main-font-size: 0.9rem;
-            --line-height-ratio: 0.525; /* 52.5% - halbiert */
+            --line-height-ratio: 0.63; /* 63% - um 20% vergrößert */
             
             /* Höhe des festen Modal-Headers: (3 Zeilen + 2 * --grid-padding)
                Hier wird der Platz für das obere und untere Padding des Headers reserviert. */
@@ -120,11 +120,16 @@
             opacity: 1;
         }
         
-        /* Email Address (rechts oben, fixiert) */
-        #email-address-top {
+        /* Aisha Altenhofen (rechts oben, fixiert - an Stelle der E-Mail) */
+        #name-right-top {
             text-align: right;
             align-self: center;
             padding-right: var(--grid-padding);
+        }
+        
+        /* Email Address (wird entfernt/ersetzt) */
+        #email-address-top {
+            display: none;
         }
         
         /* Spacer für fixierten Header */
@@ -163,8 +168,9 @@
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            gap: calc(2 * var(--grid-padding)); /* Abstand Bild-Info = doppelter linker Rand */
-            margin-bottom: calc(2 * var(--grid-padding)); /* Abstand zwischen Bildern = doppelter linker Rand */
+            gap: var(--grid-padding); /* Abstand Bild-Info = linker Rand (dichter an Bildern) */
+            margin-bottom: var(--grid-padding); /* Abstand zwischen Bildern = linker Rand */
+            margin-left: var(--grid-padding); /* Bildabstand zu linkem Rand = Bildabstand zwischen Bildern */
         }
         
         .preview-image-container {
@@ -220,18 +226,21 @@
         }
         
         /* --- IMPRINT SPEZIFISCHES CSS --- */
-        /* Imprint am Ende der Startseite, links ausgerichtet */
+        /* Imprint am Ende der Startseite, rechtsbündig in unten rechter Ecke */
         #imprint-section-bottom {
             grid-column: 1 / -1;
             margin-top: var(--row-spacing);
-            width: max-content;
-            padding-left: calc(2 * var(--grid-padding)); /* Einrücken */
-            margin-top: calc(var(--row-spacing) - 1 * var(--caption-height) * var(--line-height-ratio)); /* Eine Zeile höher */
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding-right: var(--grid-padding);
+            position: relative;
         }
         
         #imprint-link-bottom {
             cursor: pointer;
             width: max-content;
+            text-align: right;
         }
         
         /* Aufklappbarer Imprint Text Wrapper */
@@ -299,7 +308,7 @@
             padding: var(--grid-padding);
         }
         
-        /* Modal Content Area: Bilder und Info auf derselben Zeile wie Close */
+        /* Modal Content Area: Bilder und Info nebeneinander */
         .modal-content-area {
             position: fixed;
             top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
@@ -318,25 +327,35 @@
             flex: 1;
             height: 100%;
             overflow-y: auto;
-            padding-left: calc(2 * var(--grid-padding)); /* Doppelter linker Rand */
-            padding-right: calc(2 * var(--grid-padding)); /* Abstand Bild-Info */
+            padding-left: var(--grid-padding); /* Bildabstand zu linkem Rand = Bildabstand zwischen Bildern */
+            padding-right: var(--grid-padding); /* Abstand Bild-Info */
             padding-top: 0;
             padding-bottom: var(--grid-padding);
         }
         
-        /* Exhibition Info neben Bildern in Modal */
+        /* Exhibition Info und Text neben Bildern in Modal */
         .modal-exhibition-info-side {
             width: auto;
             min-width: 300px;
             padding: 0 var(--grid-padding);
             padding-top: 0;
-            padding-left: calc(2 * var(--grid-padding)); /* Abstand Bild-Info = doppelter linker Rand */
+            padding-left: var(--grid-padding); /* Abstand Bild-Info = linker Rand (dichter an Bildern) */
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             position: sticky;
             top: 0;
             align-self: flex-start;
+        }
+        
+        /* Close Button - Oberkante auf Linie mit erstem Bild */
+        .close-modal-button {
+            position: fixed;
+            top: calc(var(--caption-height) * var(--line-height-ratio) + 2 * var(--grid-padding));
+            right: var(--grid-padding);
+            z-index: 31;
+            cursor: pointer;
+            line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
         /* Container für Titel und Details (Links) */
@@ -384,7 +403,7 @@
         
         .image-block {
             padding: 0;
-            margin-bottom: calc(2 * var(--grid-padding)); /* Abstand zwischen Bildern = doppelter linker Rand */
+            margin-bottom: var(--grid-padding); /* Abstand zwischen Bildern = linker Rand */
             width: 50%;
             max-width: 50vw;
             display: flex;
@@ -395,11 +414,18 @@
             margin-bottom: 0;
         }
         
+        /* Bilder in Ausstellungsseite haben dieselbe Breite wie auf Startseite */
+        .modal-gallery-image {
+            width: 100%;
+            max-width: 50vw;
+        }
+        
         .modal-gallery-image {
             width: 100%;
             height: auto;
             object-fit: contain;
             display: block;
+            max-width: 50vw; /* Dieselbe Breite wie auf Startseite */
         }
         
         /* Image Caption Styling */
@@ -437,9 +463,10 @@
             margin-bottom: 0;
         }
         
-        /* 2. TEXT SECTION (Für alle Texte) - nach Bildern */
+        /* 2. TEXT SECTION (Für alle Texte) - unter Ausstellungsinformationen */
         .modal-text-wrapper {
-            padding: var(--grid-padding) calc(2 * var(--grid-padding)) 0 calc(2 * var(--grid-padding));
+            padding: 0;
+            margin-top: calc(3 * var(--caption-height) * var(--line-height-ratio)); /* Abstand nach Ausstellungsinfo (3 Zeilen) */
         }
         
         .modal-text-block {
@@ -467,11 +494,12 @@
             line-height: calc(var(--caption-height) * var(--line-height-ratio));
         }
         
-        /* Next Exhibition Link */
+        /* Next Exhibition Link - rechts neben letztem Bild, auf Linie mit Ausstellungsinfo, weiter unten */
         .next-exhibition-link {
-            margin-top: calc(2 * var(--grid-padding));
-            padding: var(--grid-padding) calc(2 * var(--grid-padding));
+            margin-top: calc(4 * var(--caption-height) * var(--line-height-ratio)); /* Weiter unten gesetzt */
+            padding: 0;
             cursor: pointer;
+            width: 100%;
         }
         
         .next-exhibition-link:hover {
@@ -577,8 +605,8 @@
             <div id="name-link" class="interactable-text mb-0">Aisha Altenhofen</div>
         </div>
         
-        <!-- Email Address (rechts ausgerichtet) -->
-        <div id="email-address-top">aishaaltenhofen@gmail.com</div>
+        <!-- Aisha Altenhofen (rechts, an Stelle der E-Mail) -->
+        <div id="name-right-top" class="interactable-text">Aisha Altenhofen</div>
     </div>
     
     <!-- Expandable Text Wrapper (fixiert, unter Name) -->
@@ -617,30 +645,33 @@
                 <div class="interactable-text">Aisha Altenhofen</div>
             </div>
             
-            <!-- Close Button (Rechts) -->
-            <div id="close-modal" class="close-modal-button interactable-text">Close</div>
+            <!-- Aisha Altenhofen (rechts, an Stelle der E-Mail) -->
+            <div id="modal-name-right" class="interactable-text">Aisha Altenhofen</div>
         </div>
         
-        <!-- Content Area: Bilder und Info auf derselben Zeile -->
+        <!-- Close Button (Oberkante auf Linie mit erstem Bild) -->
+        <div id="close-modal" class="close-modal-button interactable-text">Close</div>
+        
+        <!-- Content Area: Bilder und Info nebeneinander -->
         <div class="modal-content-area">
             <!-- Galerie Section (scrollbar) -->
             <div class="modal-gallery-section">
                 <div id="modal-gallery-content"></div>
-                
-                <!-- Text nach Bildern -->
-                <div id="modal-text-wrapper" class="modal-text-wrapper">
-                    <div id="modal-text" class="modal-text-block"></div>
-                </div>
-                
-                <!-- Next Exhibition Link -->
-                <div id="next-exhibition-wrapper"></div>
             </div>
             
-            <!-- Exhibition Info (rechts neben Bildern) -->
+            <!-- Exhibition Info und Text (rechts neben Bildern) -->
             <div class="modal-exhibition-info-side">
                 <div id="modal-title" class="modal-exhibition-title"></div>
                 <div id="modal-date" class="modal-exhibition-date"></div>
                 <div id="modal-location" class="modal-exhibition-location"></div>
+                
+                <!-- Text unter Ausstellungsinformationen -->
+                <div id="modal-text-wrapper" class="modal-text-wrapper">
+                    <div id="modal-text" class="modal-text-block"></div>
+                </div>
+                
+                <!-- Next Exhibition Link (weiter unten) -->
+                <div id="next-exhibition-wrapper"></div>
             </div>
         </div>
     </div>
@@ -712,7 +743,7 @@
             aabb: {
                 title: "AABB",
                 date: "December 18, 2024 – March 28, 2025",
-                location: "Dorothea Konwiarz Stiftung, Duo Exhibition with Bonnie Barth, Berlin, DE",
+                location: "Dorothea Konwiarz Stiftung, Berlin, DE",
                 description: `This is a placeholder for the AABB series text. Please replace this with your actual exhibition details or artist statement.`,
                 images: [
                     { id: "img-aabb-01", src: "https://placehold.co/1500x800/a3a3a3/000000?text=AABB+Image+01", title: "", material: "", dimensions: "" },
