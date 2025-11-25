@@ -5,6 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Aisha Altenhofen is an artist living between Berlin, Germany and Zurich, Switzerland.">
 	<title>Aisha Altenhofen</title>
+
+	<style>
+		/* Exhibition list layout and reset */
+		#exhibitionlist .exhibitionlist-container {
+			max-width: 720px;
+			margin: 0;
+			padding: 0;
+		}
+
+		ul.menu {
+			list-style: none; /* no dots */
+			margin: 0;
+			padding: 0;
+		}
+
+		ul.menu li {
+			margin: 0.4rem 0;
+		}
+
+		ul.menu a {
+			display: block;           /* easier click target */
+			color: #000;              /* black links */
+			text-decoration: none;    /* no underline */
+			padding: 0.25rem 0;
+			border-radius: 3px;
+		}
+
+		ul.menu a:visited,
+		ul.menu a:active,
+		ul.menu a:link {
+			color: #000;              /* keep all link states black */
+			text-decoration: none;
+		}
+
+		ul.menu a:hover,
+		ul.menu a:focus {
+			color: #000;              /* hover/focus stay black */
+			text-decoration: none;
+			background: rgba(0,0,0,0.03);
+			outline: none;
+		}
+
+		ul.menu a.selected {
+			font-weight: 700;
+			background: rgba(0,0,0,0.06);
+		}
+
+		/* details area */
+		#exhibition-detail {
+			margin-top: 1.2rem;
+			padding-top: 0.6rem;
+			border-top: 1px solid #eee;
+		}
+	</style>
 </head>
 <body>
 	<main>
