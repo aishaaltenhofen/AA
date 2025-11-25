@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Aisha Altenhofen is an artist living between Berlin, Germany and Zurich, Switzerland.">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Aisha Altenhofen is an artist living between Berlin, Germany and Zurich, Switzerland." />
 	<title>Aisha Altenhofen</title>
 
 	<style>
@@ -62,47 +62,116 @@
 </head>
 <body>
 	<main>
-			Aisha Altenhofen 
-			<br>
-			<br>
-			<nav>
-			<br>
-			<br>
-			<nav id="exhibitionlist">
-				<div class="exhibitionlist-container">
-					<ul id="menu-work" class="menu">
-						<li id="?" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-408"><a href="?"><em>The Carrier</em><br>July 16, 2025 - July 22, 2025 <br> University of the Arts, Berlin</a></li>
-						<li id="?" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-409"><a href="?"><em>AABB</em><br>December 18, 2024 - March 28, 2025 <br> Dorothea Konwiarz Stiftung, Berlin</a></li>
-						<li id="?" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-398"><a href="?"><em>First Exposure</em><br>July 20, 2024 - August 25, 2024 <br> Austin Space, Munich</a></li>
-						<li id="?" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-407"><a href="?"><em>trouble!</em><br>Dates<br>Cittipunkt, Berlin</a></li>
-						<li id="?" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-336"><a href="?"><em>Rundgang</em>Dates, Location</a></li>
-						<li id="?" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-338"><a href="?"><em>1,2</em><br>Dates <br>Treize,Paris </a></li>
-						
-					</ul></div>
-			<em>The Carrier</em>
-			<br>July 16, 2025 - July 22, 2025
-			<br>University of the Arts, Berlin 
-			<br>
-			<br><em>AABB</em>
-			<br>December 18, 2024 - March 28, 2025
-			<br>Dorothea Konwiarz Stiftung, Berlin
-			<br>
-			<br><em>First Exposure</em>
-			<br>July 20, 2024 - August 25, 2024
-			<br>Austin Space, Munich
-			<br>
-			<br><em>trouble!</em>
-			<br>Dates
-			<br>Cittipunkt, Berlin 
-			<br>
-			<br><i>Rundgang</i>
-			<br>Dates
-			<br> 
-			<br>
-			</nav>	
-			<br>
-			<br>
-			Imprint 
-   </main>
+		<h1>Aisha Altenhofen</h1>
+
+		<nav id="exhibitionlist" aria-label="Exhibition list">
+			<div class="exhibitionlist-container">
+				<ul id="menu-work" class="menu">
+					<li>
+						<a href="#"
+						   data-title="The Carrier"
+						   data-dates="July 16, 2025 - July 22, 2025"
+						   data-location="University of the Arts, Berlin">
+							<em>The Carrier</em><br>
+							July 16, 2025 - July 22, 2025<br>
+							University of the Arts, Berlin
+						</a>
+					</li>
+
+					<li>
+						<a href="#"
+						   data-title="AABB"
+						   data-dates="December 18, 2024 - March 28, 2025"
+						   data-location="Dorothea Konwiarz Stiftung, Berlin">
+							<em>AABB</em><br>
+							December 18, 2024 - March 28, 2025<br>
+							Dorothea Konwiarz Stiftung, Berlin
+						</a>
+					</li>
+
+					<li>
+						<a href="#"
+						   data-title="First Exposure"
+						   data-dates="July 20, 2024 - August 25, 2024"
+						   data-location="Austin Space, Munich">
+							<em>First Exposure</em><br>
+							July 20, 2024 - August 25, 2024<br>
+							Austin Space, Munich
+						</a>
+					</li>
+
+					<li>
+						<a href="#"
+						   data-title="trouble!"
+						   data-dates="Dates"
+						   data-location="Cittipunkt, Berlin">
+							<em>trouble!</em><br>
+							Dates<br>
+							Cittipunkt, Berlin
+						</a>
+					</li>
+
+					<li>
+						<a href="#"
+						   data-title="Rundgang"
+						   data-dates="Dates"
+						   data-location="Location">
+							<em>Rundgang</em><br>
+							Dates<br>
+							Location
+						</a>
+					</li>
+
+					<li>
+						<a href="#"
+						   data-title="1,2"
+						   data-dates="Dates"
+						   data-location="Treize, Paris">
+							<em>1,2</em><br>
+							Dates<br>
+							Treize, Paris
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<section id="exhibition-detail" aria-live="polite">
+				<p><strong>Select an exhibition</strong> to see details here.</p>
+			</section>
+		</nav>
+
+		<footer>
+			<p>Imprint</p>
+		</footer>
+	</main>
+
+	<script>
+		// Small script that shows details in the detail area and marks the clicked item
+		(function () {
+			const links = document.querySelectorAll('#menu-work a');
+			const detail = document.getElementById('exhibition-detail');
+
+			function showDetailsFromLink(a) {
+				const title = a.dataset.title || '';
+				const dates = a.dataset.dates || '';
+				const location = a.dataset.location || '';
+				detail.innerHTML = ''
+					+ '<h2>' + title + '</h2>'
+					+ (dates ? '<div>' + dates + '</div>' : '')
+					+ (location ? '<div>' + location + '</div>' : '');
+			}
+
+			links.forEach(a => {
+				a.addEventListener('click', function (e) {
+					e.preventDefault();
+					// toggle selected class
+					links.forEach(x => x.classList.remove('selected'));
+					this.classList.add('selected');
+					// show details
+					showDetailsFromLink(this);
+				});
+			});
+		})();
+	</script>
 </body>
 </html>
