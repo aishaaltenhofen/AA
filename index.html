@@ -7,7 +7,6 @@
 	<title>Aisha Altenhofen</title>
 
 	<style>
-		/* Exhibition list layout and reset */
 		#exhibitionlist .exhibitionlist-container {
 			max-width: 720px;
 			margin: 0;
@@ -15,7 +14,7 @@
 		}
 
 		ul.menu {
-			list-style: none; /* no dots */
+			list-style: none; 
 			margin: 0;
 			padding: 0;
 		}
@@ -25,9 +24,9 @@
 		}
 
 		ul.menu a {
-			display: block;           /* easier click target */
-			color: #000;              /* black links */
-			text-decoration: none;    /* no underline */
+			display: none;          
+			color: #000;              
+			text-decoration: none;    
 			padding: 0.25rem 0;
 			border-radius: 3px;
 		}
@@ -45,11 +44,6 @@
 			text-decoration: none;
 			background: rgba(0,0,0,0.03);
 			outline: none;
-		}
-
-		ul.menu a.selected {
-			font-weight: 700;
-			background: rgba(0,0,0,0.06);
 		}
 
 		/* details area */
@@ -135,43 +129,11 @@
 				</ul>
 			</div>
 
-			<section id="exhibition-detail" aria-live="polite">
-				<p><strong>Select an exhibition</strong> to see details here.</p>
-			</section>
 		</nav>
 
 		<footer>
 			<p>Imprint</p>
 		</footer>
 	</main>
-
-	<script>
-		// Small script that shows details in the detail area and marks the clicked item
-		(function () {
-			const links = document.querySelectorAll('#menu-work a');
-			const detail = document.getElementById('exhibition-detail');
-
-			function showDetailsFromLink(a) {
-				const title = a.dataset.title || '';
-				const dates = a.dataset.dates || '';
-				const location = a.dataset.location || '';
-				detail.innerHTML = ''
-					+ '<h2>' + title + '</h2>'
-					+ (dates ? '<div>' + dates + '</div>' : '')
-					+ (location ? '<div>' + location + '</div>' : '');
-			}
-
-			links.forEach(a => {
-				a.addEventListener('click', function (e) {
-					e.preventDefault();
-					// toggle selected class
-					links.forEach(x => x.classList.remove('selected'));
-					this.classList.add('selected');
-					// show details
-					showDetailsFromLink(this);
-				});
-			});
-		})();
-	</script>
 </body>
 </html>
