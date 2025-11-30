@@ -41,7 +41,8 @@ a:active {
 
 .exhibitionlist-container {
   position: fixed;
-  
-  
+  text-align:left;
+  float: right;
+  border-left: 1px solid #bbb;
 }
 
