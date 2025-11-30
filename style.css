@@ -31,3 +31,6 @@ a:active {
   color: grey; /
 }
 
+.menu{
+  float: right;
+}
