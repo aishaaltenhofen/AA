@@ -3,7 +3,9 @@ body {
   font-family: Times New Roman;
   font-size: 105%;
   text-decoration: none;
-
 }
 
-  
+img {
+  max-width: 60%;
+  height: auto;
+}
