@@ -32,10 +32,23 @@ a:visited {
   color: black; 
 }
 
-
 a:hover,
 a:active {
   text-decoration: none;
   color: grey; /
 }
 
+.exhibitionlist ul{
+  list-style-type: none;
+}
+
+.exhibitionlist a{
+    text-decoration: none;
+    padding: 15px;
+    display: block;
+    text-align: center;
+}
+
+.exhibitionlist li{
+    float: right;
+}
