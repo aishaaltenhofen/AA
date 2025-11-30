@@ -33,15 +33,3 @@ a:active {
   color: grey; /
 }
 
-.exhibitionlist ul{
-  list-style-type: none;
-}
-
-.exhibitionlist a{
-    position: fixed;
-    text-decoration: none;
-    padding: 15px;
-    display: block;
-    text-align: center;
-    width: auto; 
-}
