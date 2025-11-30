@@ -46,3 +46,18 @@ a:active {
   border-left: 1px solid #bbb;
 }
 
+nav ul {
+  list-style-type: none;
+}
+
+nav li {
+  float: right;
+}
+
+nav li a {
+  display: block; 
+  text-decoration: none;
+  padding: 10px;
+  color: black;
+  text-align: left;
+}
