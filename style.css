@@ -33,4 +33,5 @@ a:active {
 
 .menu{
   float: right;
+  list-style: none;
 }
