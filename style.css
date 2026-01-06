@@ -3,7 +3,7 @@ img {
   max-inline-size: 100%;
   max-width: 66.66%;
   height: auto;
-  gap: 1rem;
+  gap: 15px;
 }
 
 summary {
