@@ -35,3 +35,7 @@ a:active {
   float: right;
   list-style: none;
 }
+
+img {
+  max-inline-size: 100%;
+}
