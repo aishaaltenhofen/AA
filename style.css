@@ -1,8 +1,3 @@
-.site{
-  display:grid;
-  grid-template-columns: 3 fr, 2fr, 1 fr;
-}
-
 summary {
   cursor: pointer;
   list-style: none;               
