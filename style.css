@@ -25,7 +25,7 @@ header {
   justify-content: space-between;
   align-items: flex-start;
   padding: 15px;
-  background: inherit; 
+  background: white; 
   box-sizing: border-box; 
   z-index: 1000; 
 }
