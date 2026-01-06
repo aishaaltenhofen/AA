@@ -19,9 +19,15 @@ summary {
 
 header {
   position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 15px;
+  background: inherit; 
+  box-sizing: border-box; 
+  z-index: 1000; 
 }
 
 content {
