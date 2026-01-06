@@ -1,3 +1,8 @@
+img {
+  display: block;
+  max-inline-size: 100%;
+}
+
 summary {
   cursor: pointer;
   list-style: none;               
@@ -29,9 +34,4 @@ a:active {
 .menu{
   float: left;
   list-style: none;
-}
-
-img {
-  display: block;
-  max-inline-size: 100%;
 }
