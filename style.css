@@ -19,6 +19,9 @@ summary {
 
 header {
   position: fixed;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px;
 }
 
 content {
