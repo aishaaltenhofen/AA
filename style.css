@@ -29,18 +29,6 @@ summary {
   display: inline-block;
 }
 
-.fixed-sidebar {
-    position: fixed;
-    right: 20px; 
-    top: 20px;  
-    width: 30%; 
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-    
-  
-}
 
 content {
   margin-top: 100px;
@@ -48,7 +36,7 @@ content {
 
 
 body {
-  padding-left: 50px;
+  padding-left: 15px;
   background-color: #ffffff;
   font-family: "Times New Roman", Times, serif;
 }
