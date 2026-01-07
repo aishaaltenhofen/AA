@@ -19,16 +19,17 @@ summary {
 
 
 header {
-  position: fixed;
-  top: 0;
-  width: calc(100% - 50px);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 15px;
-  background: white; 
-  box-sizing: border-box; 
-  z-index: 1000; 
+position: fixed;
+right: 20px; /* Distance from right edge */
+top: 20px;   /* Distance from top edge */
+width: 30%;  /* Adjust width as needed */
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+  }
+
+    
+  
 }
 
 content {
