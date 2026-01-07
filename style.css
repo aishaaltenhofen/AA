@@ -17,17 +17,15 @@ summary {
   display: inline-block;
 }
 
-
-header {
-position: fixed;
-right: 20px; /* Distance from right edge */
-top: 20px;   /* Distance from top edge */
-width: 30%;  /* Adjust width as needed */
-display: flex;
-justify-content: space-between;
-align-items: flex-start;
+.fixed-sidebar {
+    position: fixed;
+    right: 20px; 
+    top: 20px;  
+    width: 30%; 
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
   }
-
     
   
 }
