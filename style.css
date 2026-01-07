@@ -80,6 +80,33 @@ a:active {
   margin-bottom: 20px;
 }
 
+.menu-item {
+  position: relative; 
+  margin-bottom: 30px;
+  list-style: none;
+}
+
+.menu-item a {
+  text-decoration: none;
+  color: black;
+  display: block;
+}
+
+.hover-preview {
+  display: none;
+  position: absolute;
+  left: 65%;           
+  top: 0;
+  
+  width: 200px;        
+  height: auto;
+  z-index: 100;
+  pointer-events: none; 
+}
+
+.menu-item:hover .hover-preview {
+  display: block;
+}
 
 @media screen and (max-width: 768px) {
   body {
