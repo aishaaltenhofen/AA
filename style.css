@@ -1,14 +1,10 @@
-{
-  box-sizing: border-box; 
-}
-
 body {
-    margin: 0;
-    padding: 15px; 
-    font-family: "Times New Roman", Times, serif;
-    font-size: 16px;
-    line-height: 1.4;
-    background-color: #fff;
+  margin: 0;
+  padding: 15px;
+  background-color: #fff;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .header-info {
@@ -16,24 +12,24 @@ body {
   margin-bottom: 15px;
 }
 
-.main-content {
-    width: 60%; 
+.header-info,
+.gallery,
+.exhibitiontext {
+  width: 100%; 
 }
 
 img {
-    width: 100%;
-    display: block;
-    height: auto; 
-    margin-bottom: 15px;
+  width: 100%;
+  display: block;
+  height: auto;
+  margin-bottom: 15px;
 }
 
 .close-link {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    text-decoration: none;
-    color: #000;
-    z-index: 1000;
+  display: block;
+  margin: 15px 0;
+  text-decoration: none;
+  color: #000;
 }
 
 .exhibitiontext {
@@ -71,16 +67,18 @@ a:active {
   margin-bottom: 15px;
 }
 
+@media screen and (min-width: 769px) {
+  /* Set the 60% width only on desktop */
+  .header-info,
+  .gallery,
+  .exhibitiontext {
+    width: 60%;
+  }
 
-  @media (max-width: 768px) {  
-    .header-info,
-    .main-content {
-        width: 100%; 
-    }
-    
-    .close-link {
-        position: static; /* Drops into the flow after header info */
-        display: block;
-        margin: 15px 0;
-    }
+  .close-link {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    margin: 0;
+  }
 }
