@@ -1,56 +1,35 @@
 body {
-  margin: 0;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #ffffff;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 16px;
-  line-height: 1.4;
+    margin: 0;
+    padding: 15px; 
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;
+    line-height: 1.4;
+    background-color: #fff;
 }
-
-.header-info {
-  margin-top: 0;
-  line-height: 1.4; 
-  margin-bottom: 15px; 
-}
-
-.close-link {
-  position: fixed;
-  top: 15px;           
-  right: 15px;        
-  text-decoration: none;
-  color: black;
-  z-index: 1000;
-  line-height: 1.4;
-}
-
-.gallery {
-    width: 60%; 
-    padding-top: 15px;
-    margin-bottom: 30px; 
-  }
 
 img {
     width: 100%;
     display: block;
-    margin-bottom: 15px;
-  }
-
-.exhibitiontext {
-    width: 60%;
-    margin-top: 15px;
-    margin-bottom: 300px;
+    margin-bottom: 15px; 
 }
 
-.footer-link {
-    display: block;
+.content-wrapper, 
+.header-info {
+    width: 60%; 
+}
+
+.close-link {
+    position: fixed;
+    top: 15px;
+    right: 15px;
     text-decoration: none;
-    color: black;
-    font-size: 16px; 
-    padding-bottom: 15px;
-  }
+    color: #000;
+}
+
+.exhibitiontext {
+    margin-bottom: 300px; 
+}
+
 
 summary {
   cursor: pointer;
@@ -61,11 +40,6 @@ summary {
   background: none;
   padding: 0 rem 0 rem;
   display: inline-block;
-}
-
-
-content {
-  margin-top: 100px;
 }
 
 a:link,
@@ -88,25 +62,15 @@ a:active {
 }
 
 
-@media screen and (max-width: 768px) {
-  body {
-    display: block; 
-    padding: 15px;
-  }
-  
-  .exhibitiontext, 
-  .gallery {
-    width: 100% !important; 
-    margin-left: 0;
-    margin-right: 0;
-  }
- 
-  .close-link {
-    position: static;
-    display: block;
-    margin-top: 15px;    
-    margin-bottom: 15px; 
-    width: 100%;
-  }
+  @media (max-width: 768px) {
+    .content-wrapper, 
+    .header-info {
+        width: 100%; /* Expand to full width on mobile */
+    }
+    
+    .close-link {
+        position: static; /* Drops into the flow after header info */
+        display: block;
+        margin: 15px 0;
+    }
 }
-
