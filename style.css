@@ -89,23 +89,19 @@ a:active {
 
 
 @media screen and (max-width: 768px) {
-  body {
-    padding-left: 0;      /* Removes the 50px side border on small screens */
-  }
-
-  .exhibit-header {
-    left: 0;              /* Moves header to the very edge on mobile */
-    width: 100%;
-    padding: 10px;
-  }
-
+  .exhibitiontext, 
   .gallery {
-    width: 100%;          /* Gallery now fills the whole screen */
-    margin-left: 0;       /* Removes the left margin */
-    margin-top: 120px;    /* Keeps space for the header */
+    width: 100%; 
+  }
+  .close-link {
+    position: static;    /* Removes it from the top-right corner */
+    display: block;      /* Puts it on its own line */
+    margin-top: 15px;    /* 15px gap after the exhibition info */
+    margin-bottom: 30px; /* Space before the description starts */
+    text-align: left;    /* Aligns it with your text */
   }
 
-  img {
-    width: 100%;          /* Image fills the now 100% wide container */
+  body {
+    padding: 15px;       /* Keeps your consistent 15px padding */
   }
 }
