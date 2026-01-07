@@ -77,7 +77,7 @@ a:visited {
 a:hover,
 a:active {
   text-decoration: none;
-  color: grey; /
+  color: grey; 
 }
 
 .menu ul {
@@ -102,9 +102,10 @@ a:active {
   }
  
   .close-link {
-    position: static;    /* Drops it into the flow */
-    margin-top: 15px;    /* Gap after 'Berlin' */
-    margin-bottom: 15px; /* Gap before 'The Carrier is a series...' */
+    position: static;
+    display: block;
+    margin-top: 15px;    
+    margin-bottom: 15px; 
     width: 100%;
   }
 }
