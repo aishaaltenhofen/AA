@@ -16,6 +16,11 @@ img {
     margin-bottom: 10px;
   }
 
+.exhibition text {
+    width: 60%;
+    margin-bottom: 300px;
+}
+
 .footer-link {
     display: block;
     padding-bottom: 100px;
