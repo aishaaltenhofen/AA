@@ -97,6 +97,8 @@ a:active {
   .exhibitiontext, 
   .gallery {
     width: 100% !important; 
+    margin-left: 0;
+    margin-right: 0;
   }
  
   .close-link {
@@ -108,7 +110,3 @@ a:active {
   }
 }
 
-  body {
-    padding: 15px;       /* Keeps your consistent 15px padding */
-  }
-}
