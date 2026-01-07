@@ -1,6 +1,7 @@
 
 .header {
-position: fixed;    
+position: fixed;
+padding-top:10px;    
 }
 
 .gallery {
