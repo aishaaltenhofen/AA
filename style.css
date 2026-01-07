@@ -59,7 +59,8 @@ a:active {
   color: grey; /
 }
 
-.menu {
-  float: left;
-  list-style: none;
+.menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
