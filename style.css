@@ -8,7 +8,7 @@
 img {
     width: 60%;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 
 .footer-link {
@@ -36,7 +36,7 @@ content {
 
 
 body {
-  padding-left: 15px;
+  padding-left: 10px;
   background-color: #ffffff;
   font-family: "Times New Roman", Times, serif;
 }
