@@ -11,12 +11,16 @@ body {
     background-color: #fff;
 }
 
-.content-wrapper, 
-.gallery,
-.exhibitiontext,
-.header-info {
+.header-info,
+.main-content {
     width: 60%; 
-    margin-left: 0;
+}
+
+img {
+    width: 100%;
+    display: block;
+    height: auto; 
+    margin-bottom: 15px; 
 }
 
 .close-link {
@@ -26,13 +30,6 @@ body {
     text-decoration: none;
     color: #000;
     z-index: 1000;
-}
-
-img {
-    width: 100%;
-    display: block;
-    height: auto; 
-    margin-bottom: 15px; 
 }
 
 .exhibitiontext {
@@ -73,9 +70,7 @@ a:active {
 
   @media (max-width: 768px) {  
     .header-info,
-    .content-wrapper,
-    .gallery,
-    .exhibitiontext {
+    .main-content {
         width: 100%; 
     }
     
