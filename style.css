@@ -86,20 +86,18 @@ a:active {
   list-style: none;
 }
 
-.menu-item a {
-  text-decoration: none;
-  color: black;
-  display: block;
+.menu-item {
+  position: relative;
+  margin-bottom: 30px;
+  list-style: none;
 }
 
 .hover-preview {
-  display: none;
-  position: absolute;
-  left: 65%;           
+  display: none;      
+  position: absolute;  
   top: 0;
-  
-  width: 200px;        
-  height: auto;
+  left: 65%;           
+  width: 250px;        
   z-index: 100;
   pointer-events: none; 
 }
