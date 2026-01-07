@@ -6,6 +6,8 @@
   left: 10px; 
   right: 0;   
   height: auto;
+  background-color: white; 
+  z-index: 9999;
 }
 
 .gallery {
