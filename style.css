@@ -9,24 +9,6 @@ body {
   line-height: 1.4;
 }
 
-.exhibition-header {
-  position: fixed;
-  top:0;
-  left:0;
-  width: 100%;
-  height: auto;
-  background-color: white; 
-  z-index: 9999;
-  font-size: 16px;
-
-  padding: 10px; 
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  box-sizing: border-box;
-}
-
 .gallery {
     width: 60%; 
     margin-top: 80px; 
