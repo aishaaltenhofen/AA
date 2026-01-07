@@ -28,6 +28,7 @@ body {
 
 .gallery {
     width: 60%; 
+    padding-top: 15px;
     margin-bottom: 30px; 
   }
 
