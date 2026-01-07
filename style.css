@@ -1,3 +1,7 @@
+{
+  box-sizing: border-box; 
+}
+
 body {
     margin: 0;
     padding: 15px; 
@@ -12,6 +16,16 @@ body {
 .exhibitiontext,
 .header-info {
     width: 60%; 
+    margin-left: 0;
+}
+
+.close-link {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    text-decoration: none;
+    color: #000;
+    z-index: 1000;
 }
 
 img {
@@ -21,18 +35,10 @@ img {
     margin-bottom: 15px; 
 }
 
-.close-link {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    text-decoration: none;
-    color: #000;
-}
-
 .exhibitiontext {
+    margin-top: 15px;
     margin-bottom: 300px; 
 }
-
 
 summary {
   cursor: pointer;
@@ -65,24 +71,17 @@ a:active {
 }
 
 
-  @media (max-width: 768px) {
-    body {
-    display: block;  /* Simplest flow for mobile stacking */
-    padding: 15px;
-  }
-      
+  @media (max-width: 768px) {  
     .header-info,
     .content-wrapper,
     .gallery,
     .exhibitiontext {
         width: 100%; 
-        box-sizing: border-box;
     }
     
     .close-link {
         position: static; /* Drops into the flow after header info */
         display: block;
         margin: 15px 0;
-        text-align: left;
     }
 }
