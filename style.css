@@ -89,17 +89,24 @@ a:active {
 
 
 @media screen and (max-width: 768px) {
+  body {
+    display: block; 
+    padding: 15px;
+  }
+  
   .exhibitiontext, 
   .gallery {
-    width: 100%; 
+    width: 100% !important; 
   }
+ 
   .close-link {
-    position: static;    /* Removes it from the top-right corner */
-    display: block;      /* Puts it on its own line */
-    margin-top: 15px;    /* 15px gap after the exhibition info */
-    margin-bottom: 30px; /* Space before the description starts */
-    text-align: left;    /* Aligns it with your text */
+    position: static;    /* Drops it into the flow */
+    display: inline-block; /* Keeps it tight to the word 'Close' */
+    margin-top: 15px;    /* Gap after 'Berlin' */
+    margin-bottom: 15px; /* Gap before 'The Carrier is a series...' */
+    width: 100%;
   }
+}
 
   body {
     padding: 15px;       /* Keeps your consistent 15px padding */
