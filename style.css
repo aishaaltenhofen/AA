@@ -1,3 +1,11 @@
+body {
+  padding-left: 10px;
+  padding-bottom: 10px;
+  background-color: #ffffff;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+}
+
 .header {
 margin-bottom: 10px;
 }
@@ -13,7 +21,7 @@ margin-bottom: 10px;
   height: auto;
   background-color: white; 
   z-index: 9999;
-  font-size: 1em;
+  font-size: inherit;
 }
 
 .gallery {
@@ -55,15 +63,6 @@ summary {
 content {
   margin-top: 100px;
 }
-
-
-body {
-  padding-left: 10px;
-  padding-bottom: 10px;
-  background-color: #ffffff;
-  font-family: "Times New Roman", Times, serif;
-}
-
 
 a:link,
 a:visited {
