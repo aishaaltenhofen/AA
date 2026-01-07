@@ -7,7 +7,15 @@ body {
   line-height: 1.4;
 }
 
-.header-info,
+.header-info{
+  width: 100%;
+  margin-bottom: 15px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+
 .gallery,
 .exhibitiontext {
   width: 100%; 
