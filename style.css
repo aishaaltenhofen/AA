@@ -7,15 +7,18 @@ body {
     background-color: #fff;
 }
 
+.content-wrapper, 
+.gallery,
+.exhibitiontext,
+.header-info {
+    width: 60%; 
+}
+
 img {
     width: 100%;
     display: block;
+    height: auto; 
     margin-bottom: 15px; 
-}
-
-.content-wrapper, 
-.header-info {
-    width: 60%; 
 }
 
 .close-link {
@@ -63,14 +66,23 @@ a:active {
 
 
   @media (max-width: 768px) {
-    .content-wrapper, 
-    .header-info {
-        width: 100%; /* Expand to full width on mobile */
+    body {
+    display: block;  /* Simplest flow for mobile stacking */
+    padding: 15px;
+  }
+      
+    .header-info,
+    .content-wrapper,
+    .gallery,
+    .exhibitiontext {
+        width: 100%; 
+        box-sizing: border-box;
     }
     
     .close-link {
         position: static; /* Drops into the flow after header info */
         display: block;
         margin: 15px 0;
+        text-align: left;
     }
 }
