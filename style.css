@@ -11,7 +11,11 @@ body {
     background-color: #fff;
 }
 
-.header-info,
+.header-info {
+  width:60%;
+  margin-bottom: 15px;
+}
+
 .main-content {
     width: 60%; 
 }
