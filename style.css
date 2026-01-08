@@ -61,3 +61,12 @@ a:active {
   margin-top: 15px;
   margin-bottom: 15px;
 }
+
+@media screen and (min-width: 769px) {
+  img, 
+  .header-info, 
+  .exhibitiontext {
+    width: 60%;
+    margin-left: 0; 
+  }
+}
