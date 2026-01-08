@@ -8,12 +8,9 @@ body {
 }
 
 .header-info {
-  display: flex;
-  flex-direction: column;
+  display: column;
   width: 100%;
   margin-bottom: 15px;
-  justify-content: flex-start;
-  align-items: flex-start;
 }
 
 
