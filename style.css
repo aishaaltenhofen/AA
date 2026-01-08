@@ -30,14 +30,6 @@ img {
   margin-bottom: 15px;
 }
 
-.close-link {
-  display: block;
-  margin: 15px 0;
-  text-decoration: none;
-  color: #000;
-  align-self: flex-end;
-}
-
 .exhibitiontext {
     margin-top: 15px;
     margin-bottom: 300px; 
