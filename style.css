@@ -61,12 +61,3 @@ a:active {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-
-@media screen and (min-width: 769px) {
-  /* Set the 60% width only on desktop */
-  .header-info,
-  .gallery,
-  .exhibitiontext {
-    width: 60%;
-  }
-}
