@@ -69,11 +69,4 @@ a:active {
   .exhibitiontext {
     width: 60%;
   }
-
-  .close-link {
-    position: static;
-    top: 15px;
-    right: 15px;
-    margin: 0;
-  }
 }
