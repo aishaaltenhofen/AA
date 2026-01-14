@@ -54,16 +54,6 @@ img {
     margin-bottom: 300px; 
 }
 
-summary {
-  cursor: pointer;
-  list-style: none;               
-  -webkit-appearance: none;
-  appearance: none;
-  border: none;
-  background: none;
-  padding: 0 rem 0 rem;
-  display: inline-block;
-}
 
 a:link,
 a:visited {
