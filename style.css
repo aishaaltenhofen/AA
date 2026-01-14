@@ -1,4 +1,14 @@
 
+.hover-image {
+  display: none;
+  position: absolute;
+  top: 20%;
+  right: 10%;
+  width: 300px; 
+  z-index: 10;
+  pointer-events: none; 
+}
+
 html, body {
   height: 100%;
   margin: 0;
