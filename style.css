@@ -9,6 +9,15 @@
   pointer-events: none; 
 }
 
+li:hover .hover-image {
+  display: block;
+}
+
+.menu ul li {
+  position: relative;
+  list-style: none;
+}
+
 html, body {
   height: 100%;
   margin: 0;
