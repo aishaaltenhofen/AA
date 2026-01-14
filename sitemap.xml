@@ -8,13 +8,13 @@
     <priority>1.0</priority>
   </url>
 
-   <url>
+  <url>
     <loc>https://aishaaltenhofen.com/The-Carrier/</loc>
     <lastmod>2026-01-14</lastmod>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://raw.githubusercontent.com/aishaaltenhofen/AA/refs/heads/main/images/Graduation%202025%20-%2001.jpg</image:loc>
-      <image:caption>Aisha Altenhofen - The Carrier </image:caption>
+      <image:loc>https://aishaaltenhofen.com/images/Graduation%202025%20-%2001.jpg</image:loc>
+      <image:caption>Aisha Altenhofen - The Carrier</image:caption>
     </image:image>
   </url>
   
@@ -23,8 +23,8 @@
     <lastmod>2026-01-14</lastmod>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://raw.githubusercontent.com/aishaaltenhofen/AA/refs/heads/main/images/JBI-1.jpg</image:loc>
-      <image:caption>Aisha Altenhofen - AABB </image:caption>
+      <image:loc>https://aishaaltenhofen.com/images/JBI-1.jpg</image:loc>
+      <image:caption>Aisha Altenhofen - AABB</image:caption>
     </image:image>
   </url>
 
@@ -33,28 +33,28 @@
     <lastmod>2026-01-14</lastmod>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://raw.githubusercontent.com/aishaaltenhofen/AA/refs/heads/main/images/2024-FE-01-install.jpg>
-      <image:caption>Aisha Altenhofen - First Exposure </image:caption>
+      <image:loc>https://aishaaltenhofen.com/images/2024-FE-01-install.jpg</image:loc>
+      <image:caption>Aisha Altenhofen - First Exposure</image:caption>
     </image:image>
   </url>
 
-   <url>
+  <url>
     <loc>https://aishaaltenhofen.com/Trouble!/</loc>
     <lastmod>2026-01-14</lastmod>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://raw.githubusercontent.com/aishaaltenhofen/AA/refs/heads/main/images/TROUBLE%20-%20JB-01.jpg>
-      <image:caption>Aisha Altenhofen - Trouble! </image:caption>
+      <image:loc>https://aishaaltenhofen.com/images/TROUBLE%20-%20JB-01.jpg</image:loc>
+      <image:caption>Aisha Altenhofen - Trouble!</image:caption>
     </image:image>
   </url>
 
-     <url>
+  <url>
     <loc>https://aishaaltenhofen.com/Rundgang/</loc>
     <lastmod>2026-01-14</lastmod>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://raw.githubusercontent.com/aishaaltenhofen/AA/refs/heads/main/images/Aisha%20Rundgang.io-01.JPG>
-      <image:caption>Aisha Altenhofen - Rundgang </image:caption>
+      <image:loc>https://aishaaltenhofen.com/images/Aisha%20Rundgang.io-01.JPG</image:loc>
+      <image:caption>Aisha Altenhofen - Rundgang</image:caption>
     </image:image>
   </url>
 
