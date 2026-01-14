@@ -2,10 +2,11 @@
 .hover-image {
   display: none;
   position: absolute;
-  top: 20%;
-  right: 10%;
-  width: 300px; 
-  z-index: 10;
+  top: 15px;
+  right: 15x;
+  width: 60vw; 
+  max-height: calc(100vh - 30px); 
+  object-fit: contain;
   pointer-events: none; 
 }
 
