@@ -2,12 +2,13 @@
 .hover-image {
   display: none;
   position: absolute;
-  top: 15px;
-  right: 15x;
-  width: 60vw; 
-  max-height: calc(100vh - 30px); 
-  object-fit: contain;
-  pointer-events: none; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: auto;
+  z-index: 100;
+  pointer-events: none;
 }
 
 li:hover .hover-image {
