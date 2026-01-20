@@ -33,26 +33,17 @@ img {
   margin-bottom: 15px;
 }
 
-.header-info {
-  display: block;
-  width: 100%;
-  padding-bottom: 15px;
-}
-
-
+.header-info,
 .gallery,
 .exhibitiontext {
-  width: 100%; 
+  width: 100%;
   margin-bottom: 15px;
 }
-
-
 
 .exhibitiontext {
     margin-top: 15px;
     margin-bottom: 300px; 
 }
-
 
 a:link,
 a:visited {
@@ -74,12 +65,14 @@ a:active {
 }
 
 @media screen and (min-width: 769px) {
-  .menu ul li
-  img
-  .header-info
-  .gallery
-  .exhibitontext {
+  body {
+    padding-left: 50px; 
+  }
+
+  .header-info,
+  .gallery img, 
+  .exhibitiontext {
     width: 60%;
-    max-width:900px;
+    max-width: 900px;
   }
 }
