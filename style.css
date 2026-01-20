@@ -74,9 +74,7 @@ a:active {
 }
 
 @media screen and (min-width: 769px) {
-  img, 
-  .header-info, 
-  .exhibitiontext {
+  .body {
     width: 60%;
     max-width:900px;
   }
