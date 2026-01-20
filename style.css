@@ -74,9 +74,11 @@ a:active {
 }
 
 @media screen and (min-width: 769px) {
+  .menu ul li
   img
   .header-info
-  .exhibiton-text {
+  .gallery
+  .exhibitontext {
     width: 60%;
     max-width:900px;
   }
